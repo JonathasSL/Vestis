@@ -1,0 +1,6 @@
+@Vestis_HostAddress = http://localhost:5209
+
+GET {{Vestis_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
