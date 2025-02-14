@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
             return BadRequest(new { message = "User with this email does not exist" });
 
 
-        if (!new PasswordHasher().Verify(existingUser.Password, userModel.Password))
+        if (!new PasswordHasher().Verify(userModel.Password, existingUser.Password))
             return BadRequest(new { message = "Invalid password" });
 
 
