@@ -1,6 +1,6 @@
 @Vestis_HostAddress = http://localhost:5209
 
-GET {{Vestis_HostAddress}}/weatherforecast/
+GET {{Vestis_HostAddress}}/tailors/
 Accept: application/json
 
 ###
