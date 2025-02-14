@@ -33,7 +33,7 @@ builder.Services.AddSingleton<JwtService>();
 var app = builder.Build();
 
 // Verifica se foi passado um argumento para gerar o YAML
-if (args.Length > 0 && args[0].Equals("generate_yaml", StringComparison.OrdinalIgnoreCase))
+if (args.Length > 0 && args.Any(arg => arg.Equals("generate_yaml", StringComparison.OrdinalIgnoreCase)))
 {
     GenerateYaml();
     return;
@@ -141,9 +141,7 @@ void GenerateYaml()
 
         // Garante que o diretório existe
         if (!Directory.Exists(directoryPath))
-        {
             Directory.CreateDirectory(directoryPath);
-        }
 
         // Salva o arquivo
         File.WriteAllText(filePath, yamlOutput);

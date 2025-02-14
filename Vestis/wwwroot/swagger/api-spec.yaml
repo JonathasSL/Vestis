@@ -51,6 +51,13 @@ paths:
       responses:
         '200':
           description: OK
+  /api/Tailors/test:
+    get:
+      tags:
+        - Tailors
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     UserModel:

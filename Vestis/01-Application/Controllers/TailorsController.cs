@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Vestis.Application.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("api/[controller]")]
     public class TailorsController : ControllerBase
     {
@@ -15,8 +14,15 @@ namespace Vestis.Application.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult GetAll()
+        {
+            return Ok(new { Message = "Lista de alfaiates retornada com sucesso!" });
+        }
+
+        [HttpGet("test")]
+        public IActionResult GetTest()
         {
             return Ok(new { Message = "Lista de alfaiates retornada com sucesso!" });
         }
