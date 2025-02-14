@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Writers;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Vestis.Configurations;
 using Vestis.Data;
@@ -29,12 +32,17 @@ builder.Services.AddSingleton<JwtService>();
 #region build app
 var app = builder.Build();
 
+// Verifica se foi passado um argumento para gerar o YAML
+if (args.Length > 0 && args[0].Equals("generate_yaml", StringComparison.OrdinalIgnoreCase))
+{
+    GenerateYaml();
+    return;
+}
+
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())
@@ -115,3 +123,31 @@ void UseSwagger()
 }
 
 void AddDatabse() => builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+void GenerateYaml()
+{
+        // Obtém o serviço responsável por gerar a documentação Swagger
+        var swaggerProvider = app.Services.GetRequiredService<ISwaggerProvider>();
+        var swaggerDoc = swaggerProvider.GetSwagger("v1");
+
+        // Serializa para YAML
+        var stringWriter = new StringWriter();
+        swaggerDoc.SerializeAsV3(new OpenApiYamlWriter(stringWriter));
+        var yamlOutput = stringWriter.ToString();
+
+        // Define o caminho para salvar o arquivo dentro do projeto
+        var directoryPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "swagger");
+        var filePath = Path.Combine(directoryPath, "api-spec.yaml");
+
+        // Garante que o diretório existe
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
+        // Salva o arquivo
+        File.WriteAllText(filePath, yamlOutput);
+
+        Console.WriteLine($"Arquivo YAML gerado em: {filePath}");
+        return; // Encerra a aplicação após gerar o YAML
+}
