@@ -1,10 +1,10 @@
+using Humanizer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Runtime.CompilerServices;
 using System.Text;
 using Vestis.Configurations;
 using Vestis.Data;
@@ -80,8 +80,36 @@ void ConfigureJWT()
             ValidAudience = jwtSettings.Audience,
             IssuerSigningKey = key
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine($"[Authentication failed] {DateTime.Now.ToShortTimeString()}\n" + PrintExceptionStack(context.Exception,out _));
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                Console.WriteLine("[Token validated]\n" + context.SecurityToken);
+                return Task.CompletedTask;
+            }
+        };
     });
     builder.Services.AddAuthorization();
+}
+
+string PrintExceptionStack(Exception exception, out int order)
+{
+    order = 0;
+    if (exception.InnerException == null)
+    {
+        order = 1;
+        return $"[{order.Ordinalize()}] {exception.Message}";
+    }
+
+    var stackedMessages = PrintExceptionStack(exception.InnerException, out order);
+    order++;
+
+    return $"{stackedMessages}\n\n[{order.Ordinalize()}] {exception.Message}\n";
 }
 
 void AddSwagger()

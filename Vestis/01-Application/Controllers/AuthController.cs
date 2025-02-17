@@ -23,12 +23,10 @@ public class AuthController : ControllerBase
     public IActionResult Register([FromBody] UserModel userModel)
     {
         if (_context.Users.Any(u => u.Email == userModel.Email))
-        {
             return BadRequest(new { message = "User with this email already exists" });
-        }
 
         var passwordHash = new PasswordHasher().Hash(userModel.Password);
-        var user = new UserEntity(userModel.Name, userModel.Email, passwordHash, "temp");
+        var user = new UserEntity(userModel.Name, userModel.Email, passwordHash, userModel.Role);
         
         _context.Users.Add(user);
         _context.SaveChanges();
