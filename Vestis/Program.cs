@@ -1,17 +1,22 @@
 using Humanizer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Reflection;
 using System.Text;
+using Vestis._01_Application.Services;
 using Vestis.Configurations;
 using Vestis.Data;
-using Vestis.Services;
 
 #region builder
 var builder = WebApplication.CreateBuilder(args);
+var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+
+builder.Services.RegisterAllScopedDependencies(logger);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -56,6 +61,7 @@ System.Console.WriteLine(app.Environment.EnvironmentName+"\n");
 app.Run();
 #endregion build app
 
+#region methods
 void ConfigureJWT()
 {
     var jwtSettings = new JwtSettings();
@@ -84,7 +90,7 @@ void ConfigureJWT()
         {
             OnAuthenticationFailed = context =>
             {
-                Console.WriteLine($"[Authentication failed] {DateTime.Now.ToShortTimeString()}\n" + PrintExceptionStack(context.Exception,out _));
+                Console.WriteLine($"[Authentication failed] {DateTime.Now.TimeOfDay}\n" + PrintExceptionStack(context.Exception,out _));
                 return Task.CompletedTask;
             },
             OnTokenValidated = context =>
@@ -150,7 +156,7 @@ void UseSwagger()
     });
 }
 
-void AddDatabse() => builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+void AddDatabse() => builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 void GenerateYaml()
 {
@@ -176,4 +182,28 @@ void GenerateYaml()
 
         Console.WriteLine($"Arquivo YAML gerado em: {filePath}");
         return; // Encerra a aplicação após gerar o YAML
+}
+#endregion methods
+
+public static class ServiceCollectionExtensions
+{
+    public static void RegisterAllScopedDependencies(this IServiceCollection services, ILogger logger)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+
+        var types = assembly.GetTypes();
+        var interfaces = types.Where(type => type.IsInterface && type.Name.StartsWith("I")).ToList();
+
+        foreach (var interfaceType in interfaces)
+        {
+            var implementationType = types.FirstOrDefault(type => type.IsClass && !type.IsAbstract && type.Name.Equals(interfaceType.Name.Substring(1)));
+            if (implementationType == null)
+            {
+                logger.LogWarning($"[DI] No implementation found for interface {interfaceType.Name}");
+                continue;
+            }
+            services.AddScoped(interfaceType, implementationType);
+            logger.LogInformation($"[DI] Registrando: {interfaceType}, {implementationType}");
+        }
+    }
 }
