@@ -25,7 +25,7 @@ public class AuthController : BaseController
             return BadRequest(new { message = "User with this email already exists" });
         
         var user = await _userService.Create(userModel);
-        var token = await _userService.AuthenticateAsync(user.Email, user.Password);
+        var token = await _userService.AuthenticateAsync(user.Email, userModel.Password);
         
         return Ok(new { token });
     }

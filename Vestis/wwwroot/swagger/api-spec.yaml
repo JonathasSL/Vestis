@@ -58,6 +58,13 @@ paths:
       responses:
         '200':
           description: OK
+  /api/User:
+    get:
+      tags:
+        - User
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     UserModel:
