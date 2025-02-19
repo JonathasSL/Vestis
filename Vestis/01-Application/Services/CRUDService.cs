@@ -60,11 +60,11 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
 
     public virtual async Task<TModel> Delete(TId id)
     {
-        var entity = await GetById(id);
+        var entity = await _repository.GetByIdAsync(id);
         if (entity == null)
             return null;
 
         await _repository.SoftDeleteAsync(entity);
-        return entity;
+        return _mapper.Map<TModel>(entity);
     }
 }

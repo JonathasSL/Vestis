@@ -1,6 +1,6 @@
 ﻿using Vestis.Application.Models;
 
-namespace Vestis._01___Application.Models
+namespace Vestis._01_Application.Models
 {
     public class UserModel : BaseModel<Guid>
     {

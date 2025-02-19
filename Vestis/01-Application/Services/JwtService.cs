@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using Vestis.Configurations;
 
-namespace Vestis.Services;
+namespace Vestis._01_Application.Services;
 
 public class JwtService
 {

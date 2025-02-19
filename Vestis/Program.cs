@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.Text;
+using Vestis._01_Application.Mapping;
 using Vestis._01_Application.Services;
 using Vestis.Configurations;
 using Vestis.Data;
@@ -17,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
 
 builder.Services.RegisterAllScopedDependencies(logger);
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Add services to the container.
 builder.Services.AddControllers();

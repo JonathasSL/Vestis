@@ -11,7 +11,7 @@ using Vestis.Data;
 
 namespace Vestis.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250213230205_InitialCreate")]
     partial class InitialCreate
     {

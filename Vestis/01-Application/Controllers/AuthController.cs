@@ -1,51 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Vestis._01___Application.Models;
+using Vestis._01_Application.Controllers;
+using Vestis._01_Application.Models;
+using Vestis._01_Application.Services;
+using Vestis._01_Application.Services.Interfaces;
 using Vestis.Data;
-using Vestis.Entities;
-using Vestis.Services;
 
 namespace Vestis.Application.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+public class AuthController : BaseController
 {
-    private readonly AppDbContext _context;
     private readonly JwtService _jwtService;
+    private readonly IUserService _userService;
 
-    public AuthController(AppDbContext context, JwtService jwtService)
+    public AuthController(ApplicationDbContext context, JwtService jwtService, IUserService userService)
     {
-        _context = context;
         _jwtService = jwtService;
+        _userService = userService;
     }
 
     [HttpPost("register")]
-    public IActionResult Register([FromBody] UserModel userModel)
+    public async Task<IActionResult> RegisterAsync([FromBody] UserModel userModel)
     {
-        if (_context.Users.Any(u => u.Email == userModel.Email))
+        if (await _userService.ExistsAsync(userModel.Email))
             return BadRequest(new { message = "User with this email already exists" });
-
-        var passwordHash = new PasswordHasher().Hash(userModel.Password);
-        var user = new UserEntity(userModel.Name, userModel.Email, passwordHash, userModel.Role);
         
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        var user = await _userService.Create(userModel);
+        var token = await _userService.AuthenticateAsync(user.Email, user.Password);
         
-        return Ok(new { token = _jwtService.GenerateToken(user.Id.ToString(), userModel.Email) });
+        return Ok(new { token });
     }
     
     [HttpPost("login")]
-    public IActionResult Login([FromBody] UserModel userModel)
+    public async Task<IActionResult> Login([FromBody] UserModel userModel)
     {
-        var existingUser = _context.Users.FirstOrDefault(u => u.Email == userModel.Email);
-        if (existingUser == null)
-            return BadRequest(new { message = "User with this email does not exist" });
+        var existingUser = _userService.GetById(userModel.Id);
 
+        var token = await _userService.AuthenticateAsync(userModel.Email, userModel.Password);
 
-        if (!new PasswordHasher().Verify(userModel.Password, existingUser.Password))
-            return BadRequest(new { message = "Invalid password" });
-
-
-        return Ok(new { token = _jwtService.GenerateToken(existingUser.Id.ToString(), userModel.Email) });
+        return Ok(new { token });
     }
 }

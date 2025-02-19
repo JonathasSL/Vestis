@@ -23,5 +23,22 @@ namespace Vestis.Entities
             Role = role;
             CreatedDate = DateTime.UtcNow;
         }
+
+        public void ChangeName(string name)
+        {
+            Name = name;
+        }
+        public void ChangeEmail(string email)
+        {
+            Email = email;
+        }
+        public void ChangePassword(string password)
+        {
+            Password = password;
+        }
+        public void ChangeRole(string role)
+        {
+            Role = role;
+        }
     }
 }
