@@ -12,7 +12,6 @@ namespace Vestis._01_Application.Mapping
                 .ForMember(entity => entity.Password, opt => opt.Ignore());
             CreateMap<UserModel, UserEntity>()
                 .ForMember(entity => entity.Password, opt => opt.Ignore());
-
         }
     }
 }

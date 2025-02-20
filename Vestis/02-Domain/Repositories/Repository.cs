@@ -36,7 +36,13 @@ public class Repository<T, TId> : IRepository<T, TId>
         await _context.SaveChangesAsync();
     }
 
-    public Task<T> Update(T entity) => throw new NotImplementedException();
+    public async Task<T> Update(T entity)
+    {
+        entity.UpdatedDate = DateTime.UtcNow;
+        _dbSet.Update(entity);
+        await _context.SaveChangesAsync();
+        return entity;
+    }
 
     protected IQueryable<T> BeginQuery() => _dbSet.Where(e => !e.DeletedDate.HasValue);
     protected IQueryable<T> BeginQueryReadOnly() => _dbSet.AsNoTracking().Where(e => !e.DeletedDate.HasValue);
