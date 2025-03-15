@@ -44,6 +44,44 @@ paths:
       responses:
         '200':
           description: OK
+  /api/Studios:
+    get:
+      tags:
+        - Studios
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Studios
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudioModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/StudioModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/StudioModel'
+      responses:
+        '200':
+          description: OK
+  '/api/Studios/{id}':
+    get:
+      tags:
+        - Studios
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
   /api/Tailors:
     get:
       tags:
@@ -58,15 +96,42 @@ paths:
       responses:
         '200':
           description: OK
-  /api/User:
+  /api/Users:
     get:
       tags:
-        - User
+        - Users
       responses:
         '200':
           description: OK
 components:
   schemas:
+    StudioModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdDate:
+          type: string
+          format: date-time
+        updatedDate:
+          type: string
+          format: date-time
+          nullable: true
+        deletedDate:
+          type: string
+          format: date-time
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        contactEmail:
+          type: string
+          nullable: true
+        phoneNumber:
+          type: string
+          nullable: true
+      additionalProperties: false
     UserModel:
       type: object
       properties:

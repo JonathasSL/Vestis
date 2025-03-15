@@ -11,34 +11,42 @@ namespace Vestis.Entities
         public string Email { get; private set; }
         [Required]
         public string Password { get; private set; }
-        [Required]
-        public string Role { get; private set; }
 
-        public UserEntity(string name, string email, string password, string role)
+        public UserEntity(string name, string email, string password)
         {
-            Id = Guid.NewGuid();
             Name = name;
             Email = email;
             Password = password;
-            Role = role;
-            CreatedDate = DateTime.UtcNow;
         }
+
+        //Constructor for EF
+        public UserEntity() { }
 
         public void ChangeName(string name)
         {
-            Name = name;
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name cannot be null or empty.");
+            else if (Name != name)
+            {
+                Name = name;
+                SetAsUpdated();
+            }
         }
         public void ChangeEmail(string email)
         {
-            Email = email;
+            if (Email != email)
+            {
+                Email = email;
+                SetAsUpdated();
+            }
         }
         public void ChangePassword(string password)
         {
-            Password = password;
-        }
-        public void ChangeRole(string role)
-        {
-            Role = role;
+            if (Password != password)
+            {
+                Password = password;
+                SetAsUpdated();
+            }
         }
     }
 }

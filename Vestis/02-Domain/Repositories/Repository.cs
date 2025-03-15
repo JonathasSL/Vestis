@@ -31,14 +31,14 @@ public class Repository<T, TId> : IRepository<T, TId>
 
     public async Task SoftDeleteAsync(T entity)
     {
-        entity.DeletedDate = DateTime.UtcNow;
+        entity.SetAsDeleted();
         _dbSet.Update(entity);
         await _context.SaveChangesAsync();
     }
 
     public async Task<T> Update(T entity)
     {
-        entity.UpdatedDate = DateTime.UtcNow;
+        entity.SetAsUpdated();
         _dbSet.Update(entity);
         await _context.SaveChangesAsync();
         return entity;

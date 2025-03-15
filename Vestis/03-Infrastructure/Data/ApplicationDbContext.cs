@@ -10,6 +10,7 @@ namespace Vestis.Data
         {
         }
         
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var types = Assembly.GetExecutingAssembly().GetTypes();

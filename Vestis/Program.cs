@@ -14,6 +14,7 @@ using Vestis.Configurations;
 using Vestis.Data;
 
 #region builder
+
 var builder = WebApplication.CreateBuilder(args);
 var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
 
@@ -64,6 +65,7 @@ app.Run();
 #endregion build app
 
 #region methods
+
 void ConfigureJWT()
 {
     var jwtSettings = new JwtSettings();
@@ -185,6 +187,7 @@ void GenerateYaml()
         Console.WriteLine($"Arquivo YAML gerado em: {filePath}");
         return; // Encerra a aplicação após gerar o YAML
 }
+
 #endregion methods
 
 public static class ServiceCollectionExtensions

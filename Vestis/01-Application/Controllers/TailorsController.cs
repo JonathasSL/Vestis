@@ -4,7 +4,8 @@ using Vestis._01_Application.Controllers;
 
 namespace Vestis.Application.Controllers;
 
-public class TailorsController : BaseController
+[Authorize]
+public class TailorsController : VestisController
 {
     private readonly ILogger<TailorsController> _logger;
 
@@ -13,7 +14,6 @@ public class TailorsController : BaseController
         _logger = logger;
     }
 
-    [Authorize]
     [HttpGet]
     public IActionResult GetAll()
     {

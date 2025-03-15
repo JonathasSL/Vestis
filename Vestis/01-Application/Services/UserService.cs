@@ -14,7 +14,8 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
     public UserService(
         IUserRepository repository,
         IMapper mapper,
-        JwtService jwtService) : base(repository, mapper)
+        ILogger<UserService> logger,
+        JwtService jwtService) : base(mapper, logger, repository)
     {
         _repository = repository;
         _jwtService = jwtService;
@@ -23,7 +24,6 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
     public override async Task<UserModel> Create(UserModel model)
     {
         var user = _mapper.Map<UserEntity>(model);
-        user.ChangePassword(new PasswordHasher().Hash(model.Password));
         var createdUser = await _repository.CreateAsync(user);
         
         var responseModel = _mapper.Map<UserModel>(createdUser);

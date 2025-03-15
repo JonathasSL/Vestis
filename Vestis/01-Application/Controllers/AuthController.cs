@@ -1,20 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Vestis._01_Application.Controllers;
 using Vestis._01_Application.Models;
-using Vestis._01_Application.Services;
 using Vestis._01_Application.Services.Interfaces;
 using Vestis.Data;
+using VestisController = Vestis._01_Application.Controllers.VestisController;
 
 namespace Vestis.Application.Controllers;
 
-public class AuthController : BaseController
+public class AuthController : VestisController
 {
-    private readonly JwtService _jwtService;
     private readonly IUserService _userService;
 
-    public AuthController(ApplicationDbContext context, JwtService jwtService, IUserService userService)
+    public AuthController(ApplicationDbContext context, IUserService userService)
     {
-        _jwtService = jwtService;
         _userService = userService;
     }
 
@@ -33,10 +30,8 @@ public class AuthController : BaseController
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserModel userModel)
     {
-        var existingUser = _userService.GetById(userModel.Id);
-
         var token = await _userService.AuthenticateAsync(userModel.Email, userModel.Password);
 
-        return Ok(new { token });
+        return token != null ? Ok(new { token }) : Unauthorized();
     }
 }

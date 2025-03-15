@@ -2,6 +2,7 @@
 using Vestis._01_Application.Services.Interfaces;
 using Vestis._02_Domain.Repositories.Interfaces;
 using Vestis.Entities;
+using Vestis.Extensions;
 
 namespace Vestis._01_Application.Services;
 
@@ -11,60 +12,107 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
     where TEntity : BaseEntity<TId>
     where TId : struct
 {
-    private readonly IRepository<TEntity, TId> _repository;
     protected readonly IMapper _mapper;
+    private readonly ILogger<CRUDService<TModel, TEntity, TId>> _logger;
+    private readonly IRepository<TEntity, TId> _repository;
 
-    protected CRUDService(IRepository<TEntity, TId> repository, IMapper mapper)
+    protected CRUDService(IMapper mapper, ILogger<CRUDService<TModel, TEntity, TId>> logger, IRepository<TEntity, TId> repository)
     {
-        _repository = repository;
         _mapper = mapper;
+        _logger = logger;
+        _repository = repository;
     }
 
     public virtual async Task<TModel> Create(TModel model)
     {
-        var entity = _mapper.Map<TEntity>(model);
-        var result = await _repository.CreateAsync(entity);
-        return _mapper.Map<TModel>(result);
+        try
+        {
+            var entity = _mapper.Map<TEntity>(model);
+            var result = await _repository.CreateAsync(entity);
+            return _mapper.Map<TModel>(result);
+        }
+        catch (Exception e)
+        {
+            var exceptionStack = e.ExceptionStack(out _);
+            _logger.LogError(exceptionStack);
+            throw;
+        }
     }
 
     public virtual async Task<IEnumerable<TModel>>? GetAllAsync()
     {
-        var entityList = await _repository.GetAllAsync();
-        if (entityList == null)
-            return null;
+        try
+        {
+            var entityList = await _repository.GetAllAsync();
+            if (entityList == null)
+                return null;
 
-        var result = _mapper.Map<IEnumerable<TModel>>(entityList);
-        return result;
+            var result = _mapper.Map<IEnumerable<TModel>>(entityList);
+            return result;
+        }
+        catch (Exception e)
+        {
+            var exceptionStack = e.ExceptionStack(out _);
+            _logger.LogError(exceptionStack);
+            throw;
+        }
     }
 
     public virtual async Task<TModel>? GetById(TId id)
     {
-        var entity = await _repository.GetByIdAsync(id);
-        if (entity == null)
-            return null;
+        try
+        {
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+                return null;
 
-        return _mapper.Map<TModel>(entity);
+            return _mapper.Map<TModel>(entity);
+        }
+        catch (Exception e)
+        {
+            var exceptionStack = e.ExceptionStack(out _);
+            _logger.LogError(exceptionStack);
+            throw;
+        }
     }
 
     public virtual async Task<TModel>? Update(TId id, TModel model)
     {
-        var entity = await _repository.GetByIdAsync(id);
-        if (entity == null)
-            return null;
+        try
+        {
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+                return null;
 
-        _mapper.Map(model, entity);
+            _mapper.Map(model, entity);
 
-        var result = _repository.Update(entity);
-        return _mapper.Map<TModel>(result);
+            var result = _repository.Update(entity);
+            return _mapper.Map<TModel>(result);
+        }
+        catch (Exception e)
+        {
+            var exceptionStack = e.ExceptionStack(out _);
+            _logger.LogError(exceptionStack);
+            throw;
+        }
     }
 
     public virtual async Task<TModel> Delete(TId id)
     {
-        var entity = await _repository.GetByIdAsync(id);
-        if (entity == null)
-            return null;
+        try
+        {
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
+                return null;
 
-        await _repository.SoftDeleteAsync(entity);
-        return _mapper.Map<TModel>(entity);
+            await _repository.SoftDeleteAsync(entity);
+            return _mapper.Map<TModel>(entity);
+        }
+        catch (Exception e)
+        {
+            var exceptionStack = e.ExceptionStack(out _);
+            _logger.LogError(exceptionStack);
+            throw;
+        }
     }
 }

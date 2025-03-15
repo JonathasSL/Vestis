@@ -2,8 +2,10 @@
 
 namespace Vestis._01_Application.Controllers;
 
-public class UserController : BaseController 
+public class UsersController : VestisController 
 {
+    private readonly ILogger<UsersController> _logger;
+
     [HttpGet]
     public IActionResult GetAll()
     {
