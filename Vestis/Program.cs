@@ -1,17 +1,16 @@
 using Humanizer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Reflection;
 using System.Text;
-using Vestis._01_Application.Mapping;
-using Vestis._01_Application.Services;
-using Vestis.Configurations;
-using Vestis.Data;
+using Vestis._02_Application.Configurations;
+using Vestis._02_Application.Mapping;
+using Vestis._02_Application.Services;
+using Vestis._04_Infrasctructure.Data;
+using Vestis.Shared.Extensions;
 
 #region builder
 
@@ -94,7 +93,7 @@ void ConfigureJWT()
         {
             OnAuthenticationFailed = context =>
             {
-                Console.WriteLine($"[Authentication failed] {DateTime.Now.TimeOfDay}\n" + PrintExceptionStack(context.Exception,out _));
+                Console.WriteLine($"[Authentication failed] {DateTime.Now.TimeOfDay}\n" + context.Exception.ExceptionStack(out _));
                 return Task.CompletedTask;
             },
             OnTokenValidated = context =>
@@ -105,21 +104,6 @@ void ConfigureJWT()
         };
     });
     builder.Services.AddAuthorization();
-}
-
-string PrintExceptionStack(Exception exception, out int order)
-{
-    order = 0;
-    if (exception.InnerException == null)
-    {
-        order = 1;
-        return $"[{order.Ordinalize()}] {exception.Message}";
-    }
-
-    var stackedMessages = PrintExceptionStack(exception.InnerException, out order);
-    order++;
-
-    return $"{stackedMessages}\n\n[{order.Ordinalize()}] {exception.Message}\n";
 }
 
 void AddSwagger()
@@ -189,26 +173,3 @@ void GenerateYaml()
 }
 
 #endregion methods
-
-public static class ServiceCollectionExtensions
-{
-    public static void RegisterAllScopedDependencies(this IServiceCollection services, ILogger logger)
-    {
-        var assembly = Assembly.GetExecutingAssembly();
-
-        var types = assembly.GetTypes();
-        var interfaces = types.Where(type => type.IsInterface && type.Name.StartsWith("I")).ToList();
-
-        foreach (var interfaceType in interfaces)
-        {
-            var implementationType = types.FirstOrDefault(type => type.IsClass && !type.IsAbstract && type.Name.Equals(interfaceType.Name.Substring(1)));
-            if (implementationType == null)
-            {
-                logger.LogWarning($"[DI] No implementation found for interface {interfaceType.Name}");
-                continue;
-            }
-            services.AddScoped(interfaceType, implementationType);
-            logger.LogInformation($"[DI] Registrando: {interfaceType}, {implementationType}");
-        }
-    }
-}

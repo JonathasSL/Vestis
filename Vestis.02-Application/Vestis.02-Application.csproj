@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Vestis._02_Application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vestis.03-Domain\Vestis.03-Domain.csproj" />
+    <ProjectReference Include="..\Vestis.04-Infrasctructure\Vestis.04-Infrasctructure.csproj" />
+    <ProjectReference Include="..\Vestis.Shared\Vestis.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
