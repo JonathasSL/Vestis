@@ -20,9 +20,23 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+        
     - name: Restore dependencies
       run: dotnet restore
+      
     - name: Build
       run: dotnet build --no-restore
-    - name: Test
+    
+    - name: Run tests
       run: dotnet test --no-build --verbosity normal
+    
+    - name: Publish
+      run: dotnet publish --configuration Release --output ./publish
+        
+    #- name: Deploy to Azure API
+    # uses: azure/ebapps-deploy@v2
+    #  with:
+    #    app-name: <azure-app-name>
+    #    slot-name: production
+    #    publish-profile: ${{ secrets.AZURE_API_PUBLISH_PROFILE }}
+    #    package: ./publish
