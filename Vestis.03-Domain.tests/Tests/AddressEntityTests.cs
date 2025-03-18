@@ -1,6 +1,6 @@
 ﻿namespace Vestis._03_Domain.tests.Tests;
 
-public class AddressEntityTest
+public class AddressEntityTests
 {
     [Fact]
     public void ShouldChangeStreet()
