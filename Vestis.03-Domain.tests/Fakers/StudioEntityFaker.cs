@@ -10,4 +10,16 @@ internal class StudioEntityFaker : Faker<StudioEntity>
         RuleFor(s => s.PhoneNumber, f => f.Phone.PhoneNumber());
         RuleFor(s => s.Address, _ => new AddressEntityFaker().Generate());
     }
+
+    public StudioEntityFaker WithClients(int clientsCount)
+    {
+        RuleFor(s => s.Clients, f => new ClientEntityFaker().Generate(clientsCount));
+        return this;
+    }
+
+    public StudioEntityFaker WithName(string name)
+    {
+        RuleFor(s => s.Name, _ => name);
+        return this;
+    }
 }

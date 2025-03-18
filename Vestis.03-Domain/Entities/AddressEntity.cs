@@ -25,7 +25,6 @@ public class AddressEntity : BaseEntity<Guid>
     //Constructor for EF
     public AddressEntity() { }
 
-
     public void ChangeStreet(string street)
     {
         if (Street != street)
