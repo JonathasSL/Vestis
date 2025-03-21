@@ -1,6 +1,6 @@
 ﻿namespace Vestis._03_Domain.Entities;
 
-public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEntryEntity?>
+public class MeasurementEntryEntity : BaseEntity<Guid>
 {
     public string Name { get; private set; }
     public double Value { get; private set; }
@@ -38,5 +38,10 @@ public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEn
     public override bool Equals(object? obj)
     {
         return Equals(obj as MeasurementEntryEntity);
+    }
+
+    public bool Equals(MeasurementEntryEntity? other)
+    {
+        throw new NotImplementedException();
     }
 }
