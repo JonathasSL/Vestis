@@ -1,6 +1,6 @@
 ﻿namespace Vestis._03_Domain.Entities;
 
-public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEntryEntity?>
+public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEntryEntity>
 {
     public string Name { get; private set; }
     public double Value { get; private set; }
@@ -12,6 +12,7 @@ public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEn
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public MeasurementEntryEntity() { }
 
     public void ChangeName(string name)
@@ -34,31 +35,13 @@ public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEn
         }
     }
 
-    public override bool Equals(object? obj)
-    {
-        return Equals(obj as MeasurementEntryEntity);
-    }
+    public override bool Equals(object? obj) => Equals(obj as MeasurementEntryEntity);
 
     public bool Equals(MeasurementEntryEntity? other)
     {
-        return other is not null &&
-               DeletedDate == other.DeletedDate &&
-               Name == other.Name &&
-               Value == other.Value;
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(DeletedDate, Name, Value);
-    }
-
-    public static bool operator ==(MeasurementEntryEntity? left, MeasurementEntryEntity? right)
-    {
-        return EqualityComparer<MeasurementEntryEntity>.Default.Equals(left, right);
-    }
-
-    public static bool operator !=(MeasurementEntryEntity? left, MeasurementEntryEntity? right)
-    {
-        return !(left == right);
+        return other != null
+            && this.Name == other?.Name 
+            && this.Value == other?.Value
+            && this.DeletedDate == other?.DeletedDate;
     }
 }

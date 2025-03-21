@@ -23,8 +23,8 @@ public class AddressEntity : BaseEntity<Guid>
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public AddressEntity() { }
-
 
     public void ChangeStreet(string street)
     {

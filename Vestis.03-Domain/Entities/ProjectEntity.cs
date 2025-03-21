@@ -1,4 +1,6 @@
-﻿namespace Vestis._03_Domain.Entities;
+﻿using Vestis.Shared.Extensions;
+
+namespace Vestis._03_Domain.Entities;
 
 public class ProjectEntity : BaseEntity<Guid>
 {
@@ -7,13 +9,13 @@ public class ProjectEntity : BaseEntity<Guid>
     public ClientEntity Client { get; private set; }
     public virtual List<BodyMeasurementEntity> BodyMeasurements { get; private set; }
     
-    public ProjectEntity(string name, string description)
+    public ProjectEntity(string name)
     {
-        Name = name;
-        Description = description;
+        Name = name.EmptyToNull() ?? throw new ArgumentException("Name cannot be null or empty.");
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public ProjectEntity() { }
 
     public void ChangeName(string name)

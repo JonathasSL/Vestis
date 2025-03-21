@@ -18,6 +18,7 @@ public class StudioEntity : BaseEntity<Guid>
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public StudioEntity() { }
 
     public void ChangeName(string name)
