@@ -12,6 +12,7 @@ public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEn
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public MeasurementEntryEntity() { }
 
     public void ChangeName(string name)

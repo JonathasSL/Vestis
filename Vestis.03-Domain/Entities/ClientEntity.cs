@@ -12,14 +12,6 @@ public class ClientEntity : BaseEntity<Guid>
     public StudioEntity Studio { get; private set; }
     public Guid StudioId { get; private set; }
 
-    [Obsolete]
-    public ClientEntity(string name, string email, string phoneNumber)
-    {
-        Name = name.EmptyToNull() ?? throw new ArgumentNullException(nameof(name)); ;
-        Email = email.EmptyToNull() ?? throw new ArgumentNullException(nameof(email));
-        PhoneNumber = phoneNumber.EmptyToNull() ?? throw new ArgumentNullException(nameof(phoneNumber));
-    }
-
     public ClientEntity(string name)
     {
         Name = name.EmptyToNull() ?? throw new ArgumentNullException(nameof(name));

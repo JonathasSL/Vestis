@@ -15,6 +15,7 @@ public class ProjectEntity : BaseEntity<Guid>
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public ProjectEntity() { }
 
     public void ChangeName(string name)

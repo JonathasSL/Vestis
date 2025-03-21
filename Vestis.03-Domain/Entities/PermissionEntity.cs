@@ -11,5 +11,6 @@ public class PermissionEntity : BaseEntity<Guid>
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public PermissionEntity() { }
 }

@@ -13,6 +13,7 @@ public class RoleEntity : BaseEntity<Guid>
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public RoleEntity() { }
 
     public bool AddPermission(PermissionEntity permission)

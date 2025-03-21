@@ -11,6 +11,7 @@
         }
 
         //Constructor for EF
+        [Obsolete("This constructor is for EF use only.")]
         public BodyMeasurementEntity() { }
 
         public void AddEntry(string name, double value)

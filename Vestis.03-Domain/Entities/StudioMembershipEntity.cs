@@ -15,6 +15,7 @@ public class StudioMembershipEntity : BaseEntity<Guid>
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public StudioMembershipEntity() { }
 
     public void ChangeRole(RoleEntity role)

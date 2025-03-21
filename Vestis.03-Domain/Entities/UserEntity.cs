@@ -17,6 +17,7 @@ public class UserEntity : BaseEntity<Guid>
     }
 
     //Constructor for EF
+    [Obsolete("This constructor is for EF use only.")]
     public UserEntity() { }
 
     public void ChangeName(string name)
