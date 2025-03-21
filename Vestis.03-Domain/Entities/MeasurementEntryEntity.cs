@@ -39,7 +39,9 @@ public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEn
 
     public bool Equals(MeasurementEntryEntity? other)
     {
-        return this.Name == other?.Name 
-            && this.Value == other?.Value;
+        return other != null
+            && this.Name == other?.Name 
+            && this.Value == other?.Value
+            && this.DeletedDate == other?.DeletedDate;
     }
 }
