@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Vestis._03_Domain.tests.Tests;
+﻿namespace Vestis._03_Domain.tests.Tests;
 
 public class StudioMembershipEntityTests
 {

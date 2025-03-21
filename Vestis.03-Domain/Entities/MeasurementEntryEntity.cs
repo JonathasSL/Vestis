@@ -39,27 +39,4 @@ public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEn
     {
         return Equals(obj as MeasurementEntryEntity);
     }
-
-    public bool Equals(MeasurementEntryEntity? other)
-    {
-        return other is not null &&
-               DeletedDate == other.DeletedDate &&
-               Name == other.Name &&
-               Value == other.Value;
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(DeletedDate, Name, Value);
-    }
-
-    public static bool operator ==(MeasurementEntryEntity? left, MeasurementEntryEntity? right)
-    {
-        return EqualityComparer<MeasurementEntryEntity>.Default.Equals(left, right);
-    }
-
-    public static bool operator !=(MeasurementEntryEntity? left, MeasurementEntryEntity? right)
-    {
-        return !(left == right);
-    }
 }
