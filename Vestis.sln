@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis.01-Presentation", "Vestis\Vestis.01-Presentation.csproj", "{4708D317-8C18-40F6-AE43-40560D1A692A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{04F24252-11BF-485E-B8C9-663E92B8ADDF} = {04F24252-11BF-485E-B8C9-663E92B8ADDF}
+		{6E1AD34C-3B13-4F8D-954F-0F6358D7CB40} = {6E1AD34C-3B13-4F8D-954F-0F6358D7CB40}
+		{F8DE69B7-48B7-4CBC-8E8A-4D80E511611E} = {F8DE69B7-48B7-4CBC-8E8A-4D80E511611E}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis.02-Application", "Vestis.02-Application\Vestis.02-Application.csproj", "{852F805A-7EAB-4995-A02A-DA193DEACF0F}"
 EndProject
@@ -42,7 +47,6 @@ Global
 		{6E1AD34C-3B13-4F8D-954F-0F6358D7CB40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E1AD34C-3B13-4F8D-954F-0F6358D7CB40}.Release|Any CPU.Build.0 = Release|Any CPU
 		{525A92DD-AA09-4D49-9F51-09EE3FA5658A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{525A92DD-AA09-4D49-9F51-09EE3FA5658A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{525A92DD-AA09-4D49-9F51-09EE3FA5658A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{525A92DD-AA09-4D49-9F51-09EE3FA5658A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
