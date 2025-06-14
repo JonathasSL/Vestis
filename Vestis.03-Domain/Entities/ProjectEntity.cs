@@ -6,11 +6,16 @@ public class ProjectEntity : BaseEntity<Guid>
 {
     public string Name { get; private set; }
     public string Description { get; private set; }
+    public Guid StudioId { get; private set; }
+    public StudioEntity Studio { get; private set; }
+    public Guid ClientId { get; private set; }
     public ClientEntity Client { get; private set; }
-    public virtual List<BodyMeasurementEntity> BodyMeasurements { get; private set; }
+    public BodyMeasurementEntity BodyMeasurements { get; private set; }
     
-    public ProjectEntity(string name)
+    public ProjectEntity(StudioEntity studioEntity, string name)
     {
+        Studio = studioEntity;
+        StudioId = studioEntity.Id;
         Name = name.EmptyToNull() ?? throw new ArgumentException("Name cannot be null or empty.");
     }
 
@@ -41,13 +46,8 @@ public class ProjectEntity : BaseEntity<Guid>
         if (!Client.Equals(client))
         {
             Client = client;
+            ClientId = client.Id;
             SetAsUpdated();
         }
-    }
-    public void AddBodyMeasurement(BodyMeasurementEntity bodyMeasurement)
-    {
-        BodyMeasurements ??= new List<BodyMeasurementEntity>();
-        BodyMeasurements.Add(bodyMeasurement);
-        SetAsUpdated();
     }
 }

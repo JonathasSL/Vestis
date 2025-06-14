@@ -11,20 +11,20 @@ public class ClientEntityConfiguration : IEntityTypeConfiguration<ClientEntity>
     {
         builder.ToTable(nameof(ClientEntity).Replace("Entity", string.Empty).Pluralize());
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(c => c.Id);
 
-        builder.Property(x => x.Name)
+        builder.Property(c => c.Name)
             .IsRequired()
             .HasMaxLength(128);
 
-        builder.HasOne(x => x.Studio)
-            .WithMany(x => x.Clients)
-            .HasForeignKey(x => x.StudioId)
+        builder.HasOne(c => c.Studio)
+            .WithMany(s => s.Clients)
+            .HasForeignKey(c => c.StudioId).IsRequired(true)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(x => x.Address)
-            .WithOne()
-            .HasForeignKey<ClientEntity>(x => x.AddressId)
-            .OnDelete(DeleteBehavior.NoAction);
+        builder.HasOne(c => c.Address)
+            .WithOne().IsRequired(false)
+            .HasForeignKey<ClientEntity>(c => c.AddressId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

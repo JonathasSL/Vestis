@@ -11,13 +11,18 @@ public class MeasurementEntryEntityConfiguration : IEntityTypeConfiguration<Meas
     {
         builder.ToTable(nameof(MeasurementEntryEntity).Replace("Entity",string.Empty).Pluralize());
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(m => m.Id);
 
-        builder.Property<string>(x => x.Name)
-            .IsRequired()
+        builder.Property<string>(m => m.Name)
+            .IsRequired(true)
             .HasMaxLength(64);
 
-        builder.Property<double>(x => x.Value)
-            .IsRequired();
+        builder.Property<double>(m => m.Value)
+            .IsRequired(true);
+
+        builder.HasOne(m => m.BodyMeasurement)
+            .WithMany(b => b.Entries)
+            .HasForeignKey(m => m.BodyMeasurementId)
+            .IsRequired(true);
     }
 }

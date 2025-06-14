@@ -6,8 +6,9 @@ public class StudioEntity : BaseEntity<Guid>
     public string Name { get; private set; }
     public string ContactEmail { get; private set; }
     public string PhoneNumber { get; private set; }
-    public AddressEntity Address { get; private set; }
+    public List<ProjectEntity> Projects { get; private set; }
     public Guid AddressId { get; set; }
+    public AddressEntity Address { get; private set; }
     public virtual List<ClientEntity> Clients { get; private set; }
     #endregion Properties
 

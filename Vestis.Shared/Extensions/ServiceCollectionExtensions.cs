@@ -63,7 +63,7 @@ public static class ServiceCollectionExtensions
                 continue;
             }
             services.AddScoped(interfaceType, implementationType);
-            logger.LogInformation($"[DI] Registrando: {interfaceType}, {implementationType}");
+            //logger.LogInformation($"[DI] Registrando: {interfaceType}, {implementationType}");
         }
     }
 }

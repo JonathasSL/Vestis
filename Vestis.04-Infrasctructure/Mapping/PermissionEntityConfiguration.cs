@@ -11,13 +11,13 @@ public class PermissionEntityConfiguration : IEntityTypeConfiguration<Permission
     {
         builder.ToTable(nameof(PermissionEntity).Replace("Entity",string.Empty).Pluralize());
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(p => p.Id);
 
-        builder.Property(x => x.Name)
+        builder.Property(p => p.Name)
             .IsRequired()
             .HasMaxLength(64);
 
-        builder.Property(x => x.Description)
+        builder.Property(p => p.Description)
             .IsRequired()
             .HasMaxLength(256);
     }
