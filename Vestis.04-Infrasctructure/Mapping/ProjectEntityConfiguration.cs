@@ -11,6 +11,11 @@ public class ProjectEntityConfiguration : IEntityTypeConfiguration<ProjectEntity
     {
         builder.ToTable(nameof(ProjectEntity).Replace("Entity",string.Empty).Pluralize());
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(p => p.Id);
+
+        builder.HasOne(p => p.Studio)
+            .WithMany(s => s.Projects)
+            .HasForeignKey(p => p.StudioId)
+            .IsRequired(true);
     }
 }

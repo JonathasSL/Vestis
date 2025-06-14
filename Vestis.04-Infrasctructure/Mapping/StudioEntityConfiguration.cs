@@ -24,12 +24,8 @@ public class StudioEntityConfiguration : IEntityTypeConfiguration<StudioEntity>
             .HasMaxLength(20);
 
         builder.HasOne(x => x.Address)
-            .WithOne()
+            .WithOne().IsRequired(false)
             .HasForeignKey<StudioEntity>(x => x.AddressId)
-            .OnDelete(DeleteBehavior.NoAction);
-
-        builder.HasMany(x => x.Clients)
-            .WithOne(x => x.Studio)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

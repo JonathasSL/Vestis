@@ -143,7 +143,12 @@ void UseSwagger()
     });
 }
 
-void AddDatabse() => builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+void AddDatabse() 
+    => builder.Services.AddDbContext<ApplicationDbContext>(
+        options => options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConnection"),
+            b => b.MigrationsAssembly("Vestis._04_Infrasctructure"))
+    );
 
 void GenerateYaml()
 {

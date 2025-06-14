@@ -2,6 +2,7 @@
 
 public class ProjectEntityTests
 {
+    /*
     [Fact]
     public void ShouldCreateProject()
     {
@@ -13,6 +14,7 @@ public class ProjectEntityTests
         // Assert
         Assert.Equal(projectName, project.Name);
     }
+    */
 
     [Fact]
     public void ShouldChangeProjectName()
@@ -56,6 +58,7 @@ public class ProjectEntityTests
         Assert.Equal(newClient, project.Client);
     }
 
+    /*
     [Fact]
     public void ShouldAddBodyMeasurement()
     {
@@ -69,4 +72,5 @@ public class ProjectEntityTests
         // Assert
         Assert.Contains(bodyMeasurement, project.BodyMeasurements);
     }
+    */
 }

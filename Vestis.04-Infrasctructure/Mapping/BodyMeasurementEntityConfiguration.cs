@@ -11,6 +11,16 @@ public class BodyMeasurementEntityConfiguration : IEntityTypeConfiguration<BodyM
     {
         builder.ToTable(nameof(BodyMeasurementEntity).Replace("Entity",string.Empty).Pluralize());
 
-        builder.HasKey(x => x.Id);
+        builder.HasKey(b => b.Id);
+
+        builder.Property(b => b.MeasurementDate)
+            .IsRequired(true);
+
+        builder.HasOne(b => b.Project)
+            .WithOne(p => p.BodyMeasurements)
+            .HasForeignKey<BodyMeasurementEntity>(b => b.ProjectId)
+            .IsRequired(true)
+            .OnDelete(DeleteBehavior.Cascade);
     }
+
 }

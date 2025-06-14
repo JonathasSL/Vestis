@@ -4,6 +4,8 @@ public class MeasurementEntryEntity : BaseEntity<Guid>, IEquatable<MeasurementEn
 {
     public string Name { get; private set; }
     public double Value { get; private set; }
+    public Guid BodyMeasurementId { get; private set; }
+    public BodyMeasurementEntity BodyMeasurement { get; }
 
     public MeasurementEntryEntity(string name, double value)
     {

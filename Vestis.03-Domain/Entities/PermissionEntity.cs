@@ -4,6 +4,8 @@ public class PermissionEntity : BaseEntity<Guid>
 {
     public string Name { get; private set; }
     public string Description { get; private set; }
+    public Guid RoleId { get; private set; }
+    public RoleEntity Role { get; private set; }
     public PermissionEntity(string name, string description)
     {
         Name = name;

@@ -11,10 +11,10 @@ public class AddressEntityConfiguration : IEntityTypeConfiguration<AddressEntity
     {
         builder.ToTable(nameof(AddressEntity).Replace("Entity", string.Empty).Pluralize());
  
-        builder.HasKey(x => x.Id);
+        builder.HasKey(a => a.Id);
 
-        builder.Property<string>(x => x.ZipCode)
-            .IsRequired()
+        builder.Property<string>(a => a.ZipCode)
+            .IsRequired(true)
             .HasMaxLength(10);
     }
 }

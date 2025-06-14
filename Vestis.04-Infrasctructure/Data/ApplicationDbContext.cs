@@ -6,10 +6,8 @@ namespace Vestis._04_Infrasctructure.Data;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-    }
-        
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         var types = Assembly.Load("Vestis.03-Domain").GetTypes();
