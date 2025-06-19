@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
@@ -15,8 +16,9 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
     public UserService(
         IUserRepository repository,
         IMapper mapper,
+        IMediator mediator,
         ILogger<UserService> logger,
-        JwtService jwtService) : base(mapper, logger, repository)
+        JwtService jwtService) : base(mapper, mediator, logger, repository)
     {
         _repository = repository;
         _jwtService = jwtService;

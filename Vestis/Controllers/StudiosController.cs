@@ -3,72 +3,52 @@ using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis.Shared.Extensions;
 
-namespace Controllers
+namespace Controllers;
+
+public class StudiosController : VestisController
 {
-    public class StudiosController : VestisController
+    private readonly ILogger<StudiosController> _logger;
+    private readonly IStudioService _service;
+
+    public StudiosController(ILogger<StudiosController> logger, IStudioService service)
     {
-        private readonly ILogger<StudiosController> _logger;
-        private readonly IStudioService _service;
+        _logger = logger;
+        _service = service;
+    }
 
-        public StudiosController(ILogger<StudiosController> logger, IStudioService service)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        try
         {
-            _logger = logger;
-            _service = service;
+            var studio = await _service.GetById(id);
+            if (studio is not null)
+                return Ok(studio);
+            else
+                return NotFound();
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        catch (Exception e)
         {
-            try
-            {
-                var studios = (await _service.GetAllAsync()).ToList();
-
-                if (studios.Any())
-                    return Ok(studios);
-                else
-                    return NoContent();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.ExceptionStack(out _));
-                return BadRequest();
-            }
+            _logger.LogError(e.ExceptionStack(out _));
+            return BadRequest();
         }
+    }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] StudioModel studioModel)
+    {
+        try
         {
-            try
-            {
-                var studio = await _service.GetById(id);
-                if (studio is not null)
-                    return Ok(studio);
-                else
-                    return NotFound();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.ExceptionStack(out _));
+            var studio = await _service.Create(studioModel);
+            if (studio is null)
                 return BadRequest();
-            }
+            else
+                return Ok(studio);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] StudioModel studioModel)
+        catch (Exception e)
         {
-            try
-            {
-                var studio = await _service.Create(studioModel);
-                if (studio is null)
-                    return BadRequest();
-                else
-                    return Ok(studio);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.ExceptionStack(out _));
-                return BadRequest();
-            }
+            _logger.LogError(e.ExceptionStack(out _));
+            return BadRequest();
         }
     }
 }

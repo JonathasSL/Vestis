@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -5,6 +6,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
+using Vestis._02_Application;
+using Vestis._02_Application.Behavior;
+using Vestis._02_Application.Common;
 using Vestis._02_Application.Configurations;
 using Vestis._02_Application.Mapping;
 using Vestis._02_Application.Services;
@@ -32,6 +36,8 @@ AddDatabse();
 AddSwagger();
 
 builder.Services.AddSingleton<JwtService>();
+
+AddCQRS();
 
 #endregion Builder
 
@@ -176,4 +182,16 @@ void GenerateYaml()
         return; // Encerra a aplicação após gerar o YAML
 }
 
+
+void AddCQRS()
+{
+    // Adiciona MediatR — busca todos os Handlers no Application
+    builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly));
+    
+    // Pipeline global de validação
+    builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+    // Adiciona o contexto de notificação de negócios
+    builder.Services.AddScoped<BusinessNotificationContext>();
+}
 #endregion methods

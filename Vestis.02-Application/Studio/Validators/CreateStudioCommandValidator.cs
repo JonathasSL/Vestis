@@ -14,28 +14,31 @@ public class CreateStudioCommandValidator : AbstractValidator<CreateStudioComman
 
     private void NameRules()
     {
+        var characterLimit = 256;
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage("Name is required.")
-            .MaximumLength(100)
-            .WithMessage("Name must not exceed 100 characters.");
+            .MaximumLength(characterLimit)
+            .WithMessage($"Name must not exceed {characterLimit} characters.");
     }
 
     private void ContactEmailRules()
     {
+        var characterLimit = 100;
         RuleFor(x => x.ContactEmail)
             .EmailAddress()
             .WithMessage("Contact email must be a valid email address.")
-            .MaximumLength(100)
-            .WithMessage("Contact email must not exceed 100 characters.");
+            .MaximumLength(characterLimit)
+            .WithMessage($"Contact email must not exceed {characterLimit} characters.");
     }
 
     private void PhoneNumberRules()
     {
+        var characterLimit = 15;
         RuleFor(x => x.PhoneNumber)
             .Matches(@"^\+?[1-9]\d{1,14}$")
             .WithMessage("Phone number must be a valid international format.")
-            .MaximumLength(15)
-            .WithMessage("Phone number must not exceed 15 characters.");
+            .MaximumLength(characterLimit)
+            .WithMessage($"Phone number must not exceed {characterLimit} characters.");
     }
 }

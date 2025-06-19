@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
@@ -14,12 +15,14 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
     where TId : struct
 {
     protected readonly IMapper _mapper;
+    protected readonly IMediator _mediator;
     private readonly ILogger<CRUDService<TModel, TEntity, TId>> _logger;
     private readonly IRepository<TEntity, TId> _repository;
 
-    protected CRUDService(IMapper mapper, ILogger<CRUDService<TModel, TEntity, TId>> logger, IRepository<TEntity, TId> repository)
+    protected CRUDService(IMapper mapper, IMediator mediator, ILogger<CRUDService<TModel, TEntity, TId>> logger, IRepository<TEntity, TId> repository)
     {
         _mapper = mapper;
+        _mediator = mediator;
         _logger = logger;
         _repository = repository;
     }

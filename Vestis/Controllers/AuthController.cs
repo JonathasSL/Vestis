@@ -14,7 +14,7 @@ public class AuthController : VestisController
         _userService = userService;
     }
 
-    [HttpPost("register")]
+    [HttpPost()]
     public async Task<IActionResult> RegisterAsync([FromBody] UserModel userModel)
     {
         if (await _userService.ExistsAsync(userModel.Email))
@@ -26,7 +26,7 @@ public class AuthController : VestisController
         return Ok(new { token });
     }
     
-    [HttpPost("login")]
+    [HttpPost()]
     public async Task<IActionResult> Login([FromBody] UserModel userModel)
     {
         var token = await _userService.AuthenticateAsync(userModel.Email, userModel.Password);
