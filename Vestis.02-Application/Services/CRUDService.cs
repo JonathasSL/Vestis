@@ -16,7 +16,7 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
 {
     protected readonly IMapper _mapper;
     protected readonly IMediator _mediator;
-    private readonly ILogger<CRUDService<TModel, TEntity, TId>> _logger;
+    protected readonly ILogger<CRUDService<TModel, TEntity, TId>> _logger;
     private readonly IRepository<TEntity, TId> _repository;
 
     protected CRUDService(IMapper mapper, IMediator mediator, ILogger<CRUDService<TModel, TEntity, TId>> logger, IRepository<TEntity, TId> repository)

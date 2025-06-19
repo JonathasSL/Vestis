@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis.Shared.Extensions;
@@ -30,7 +31,7 @@ public class StudiosController : VestisController
         catch (Exception e)
         {
             _logger.LogError(e.ExceptionStack(out _));
-            return BadRequest();
+            return StatusCode(500);
         }
     }
 
@@ -39,16 +40,16 @@ public class StudiosController : VestisController
     {
         try
         {
-            var studio = await _service.Create(studioModel);
-            if (studio is null)
-                return BadRequest();
+            var result = await _service.CreateByCommand(studioModel);
+            if (result.IsSuccess)
+                return Ok(result);
             else
-                return Ok(studio);
+                return BadRequest(result);
         }
         catch (Exception e)
         {
             _logger.LogError(e.ExceptionStack(out _));
-            return BadRequest();
+            return StatusCode(500);
         }
     }
 }

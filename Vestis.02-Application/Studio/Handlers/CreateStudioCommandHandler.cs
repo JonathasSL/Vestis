@@ -5,7 +5,7 @@ using Vestis._04_Infrasctructure.Repositories.Interfaces;
 
 namespace Vestis._02_Application.Studio.Handlers;
 
-public class CreateStudioCommandHandler : IRequestHandler<CreateStudioCommand, Guid>
+public class CreateStudioCommandHandler : IRequestHandler<CreateStudioCommand, StudioEntity>
 {
     private readonly IStudioRepository _studioRepository;
     //private readonly IUnitOfWork _unitOfWork;
@@ -14,7 +14,7 @@ public class CreateStudioCommandHandler : IRequestHandler<CreateStudioCommand, G
         _studioRepository = studioRepository;
         //_unitOfWork = unitOfWork;
     }
-    public async Task<Guid> Handle(CreateStudioCommand request, CancellationToken cancellationToken)
+    public async Task<StudioEntity> Handle(CreateStudioCommand request, CancellationToken cancellationToken)
     {
         var studio = new StudioEntity(request.Name);
         studio.ChangeContactEmail(request.ContactEmail);
@@ -22,6 +22,6 @@ public class CreateStudioCommandHandler : IRequestHandler<CreateStudioCommand, G
 
         studio = await _studioRepository.CreateAsync(studio);
         //await _unitOfWork.SaveChangesAsync();
-        return studio.Id;
+        return studio;
     }
 }

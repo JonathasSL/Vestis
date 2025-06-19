@@ -22,10 +22,11 @@ public class StudioEntityConfiguration : IEntityTypeConfiguration<StudioEntity>
 
         builder.Property(e => e.PhoneNumber)
             .HasMaxLength(20);
-
+        /*
         builder.HasOne(x => x.Address)
             .WithOne().IsRequired(false)
             .HasForeignKey<StudioEntity>(x => x.AddressId)
             .OnDelete(DeleteBehavior.Cascade);
+        */
     }
 }

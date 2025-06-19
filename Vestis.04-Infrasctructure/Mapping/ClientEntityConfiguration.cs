@@ -16,7 +16,7 @@ public class ClientEntityConfiguration : IEntityTypeConfiguration<ClientEntity>
         builder.Property(c => c.Name)
             .IsRequired()
             .HasMaxLength(128);
-
+        /*
         builder.HasOne(c => c.Studio)
             .WithMany(s => s.Clients)
             .HasForeignKey(c => c.StudioId).IsRequired(true)
@@ -26,5 +26,6 @@ public class ClientEntityConfiguration : IEntityTypeConfiguration<ClientEntity>
             .WithOne().IsRequired(false)
             .HasForeignKey<ClientEntity>(c => c.AddressId)
             .OnDelete(DeleteBehavior.Cascade);
+        */
     }
 }
