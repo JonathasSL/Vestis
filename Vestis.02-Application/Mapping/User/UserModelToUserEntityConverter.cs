@@ -3,7 +3,7 @@ using Vestis._02_Application.Services;
 using Vestis._02_Application.Models;
 using Vestis._03_Domain.Entities;
 
-namespace Vestis._02_Application.Mapping;
+namespace Vestis._02_Application.Mapping.User;
 
 public class UserModelToUserEntityConverter : ITypeConverter<UserModel, UserEntity>
 {

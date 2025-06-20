@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Vestis._02_Application.Mapping.Address;
+using Vestis._02_Application.Mapping.Studio;
+using Vestis._02_Application.Mapping.User;
 using Vestis._02_Application.Models;
 using Vestis._03_Domain.Entities;
 
@@ -10,11 +13,12 @@ public class MappingProfile : Profile
     {
         CustomMappings();
         StandardMappings();
-
         CreateMap<BaseEntity<Guid>, BaseModel<Guid>>();
+        /*
         CreateMap<BaseModel<Guid>, BaseEntity<Guid>>()
             .IncludeAllDerived()
             .ConvertUsing<BaseModelToBaseEntityConverter<Guid>>();
+        */
     }
 
     private void StandardMappings()
@@ -26,10 +30,15 @@ public class MappingProfile : Profile
             .IncludeBase<BaseModel<Guid>, BaseEntity<Guid>>()
             .ConvertUsing<UserModelToUserEntityConverter>();
 
-        CreateMap<StudioEntity, StudioModel>();
+        CreateMap<StudioEntity, StudioModel>()
+            .IncludeBase<BaseEntity<Guid>, BaseModel<Guid>>()
+            .ConvertUsing<StudioEntityToStudioModelConverter>();
+        /*
         CreateMap<StudioModel, StudioEntity>()
             .IncludeBase<BaseModel<Guid>, BaseEntity<Guid>>();
-
+        */
+        CreateMap<AddressEntity, AddressModel>()
+            .ConvertUsing<AddressEntityToAddressModelConverter>();
     }
 
     private void CustomMappings()

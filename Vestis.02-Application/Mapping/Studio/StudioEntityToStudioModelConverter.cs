@@ -2,7 +2,7 @@
 using Vestis._02_Application.Models;
 using Vestis._03_Domain.Entities;
 
-namespace Vestis._02_Application.Mapping;
+namespace Vestis._02_Application.Mapping.Studio;
 
 public class StudioEntityToStudioModelConverter : ITypeConverter<StudioEntity, StudioModel>
 {
@@ -13,6 +13,11 @@ public class StudioEntityToStudioModelConverter : ITypeConverter<StudioEntity, S
         destination.Name = source.Name;
         destination.ContactEmail = source.ContactEmail;
         destination.PhoneNumber = source.PhoneNumber;
+
+        if (source.Address is not null)
+            destination.Address = context.Mapper.Map<AddressModel>(source.Address);
+        else
+            destination.Address = null;
 
         return destination;
     }

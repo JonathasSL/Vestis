@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Vestis._02_Application.Address.Commands;
 using Vestis._02_Application.Common;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
@@ -30,10 +31,25 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
         StudioModel result;
         try
         {
-            var command = new CreateStudioCommand(model.Name, model.ContactEmail, model.PhoneNumber);
-            var entity = await _mediator.Send(command);
+            var addressCommand = new CreateAddressCommand(
+                model.Address.Street,
+                model.Address.Number,
+                model.Address.Neighborhood,
+                model.Address.City,
+                model.Address.State,
+                model.Address.ZipCode
+            );
 
+            var studioCommand = new CreateStudioCommand(model.Name, model.ContactEmail, model.PhoneNumber, addressCommand);
+            
+            var entity = await _mediator.Send(studioCommand);
             result = _mapper.Map<StudioModel>(entity);
+
+
+            if (_businessNotificationContext.HasNotifications)
+                return CommandResult<StudioModel>.Failure("Houve um erro ao criar seu ateliê.", _businessNotificationContext.Notifications.ToList());
+            else
+                return CommandResult<StudioModel>.Success(result);
         }
         catch (Exception e)
         {
@@ -41,11 +57,6 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
 
             return CommandResult<StudioModel>.Failure( "Houve um erro ao criar seu ateliê. Verifique suas informações e tente novamente", _businessNotificationContext.Notifications.ToList());
         }
-        
-        if (_businessNotificationContext.HasNotifications)
-            return CommandResult<StudioModel>.Failure("Houve um erro ao criar seu ateliê. Verifique suas informações e tente novamente", _businessNotificationContext.Notifications.ToList());
-        else
-            return CommandResult<StudioModel>.Success(result);
     }
 
 }

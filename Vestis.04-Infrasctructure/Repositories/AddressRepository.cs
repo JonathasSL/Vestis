@@ -4,9 +4,9 @@ using Vestis._04_Infrasctructure.Repositories.Interfaces;
 
 namespace Vestis._04_Infrasctructure.Repositories;
 
-internal class StudioRepository : Repository<StudioEntity, Guid>, IStudioRepository
+internal class AddressRepository : Repository<AddressEntity, Guid>, IAddressRepository
 {
-    public StudioRepository(ApplicationDbContext context) : base(context)
+    public AddressRepository(ApplicationDbContext context) : base(context)
     {
     }
 }

@@ -20,28 +20,15 @@ public class CommandResult<T>
         };
     }
 
-    public static CommandResult<T> Failure(string message, List<string>? errors = null)
+    public static CommandResult<T> Failure(string message, List<string> errors = null)
     {
-        if (errors.IsNullOrEmpty())
+        return new CommandResult<T>
         {
-            return new CommandResult<T>
-            {
-                IsSuccess = false,
-                Data = default,
-                Message = message,
-                Errors = new List<string>() { message }
-            };
-        }
-        else
-        {
-            return new CommandResult<T>
-            {
-                IsSuccess = false,
-                Data = default,
-                Message = message,
-                Errors = errors ?? new List<string>()
-            };
-        }
+            IsSuccess = false,
+            Data = default,
+            Message = message,
+            Errors = errors ?? new List<string>() { message }
+        };
     }
 }
 
