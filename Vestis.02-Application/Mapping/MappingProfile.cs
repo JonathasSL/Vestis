@@ -11,37 +11,17 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CustomMappings();
-        StandardMappings();
-        CreateMap<BaseEntity<Guid>, BaseModel<Guid>>();
-        /*
-        CreateMap<BaseModel<Guid>, BaseEntity<Guid>>()
+        CreateMap<BaseEntity<Guid>, BaseModel<Guid>>()
             .IncludeAllDerived()
-            .ConvertUsing<BaseModelToBaseEntityConverter<Guid>>();
-        */
-    }
+            .ConvertUsing<BaseEntityToBaseModelConverter>();
 
-    private void StandardMappings()
-    {
+        CreateMap<AddressEntity, AddressModel>()
+            .ConvertUsing<AddressEntityToAddressModelConverter>();
+
+        CreateMap<StudioEntity, StudioModel>()
+            .ConvertUsing<StudioEntityToStudioModelConverter>();
 
         CreateMap<UserEntity, UserModel>()
             .ForMember(entity => entity.Password, opt => opt.Ignore());
-        CreateMap<UserModel, UserEntity>()
-            .IncludeBase<BaseModel<Guid>, BaseEntity<Guid>>()
-            .ConvertUsing<UserModelToUserEntityConverter>();
-
-        CreateMap<StudioEntity, StudioModel>()
-            .IncludeBase<BaseEntity<Guid>, BaseModel<Guid>>()
-            .ConvertUsing<StudioEntityToStudioModelConverter>();
-        /*
-        CreateMap<StudioModel, StudioEntity>()
-            .IncludeBase<BaseModel<Guid>, BaseEntity<Guid>>();
-        */
-        CreateMap<AddressEntity, AddressModel>()
-            .ConvertUsing<AddressEntityToAddressModelConverter>();
-    }
-
-    private void CustomMappings()
-    {
     }
 }

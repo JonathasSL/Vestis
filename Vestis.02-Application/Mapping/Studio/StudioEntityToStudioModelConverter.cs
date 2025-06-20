@@ -9,7 +9,12 @@ public class StudioEntityToStudioModelConverter : ITypeConverter<StudioEntity, S
     public StudioModel Convert(StudioEntity source, StudioModel destination, ResolutionContext context)
     {
         destination ??= new StudioModel();
-        
+
+        destination.Id = source.Id;
+        destination.CreatedDate = source.CreatedDate;
+        destination.UpdatedDate = source.UpdatedDate;
+        destination.DeletedDate = source.DeletedDate;
+
         destination.Name = source.Name;
         destination.ContactEmail = source.ContactEmail;
         destination.PhoneNumber = source.PhoneNumber;

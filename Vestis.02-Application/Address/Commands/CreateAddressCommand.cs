@@ -11,5 +11,5 @@ public record CreateAddressCommand(
     string State,
     string ZipCode,
     string? Complement = null,
-    string Country = "Brasil"
+    string Country = "BR"
 ) : IRequest<AddressEntity>;

@@ -32,12 +32,14 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
         try
         {
             var addressCommand = new CreateAddressCommand(
-                model.Address.Street,
-                model.Address.Number,
-                model.Address.Neighborhood,
-                model.Address.City,
-                model.Address.State,
-                model.Address.ZipCode
+                model.Address.Street.EmptyToNull(),
+                model.Address.Number.EmptyToNull(),
+                model.Address.Neighborhood.EmptyToNull(),
+                model.Address.City.EmptyToNull(),
+                model.Address.State.EmptyToNull(),
+                model.Address.ZipCode.EmptyToNull(),
+                model.Address.Neighborhood.EmptyToNull(),
+                model.Address.Country.EmptyToNull()
             );
 
             var studioCommand = new CreateStudioCommand(model.Name, model.ContactEmail, model.PhoneNumber, addressCommand);
