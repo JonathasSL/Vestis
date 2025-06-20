@@ -182,14 +182,14 @@ void GenerateYaml()
         return; // Encerra a aplicação após gerar o YAML
 }
 
-
 void AddCQRS()
 {
     // Adiciona MediatR — busca todos os Handlers no Application
     builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly));
     
-    // Pipeline global de validação
+    // Pipeline global
     builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+    builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
 
     // Adiciona o contexto de notificação de negócios
     builder.Services.AddScoped<BusinessNotificationContext>();

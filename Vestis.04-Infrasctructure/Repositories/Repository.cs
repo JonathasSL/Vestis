@@ -25,7 +25,7 @@ internal class Repository<T, TId> : IRepository<T, TId>
     public Task<T> CreateAsync(T entity)
     {
         _dbSet.Add(entity);
-        _context.SaveChanges();
+        //_context.SaveChanges();
         return Task.FromResult(entity);
     }
 
@@ -33,14 +33,14 @@ internal class Repository<T, TId> : IRepository<T, TId>
     {
         entity.SetAsDeleted();
         _dbSet.Update(entity);
-        await _context.SaveChangesAsync();
+        //await _context.SaveChangesAsync();
     }
 
     public async Task<T> Update(T entity)
     {
         entity.SetAsUpdated();
         _dbSet.Update(entity);
-        await _context.SaveChangesAsync();
+        //await _context.SaveChangesAsync();
         return entity;
     }
 
