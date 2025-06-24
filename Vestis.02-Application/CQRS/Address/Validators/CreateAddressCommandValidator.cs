@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Vestis._02_Application.Address.Commands;
+using Vestis._02_Application.CQRS.Address.Commands;
 
-namespace Vestis._02_Application.Address.Validators;
+namespace Vestis._02_Application.CQRS.Address.Validators;
 
 public class CreateAddressCommandValidator : AbstractValidator<CreateAddressCommand>
 {

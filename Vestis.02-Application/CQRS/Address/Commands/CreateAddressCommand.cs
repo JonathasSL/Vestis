@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Vestis._03_Domain.Entities;
 
-namespace Vestis._02_Application.Address.Commands;
+namespace Vestis._02_Application.CQRS.Address.Commands;
 
 public record CreateAddressCommand(
     string Street,
