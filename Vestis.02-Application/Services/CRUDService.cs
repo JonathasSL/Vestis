@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Vestis._02_Application.Common;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrasctructure.Repositories.Interfaces;
@@ -14,20 +15,22 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
     where TEntity : BaseEntity<TId>
     where TId : struct
 {
+    private readonly IRepository<TEntity, TId> _repository;
     protected readonly IMapper _mapper;
     protected readonly IMediator _mediator;
+    protected readonly BusinessNotificationContext _businessNotificationContext;
     protected readonly ILogger<CRUDService<TModel, TEntity, TId>> _logger;
-    private readonly IRepository<TEntity, TId> _repository;
 
-    protected CRUDService(IMapper mapper, IMediator mediator, ILogger<CRUDService<TModel, TEntity, TId>> logger, IRepository<TEntity, TId> repository)
+    protected CRUDService(IMapper mapper, IMediator mediator, BusinessNotificationContext businessNotificationContext, ILogger<CRUDService<TModel, TEntity, TId>> logger, IRepository<TEntity, TId> repository)
     {
         _mapper = mapper;
         _mediator = mediator;
+        _businessNotificationContext = businessNotificationContext;
         _logger = logger;
         _repository = repository;
     }
 
-    public virtual async Task<TModel> Create(TModel model)
+    public virtual async Task<TModel> CreateByMapping(TModel model)
     {
         try
         {

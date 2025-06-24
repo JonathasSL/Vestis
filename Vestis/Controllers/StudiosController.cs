@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis.Shared.Extensions;
 
-namespace Controllers;
+namespace Vestis._01_Presentation.Controllers;
 
+[Authorize]
 public class StudiosController : VestisController
 {
     private readonly ILogger<StudiosController> _logger;
@@ -40,7 +42,9 @@ public class StudiosController : VestisController
     {
         try
         {
-            var result = await _service.CreateByCommand(studioModel);
+            var userId = User?.GetUserId();
+
+            var result = await _service.Create(userId.Value, studioModel);
             if (result.IsSuccess)
                 return Ok(result);
             else

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Controllers;
+namespace Vestis._01_Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[Action]")]

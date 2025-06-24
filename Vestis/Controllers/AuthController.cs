@@ -3,7 +3,7 @@ using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._04_Infrasctructure.Data;
 
-namespace Controllers;
+namespace Vestis._01_Presentation.Controllers;
 
 public class AuthController : VestisController
 {

@@ -5,6 +5,7 @@ namespace Vestis._02_Application.Services.Interfaces;
 
 public interface IUserService : ICRUDService<UserModel, UserEntity, Guid>
 {
+    Task<UserModel> Create(UserModel model);
     Task<bool> ExistsAsync(string email);
     Task<string> AuthenticateAsync(string email, string password);
 }

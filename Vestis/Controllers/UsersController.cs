@@ -1,14 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Vestis._02_Application.Services.Interfaces;
+using Vestis.Shared.Extensions;
 
-namespace Controllers;
+namespace Vestis._01_Presentation.Controllers;
 
+[Authorize]
 public class UsersController : VestisController 
 {
     private readonly ILogger<UsersController> _logger;
+    private readonly IUserService _userService;
+
+    public UsersController(ILogger<UsersController> logger, IUserService userService)
+    {
+        _logger = logger;
+        _userService = userService;
+    }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> Me()
     {
-        return Ok(new { Message = "Lista de negócios retornada com sucesso!" });
+        var userId = User.GetUserId();
+
+        var user = await _userService.GetById(userId.Value);
+
+        return Ok(user);
     }
 }
