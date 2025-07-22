@@ -1,23 +1,24 @@
 ---
-name: 🧑‍💼 Manage User
-about: Cadastro, edição e desativação de conta do cliente
-title: "US01 – Manage User"
+name: 
+about: 
+title: ""
 labels: [épico: users, tipo: feature, prioridade: alta]
 assignees: ""
 ---
 
 ## 📄 Descrição  
-Como **novo cliente**, desejo criar minha conta no sistema para acessar os serviços da plataforma Vestis e gerenciar minhas informações pessoais.
+Caso de uso.
 
 ---
 
 ## 🎯 Objetivo  
-Implementar o fluxo básico de gerenciamento de usuários, permitindo que novos clientes se registrem, visualizem, editem seus dados e desativem sua conta (soft delete).
+Ex: Implementar o fluxo básico de gerenciamento de usuários, permitindo que novos clientes se registrem, visualizem, editem seus dados e desativem sua conta (soft delete).
 
 ---
 
 ## ✅ Critérios de Aceitação
 
+Ex:
 - [ ] É possível realizar o **cadastro** de um novo cliente com nome, email e senha.
 - [ ] O sistema permite a **edição** de dados pessoais (nome, senha).
 - [ ] O cliente pode **visualizar** seus dados de perfil.
@@ -30,32 +31,32 @@ Implementar o fluxo básico de gerenciamento de usuários, permitindo que novos 
 
 ## 🧱 Subtarefas Técnicas
 
-| Tarefa | Tipo | Repositório |
-|--------|------|-------------|
-| Criar entidade `User` e `UserDto` | back-end | vestis-backend |
-| Criar `CreateUserCommand`, `UpdateUserCommand`, `DeactivateUserCommand` | back-end | vestis-backend |
-| Criar controller e endpoints (`POST`, `GET`, `PUT`, `PATCH`) | back-end | vestis-backend |
-| Criar componente de formulário de cadastro | front-end | vestis-frontend |
-| Criar componente de perfil de usuário | front-end | vestis-frontend |
-| Implementar serviço de autenticação com JWT | ambos | vestis-backend + vestis-frontend |
-| Criar validações de formulário (front) e regras de negócio (back) | ambos | — |
-| Testar fluxo completo: cadastro > login > editar > desativar | ambos | — |
+Ex:
+🔧 Back-end
+
+Tarefa | Descrição
+-- | --
+T01 | Criar entidade User com propriedades básicas (Id, Name, Email, Password, IsActive)
+T02 | Criar DTOs: CreateUserDto, UpdateUserDto, UserResponseDto
+T03 | Implementar CreateUserCommandHandler, UpdateUserCommandHandler, DeactivateUserCommandHandler
+T04 | Implementar GetUserByIdQueryHandler
+T05 | Criar controller UsersController com endpoints REST (POST, GET, PUT, PATCH)
+T06 | Validar regras de negócio: email único, senha criptografada, etc
+T07 | Implementar integração com autenticação JWT
+
+🎨 Front-end
+
+Tarefa | Descrição
+-- | --
+T08 | Criar componente RegisterComponent (formulário de cadastro)
+T09 | Criar componente UserProfileComponent (visualização e edição do perfil)
+T10 | Criar serviço user.service.ts para consumir a API
+T11 | Integrar RegisterComponent com endpoint de criação (/api/users)
+T12 | Integrar UserProfileComponent com endpoints de edição e desativação
+T13 | Implementar validação de formulário: campos obrigatórios, formato de email, senha mínima
+T14 | Mostrar mensagens de sucesso e erro com feedback visual
+T15 | Proteger as rotas de perfil com guarda de autenticação (AuthGuard)
+T16 | Adicionar loading spinners e desabilitar botões durante requisições
+T17 | Realizar testes manuais do fluxo: cadastro > login > perfil > edição > desativação
 
 ---
-
-## 🧩 Épico Relacionado  
-🔗 `User Management`
-
----
-
-## 🕓 Sprint Sugerida  
-Sprint 1
-
----
-
-## 🏷️ Labels sugeridas  
-- `épico: users`  
-- `tipo: feature`  
-- `repo: [backend,frontend]`
-- `prioridade: alta`  
-- `sprint: 1`
