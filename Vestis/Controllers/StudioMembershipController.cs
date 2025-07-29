@@ -1,38 +1,79 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Vestis._02_Application.Models;
+using Vestis._02_Application.Services.Interfaces;
+using Vestis.Shared.Extensions;
 
 namespace Vestis._01_Presentation.Controllers;
 
+[Authorize]
 public class StudioMembershipController : VestisController
 {
-    // GET: api/<StudioMembershipController>
-    [HttpGet]
-    public IEnumerable<string> Get()
+    private readonly IStudioMembershipService _studioMembershipService;
+    public StudioMembershipController(IStudioMembershipService studioMembershipService)
     {
-        return new string[] { "value1", "value2" };
+        _studioMembershipService = studioMembershipService ?? throw new ArgumentNullException(nameof(studioMembershipService));
     }
 
-    // GET api/<StudioMembershipController>/5
-    [HttpGet("{id}")]
-    public string Get(int id)
+    [HttpGet("{studioId}")]
+    public async Task<IActionResult> GetFromStudioId(Guid studioId, CancellationToken cancellationToken)
     {
-        return "value";
+        if (studioId == Guid.Empty)
+            return BadRequest();
+
+        return _studioMembershipService.GetFromStudioId(studioId, cancellationToken) is { } memberships
+            ? Ok(memberships)
+            : NotFound();
     }
 
-    // POST api/<StudioMembershipController>
+    [HttpGet("{studioId}")]
+    public async Task<IActionResult> GetFromUserInStudio(Guid studioId, CancellationToken cancellationToken)
+    {
+        if (studioId == Guid.Empty)
+            return BadRequest();
+
+        var userId = User.GetUserId().Value;
+
+        if (await _studioMembershipService.GetByUserAndStudioAsync(userId, studioId, cancellationToken) is { } membership)
+            return Ok(membership);
+        else
+            return NotFound();
+    }
+
     [HttpPost]
-    public void Post([FromBody] string value)
+    public async Task<IActionResult> Post([FromBody] StudioMembershipModel value, CancellationToken cancellationToken)
     {
+        if (value != null)
+            return BadRequest("Value cannot be null or empty.");
+
+        var newMembership = await _studioMembershipService.CreateByMapping(value);
+
+        if  (newMembership is { })
+            return Ok(newMembership);
+        else
+            return BadRequest();
     }
 
-    // PUT api/<StudioMembershipController>/5
     [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value)
+    public async Task<IActionResult> Put(Guid id, [FromBody] StudioMembershipModel value, CancellationToken cancellationToken)
     {
+        if (id == Guid.Empty || value is not { })
+            return BadRequest("Id cannot be empty.");
+
+        var updatedMembership = await _studioMembershipService.Update(id, value);
+        if (updatedMembership is { })
+            return Ok(updatedMembership);
+        else
+            return NotFound();
     }
 
-    // DELETE api/<StudioMembershipController>/5
-    [HttpDelete("{id}")]
-    public void Delete(int id)
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> Delete(Guid id, Guid userId, CancellationToken cancellationToken)
     {
+        if (id == Guid.Empty || userId == Guid.Empty)
+            return BadRequest("Id cannot be empty.");
+
+        await _studioMembershipService.Delete(id);
+        return Ok();
     }
 }
