@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.0.4
 info:
   title: Vestis API
   description: Manage your tailoring
@@ -8,7 +8,7 @@ info:
     email: contact@vestis.com
   version: v1
 paths:
-  /api/Auth/register:
+  /api/Auth/Register:
     post:
       tags:
         - Auth
@@ -26,7 +26,7 @@ paths:
       responses:
         '200':
           description: OK
-  /api/Auth/login:
+  /api/Auth/Login:
     post:
       tags:
         - Auth
@@ -44,31 +44,97 @@ paths:
       responses:
         '200':
           description: OK
-  /api/Studios:
+  '/api/StudioMembership/GetFromStudioId/{studioId}':
     get:
       tags:
-        - Studios
+        - StudioMembership
+      parameters:
+        - name: studioId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: OK
+  '/api/StudioMembership/GetFromUserInStudio/{studioId}':
+    get:
+      tags:
+        - StudioMembership
+      parameters:
+        - name: studioId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+  /api/StudioMembership/Post:
     post:
       tags:
-        - Studios
+        - StudioMembership
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StudioModel'
+              $ref: '#/components/schemas/StudioMembershipModel'
           text/json:
             schema:
-              $ref: '#/components/schemas/StudioModel'
+              $ref: '#/components/schemas/StudioMembershipModel'
           application/*+json:
             schema:
-              $ref: '#/components/schemas/StudioModel'
+              $ref: '#/components/schemas/StudioMembershipModel'
       responses:
         '200':
           description: OK
-  '/api/Studios/{id}':
+  '/api/StudioMembership/Put/{id}':
+    put:
+      tags:
+        - StudioMembership
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudioMembershipModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/StudioMembershipModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/StudioMembershipModel'
+      responses:
+        '200':
+          description: OK
+  '/api/StudioMembership/Delete/{Id}':
+    delete:
+      tags:
+        - StudioMembership
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: userId
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+  '/api/Studios/GetById/{id}':
     get:
       tags:
         - Studios
@@ -82,21 +148,25 @@ paths:
       responses:
         '200':
           description: OK
-  /api/Tailors:
-    get:
+  /api/Studios/Create:
+    post:
       tags:
-        - Tailors
+        - Studios
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudioModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/StudioModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/StudioModel'
       responses:
         '200':
           description: OK
-  /api/Tailors/test:
-    get:
-      tags:
-        - Tailors
-      responses:
-        '200':
-          description: OK
-  /api/Users:
+  /api/Users/Me:
     get:
       tags:
         - Users
@@ -105,6 +175,62 @@ paths:
           description: OK
 components:
   schemas:
+    AddressModel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdDate:
+          type: string
+          format: date-time
+          nullable: true
+        updatedDate:
+          type: string
+          format: date-time
+          nullable: true
+        deletedDate:
+          type: string
+          format: date-time
+          nullable: true
+        street:
+          type: string
+          nullable: true
+        number:
+          type: string
+          nullable: true
+        complement:
+          type: string
+          nullable: true
+        neighborhood:
+          type: string
+          nullable: true
+        city:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        country:
+          type: string
+          nullable: true
+        zipCode:
+          type: string
+          nullable: true
+      additionalProperties: false
+    StudioMembershipModel:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        studioId:
+          type: string
+          format: uuid
+        role:
+          type: string
+          nullable: true
+      additionalProperties: false
     StudioModel:
       type: object
       properties:
@@ -114,6 +240,7 @@ components:
         createdDate:
           type: string
           format: date-time
+          nullable: true
         updatedDate:
           type: string
           format: date-time
@@ -131,6 +258,8 @@ components:
         phoneNumber:
           type: string
           nullable: true
+        address:
+          $ref: '#/components/schemas/AddressModel'
       additionalProperties: false
     UserModel:
       type: object
@@ -141,6 +270,7 @@ components:
         createdDate:
           type: string
           format: date-time
+          nullable: true
         updatedDate:
           type: string
           format: date-time
