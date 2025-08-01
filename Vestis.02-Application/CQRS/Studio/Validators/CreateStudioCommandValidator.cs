@@ -1,15 +1,25 @@
 ﻿using FluentValidation;
-using Vestis._02_Application.Studio.Commands;
+using Vestis._02_Application.CQRS.Studio.Commands;
 
-namespace Vestis._02_Application.Studio.Validators;
+namespace Vestis._02_Application.CQRS.Studio.Validators;
 
 public class CreateStudioCommandValidator : AbstractValidator<CreateStudioCommand>
 {
     public CreateStudioCommandValidator()
     {
+        UserRules();
         NameRules();
         ContactEmailRules();
         PhoneNumberRules();
+    }
+
+    private void UserRules()
+    {
+        RuleFor(x => x.UserId)
+            .NotEmpty()
+            .WithMessage("User ID is required.")
+            .Must(userId => userId != Guid.Empty)
+            .WithMessage("User ID must be a valid GUID.");
     }
 
     private void NameRules()

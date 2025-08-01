@@ -3,7 +3,7 @@ using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._04_Infrasctructure.Data;
 
-namespace Controllers;
+namespace Vestis._01_Presentation.Controllers;
 
 public class AuthController : VestisController
 {
@@ -21,14 +21,21 @@ public class AuthController : VestisController
             return BadRequest(new { message = "User with this email already exists" });
         
         var user = await _userService.Create(userModel);
-        var token = await _userService.AuthenticateAsync(user.Email, userModel.Password);
+        //TODO: Send Email validation instead of authenticate
+        //var token = await _userService.AuthenticateAsync(user.Email, userModel.Password);
         
-        return Ok(new { token });
+        if (user != null)
+            return Created();
+        else
+            return BadRequest();
     }
     
     [HttpPost()]
     public async Task<IActionResult> Login([FromBody] UserModel userModel)
     {
+        if (userModel == null || string.IsNullOrEmpty(userModel.Email) || string.IsNullOrEmpty(userModel.Password))
+            return BadRequest(new { message = "Email and password are required" });
+
         var token = await _userService.AuthenticateAsync(userModel.Email, userModel.Password);
 
         return token != null ? Ok(new { token }) : Unauthorized();

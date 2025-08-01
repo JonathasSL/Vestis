@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Vestis._02_Application.Address.Commands;
+using Vestis._02_Application.CQRS.Address.Commands;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrasctructure.Repositories.Interfaces;
 
-namespace Vestis._02_Application.Address.Handlers;
+namespace Vestis._02_Application.CQRS.Address.Handlers;
 
 public class CreateAddressCommandHandler : IRequestHandler<CreateAddressCommand, AddressEntity>
 {

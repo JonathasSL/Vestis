@@ -9,13 +9,11 @@ internal class Repository<T, TId> : IRepository<T, TId>
     where T : BaseEntity<TId>
     where TId : struct
 {
-    private readonly ApplicationDbContext _context;
     private readonly DbSet<T> _dbSet;
 
     public Repository(ApplicationDbContext context)
     {
-        _context = context;
-        _dbSet = _context.Set<T>();
+        _dbSet = context.Set<T>();
     }
 
     public async Task<T> GetByIdAsync(TId id) => await _dbSet.FindAsync(id);
@@ -25,7 +23,6 @@ internal class Repository<T, TId> : IRepository<T, TId>
     public Task<T> CreateAsync(T entity)
     {
         _dbSet.Add(entity);
-        //_context.SaveChanges();
         return Task.FromResult(entity);
     }
 
@@ -33,14 +30,12 @@ internal class Repository<T, TId> : IRepository<T, TId>
     {
         entity.SetAsDeleted();
         _dbSet.Update(entity);
-        //await _context.SaveChangesAsync();
     }
 
     public async Task<T> Update(T entity)
     {
         entity.SetAsUpdated();
         _dbSet.Update(entity);
-        //await _context.SaveChangesAsync();
         return entity;
     }
 

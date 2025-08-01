@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Vestis._02_Application.Common;
+using Vestis._02_Application.CQRS.User.Commands;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
@@ -17,20 +19,34 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
         IUserRepository repository,
         IMapper mapper,
         IMediator mediator,
+        BusinessNotificationContext businessNotificationContext,
         ILogger<UserService> logger,
-        JwtService jwtService) : base(mapper, mediator, logger, repository)
+        JwtService jwtService) : base(mapper, mediator, businessNotificationContext, logger, repository)
     {
         _repository = repository;
         _jwtService = jwtService;
     }
 
-    public override async Task<UserModel> Create(UserModel model)
+    public async Task<UserModel> Create(UserModel model)
     {
-        var user = _mapper.Map<UserEntity>(model);
-        var createdUser = await _repository.CreateAsync(user);
-        
+        var command = CreateCommand(model);
+        var createdUser = await _mediator.Send(command);
+        //var user = _mapper.Map<UserEntity>(model);
+        //var createdUser = await _repository.CreateAsync(user);
+
         var responseModel = _mapper.Map<UserModel>(createdUser);
         return responseModel;
+
+        CreateUserCommand CreateCommand(UserModel model)
+        {
+            if (model is null)
+                return null;
+            
+            return new CreateUserCommand(
+                model.Name,
+                model.Email,
+                model.Password);
+        }
     }
 
     public override async Task<UserModel> Update(Guid id, UserModel model)

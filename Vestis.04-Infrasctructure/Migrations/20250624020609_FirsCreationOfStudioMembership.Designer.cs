@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vestis._04_Infrasctructure.Data;
 
@@ -11,9 +12,11 @@ using Vestis._04_Infrasctructure.Data;
 namespace Vestis._04_Infrasctructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250624020609_FirsCreationOfStudioMembership")]
+    partial class FirsCreationOfStudioMembership
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -318,6 +321,9 @@ namespace Vestis._04_Infrasctructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -337,6 +343,8 @@ namespace Vestis._04_Infrasctructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("StudioId");
 
@@ -453,6 +461,12 @@ namespace Vestis._04_Infrasctructure.Migrations
 
             modelBuilder.Entity("Vestis._03_Domain.Entities.StudioMembershipEntity", b =>
                 {
+                    b.HasOne("Vestis._03_Domain.Entities.ClientEntity", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Vestis._03_Domain.Entities.StudioEntity", "Studio")
                         .WithMany()
                         .HasForeignKey("StudioId")
@@ -464,6 +478,8 @@ namespace Vestis._04_Infrasctructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
 
                     b.Navigation("Studio");
 

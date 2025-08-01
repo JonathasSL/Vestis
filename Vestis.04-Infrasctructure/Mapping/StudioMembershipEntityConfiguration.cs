@@ -23,14 +23,15 @@ public class StudioMembershipEntityConfiguration : IEntityTypeConfiguration<Stud
             .HasForeignKey<StudioMembershipEntity>(s => s.StudioId)
             .IsRequired(true);
 
+        /*
         builder.HasOne(s => s.Client)
             .WithOne()
             .HasForeignKey<StudioMembershipEntity>(s => s.ClientId)
             .IsRequired(true);
-
         builder.HasOne(s => s.Role)
             .WithOne()
             .HasForeignKey<StudioMembershipEntity>(s => s.RoleId)
             .IsRequired(true);
+        */
     }
 }

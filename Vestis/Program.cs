@@ -24,49 +24,74 @@ var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<
 builder.Services.RegisterAllScopedDependencies(logger);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+var _allowSpecificOrigins = "_allowCORS";
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: _allowSpecificOrigins,
+            policy =>
+            {
+                policy.AllowAnyOrigin()
+                    //.WithOrigins("development.internal")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+    });
+
+    //builder.WebHost.ConfigureKestrel(serverOptions =>
+    //{
+    //    serverOptions.ListenAnyIP(7232, listenOptions =>
+    //    {
+    //        listenOptions.UseHttps();
+    //        Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port}");
+    //    });
+    //});
+}
+
 // Add services to the container.
 builder.Services.AddControllers();
-//builder.Services.Configure<ApiBehaviorOptions>(opt => opt.SuppressModelStateInvalidFilter = true);
 
-//Configurar JWT
 ConfigureJWT();
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-//builder.Services.AddOpenApi();
-
 AddDatabse();
+
 AddSwagger();
 
 builder.Services.AddSingleton<JwtService>();
 
 AddCQRS();
-
 #endregion Builder
 
 #region build app
 var app = builder.Build();
 
-// Verifica se foi passado um argumento para gerar o YAML
-if (args.Length > 0 && args.Any(arg => arg.Equals("generate_yaml", StringComparison.OrdinalIgnoreCase)))
+if (args.Length > 0)
 {
-    GenerateYaml();
-    return;
+    // Verifica se foi passado um argumento para gerar o YAML
+    if (args.Any(arg => arg.Equals("generate_yaml", StringComparison.OrdinalIgnoreCase)))
+    {
+        GenerateYaml();
+        return;
+    }
 }
 
-// Configure the HTTP request pipeline.
-app.UseHttpsRedirection();
+
+if (app.Environment.IsProduction())
+    app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())
 {
-    //app.MapOpenApi();
     UseSwagger();
+    app.UseCors(_allowSpecificOrigins);
 }
 
 System.Console.WriteLine("       ____   ____               __  .__            _____ __________.___ \r\n       \\   \\ /   /____   _______/  |_|__| ______   /  _  \\\\______   \\   |\r\n        \\   Y   // __ \\ /  ___/\\   __\\  |/  ___/  /  /_\\  \\|     ___/   |\r\n         \\     /\\  ___/ \\___ \\  |  | |  |\\___ \\  /    |    \\    |   |   |\r\n          \\___/  \\___  >____  > |__| |__/____  > \\____|__  /____|   |___|\r\n                     \\/     \\/               \\/          \\/\n");
-System.Console.WriteLine(app.Environment.EnvironmentName+"\n");
+System.Console.WriteLine($"EnvironmentName: {app.Environment.EnvironmentName}\n");
 app.Run();
 #endregion build app
 
@@ -131,13 +156,6 @@ void AddSwagger()
                 Url = new Uri("https://vestis.com")
             }
         });
-        /*
-        //Habilita comentários XML
-        var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-        options.IncludeXmlComments(xmlPath);
-        */
     });
 }
 

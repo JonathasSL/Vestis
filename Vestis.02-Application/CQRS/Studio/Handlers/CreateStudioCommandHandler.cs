@@ -1,17 +1,17 @@
 ﻿using MediatR;
-using Vestis._02_Application.Studio.Commands;
+using Vestis._02_Application.CQRS.Studio.Commands;
+using Vestis._02_Application.CQRS.StudioMembership.Commands;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrasctructure.Repositories.Interfaces;
 
-namespace Vestis._02_Application.Studio.Handlers;
+namespace Vestis._02_Application.CQRS.Studio.Handlers;
 
 public class CreateStudioCommandHandler : IRequestHandler<CreateStudioCommand, StudioEntity>
 {
     private readonly IStudioRepository _studioRepository;
     private IMediator _mediator;
-    //private readonly IUnitOfWork _unitOfWork;
 
-    public CreateStudioCommandHandler(IStudioRepository studioRepository, IMediator mediator/*, IUnitOfWork unitOfWork*/)
+    public CreateStudioCommandHandler(IStudioRepository studioRepository, IMediator mediator)
     {
         _studioRepository = studioRepository;
         _mediator = mediator;
@@ -31,6 +31,9 @@ public class CreateStudioCommandHandler : IRequestHandler<CreateStudioCommand, S
         }
 
         studio = await _studioRepository.CreateAsync(studio);
+
+        await _mediator.Send(new CreateStudioMembershipCommand(request.UserId, studio.Id, "Owner"), cancellationToken);
+
         return studio;
     }
 }
