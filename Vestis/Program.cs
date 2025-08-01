@@ -33,19 +33,20 @@ if (builder.Environment.IsDevelopment())
             policy =>
             {
                 policy.AllowAnyOrigin()
-                    //.WithOrigins("http://192.168.1.14:8100")
+                    //.WithOrigins("development.internal")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
     });
 
-    builder.WebHost.ConfigureKestrel(serverOptions =>
-    {
-        serverOptions.ListenAnyIP(7232, listenOptions =>
-        {
-            listenOptions.UseHttps();
-        });
-    });
+    //builder.WebHost.ConfigureKestrel(serverOptions =>
+    //{
+    //    serverOptions.ListenAnyIP(7232, listenOptions =>
+    //    {
+    //        listenOptions.UseHttps();
+    //        Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port}");
+    //    });
+    //});
 }
 
 // Add services to the container.
@@ -75,7 +76,6 @@ if (args.Length > 0)
     }
 }
 
-app.UseCors(_allowSpecificOrigins);
 
 if (app.Environment.IsProduction())
     app.UseHttpsRedirection();
@@ -87,6 +87,7 @@ app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
     UseSwagger();
+    app.UseCors(_allowSpecificOrigins);
 }
 
 System.Console.WriteLine("       ____   ____               __  .__            _____ __________.___ \r\n       \\   \\ /   /____   _______/  |_|__| ______   /  _  \\\\______   \\   |\r\n        \\   Y   // __ \\ /  ___/\\   __\\  |/  ___/  /  /_\\  \\|     ___/   |\r\n         \\     /\\  ___/ \\___ \\  |  | |  |\\___ \\  /    |    \\    |   |   |\r\n          \\___/  \\___  >____  > |__| |__/____  > \\____|__  /____|   |___|\r\n                     \\/     \\/               \\/          \\/\n");
