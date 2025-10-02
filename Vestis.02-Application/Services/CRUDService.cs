@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 using Vestis._02_Application.Common;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
@@ -46,11 +47,11 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
         }
     }
 
-    public virtual async Task<IEnumerable<TModel>>? GetAllAsync()
+    public virtual async Task<IEnumerable<TModel>>? GetAllAsync(CancellationToken cancellationToken)
     {
         try
         {
-            var entityList = await _repository.GetAllAsync();
+            var entityList = await _repository.GetAllAsync(cancellationToken);
             if (entityList == null)
                 return null;
 
@@ -65,11 +66,11 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
         }
     }
 
-    public virtual async Task<TModel>? GetById(TId id)
+    public virtual async Task<TModel>? GetById(TId id, CancellationToken cancellationToken)
     {
         try
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _repository.GetByIdAsync(id, cancellationToken);
             if (entity == null)
                 return null;
 
@@ -83,11 +84,11 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
         }
     }
 
-    public virtual async Task<TModel>? Update(TId id, TModel model)
+    public virtual async Task<TModel>? Update(TId id, TModel model, CancellationToken cancellationToken)
     {
         try
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _repository.GetByIdAsync(id, cancellationToken);
             if (entity == null)
                 return null;
 
@@ -104,11 +105,11 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
         }
     }
 
-    public virtual async Task<TModel> Delete(TId id)
+    public virtual async Task<TModel> Delete(TId id, CancellationToken cancellationToken)
     {
         try
         {
-            var entity = await _repository.GetByIdAsync(id);
+            var entity = await _repository.GetByIdAsync(id, cancellationToken);
             if (entity == null)
                 return null;
 

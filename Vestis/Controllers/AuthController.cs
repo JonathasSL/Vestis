@@ -33,11 +33,21 @@ public class AuthController : VestisController
     [HttpPost()]
     public async Task<IActionResult> Login([FromBody] UserModel userModel)
     {
-        if (userModel == null || string.IsNullOrEmpty(userModel.Email) || string.IsNullOrEmpty(userModel.Password))
+        if (userModel == null || 
+            string.IsNullOrEmpty(userModel.Email) || 
+            string.IsNullOrEmpty(userModel.Password))
             return BadRequest(new { message = "Email and password are required" });
 
         var token = await _userService.AuthenticateAsync(userModel.Email, userModel.Password);
 
         return token != null ? Ok(new { token }) : Unauthorized();
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+            return BadRequest("Token is required");
+        return Ok();
     }
 }

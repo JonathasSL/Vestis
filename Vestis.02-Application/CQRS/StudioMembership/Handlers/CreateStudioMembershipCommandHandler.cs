@@ -23,8 +23,8 @@ public class CreateStudioMembershipCommandHandler : IRequestHandler<CreateStudio
 
     public async Task<StudioMembershipEntity> Handle(CreateStudioMembershipCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(request.UserId);
-        var studio = await _studioRepository.GetByIdAsync(request.StudioId); 
+        var user = await _userRepository.GetByIdAsync(request.UserId, cancellationToken);
+        var studio = await _studioRepository.GetByIdAsync(request.StudioId, cancellationToken); 
         
         
         var entity = new StudioMembershipEntity(user, request.Role, studio);

@@ -5,8 +5,8 @@ public interface ICRUDService<TModel, TEntity, TId>
         where TEntity : class
 {
     Task<TModel> CreateByMapping(TModel model);
-    Task<IEnumerable<TModel>>? GetAllAsync();
-    Task<TModel>? GetById(TId id);
-    Task<TModel>? Update(TId id, TModel model);
-    Task<TModel> Delete(TId id);
+    Task<IEnumerable<TModel>>? GetAllAsync(CancellationToken cancellationToken);
+    Task<TModel>? GetById(TId id, CancellationToken cancellationToken);
+    Task<TModel>? Update(TId id, TModel model, CancellationToken cancellationToken);
+    Task<TModel> Delete(TId id, CancellationToken cancellationToken);
 }

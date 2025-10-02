@@ -49,9 +49,9 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
         }
     }
 
-    public override async Task<UserModel> Update(Guid id, UserModel model)
+    public override async Task<UserModel> Update(Guid id, UserModel model, CancellationToken cancellationToken)
     {
-        var entity = await _repository.GetByIdAsync(id);
+        var entity = await _repository.GetByIdAsync(id, cancellationToken);
         if (entity == null)
             return null;
 

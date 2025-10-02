@@ -8,12 +8,14 @@ public class UserEntity : BaseEntity<Guid>
     [EmailAddress]
     public string Email { get; private set; }
     public string Password { get; private set; }
+    public bool IsEmailConfirmed { get; private set; }
 
     public UserEntity(string name, string email, string password)
     {
         Name = name;
         Email = email;
         Password = password;
+        IsEmailConfirmed = false;
     }
 
     //Constructor for EF

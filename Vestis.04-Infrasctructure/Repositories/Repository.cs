@@ -16,9 +16,9 @@ internal class Repository<T, TId> : IRepository<T, TId>
         _dbSet = context.Set<T>();
     }
 
-    public async Task<T> GetByIdAsync(TId id) => await _dbSet.FindAsync(id);
+    public async Task<T?> GetByIdAsync(TId id, CancellationToken cancellationToken) => await _dbSet.FindAsync(id, cancellationToken);
 
-    public Task<IEnumerable<T>> GetAllAsync() => Task.FromResult(BeginQuery().AsEnumerable());
+    public Task<List<T>> GetAllAsync(CancellationToken cancellationToken) => BeginQuery().ToListAsync(cancellationToken);
 
     public Task<T> CreateAsync(T entity)
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis.Shared.Extensions;
@@ -20,11 +21,11 @@ public class StudiosController : VestisController
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         try
         {
-            var studio = await _service.GetById(id);
+            var studio = await _service.GetById(id, cancellationToken);
             if (studio is not null)
                 return Ok(studio);
             else
@@ -38,7 +39,7 @@ public class StudiosController : VestisController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] StudioModel studioModel)
+    public async Task<IActionResult> Create([FromBody] StudioModel studioModel, CancellationToken cancellationToken)
     {
         try
         {

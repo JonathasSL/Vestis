@@ -60,7 +60,7 @@ public class StudioMembershipController : VestisController
         if (id == Guid.Empty || value is not { })
             return BadRequest("Id cannot be empty.");
 
-        var updatedMembership = await _studioMembershipService.Update(id, value);
+        var updatedMembership = await _studioMembershipService.Update(id, value, cancellationToken);
         if (updatedMembership is { })
             return Ok(updatedMembership);
         else
@@ -73,7 +73,7 @@ public class StudioMembershipController : VestisController
         if (id == Guid.Empty || userId == Guid.Empty)
             return BadRequest("Id cannot be empty.");
 
-        await _studioMembershipService.Delete(id);
+        await _studioMembershipService.Delete(id, cancellationToken);
         return Ok();
     }
 }

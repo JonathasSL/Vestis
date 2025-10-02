@@ -18,11 +18,11 @@ public class UsersController : VestisController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Me()
+    public async Task<IActionResult> Me(CancellationToken cancellationToken)
     {
         var userId = User.GetUserId();
 
-        var user = await _userService.GetById(userId.Value);
+        var user = await _userService.GetById(userId.Value, cancellationToken);
 
         return Ok(user);
     }
