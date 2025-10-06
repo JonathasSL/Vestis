@@ -23,7 +23,7 @@ services:
       ASPNETCORE_ENVIRONMENT: "development"
       
     # Garante que, se o contêiner cair, ele tente reiniciar
-    restart: "unless-stopped"
+    # restart: "unless-stopped"
     
     # Opcional: Se você usa um volume para persistência ou logs
     # volumes:
