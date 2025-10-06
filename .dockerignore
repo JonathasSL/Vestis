@@ -1,0 +1,13 @@
+# Exclui arquivos binários e objetos de build
+**/bin/
+**/obj/
+
+# Exclui diretórios relacionados ao Docker
+**/appsettings*.Development.json
+**/appsettings.Local.json
+
+# Exclui arquivos de controle de versão
+.git
+.gitignore
+
+Diagramas/
