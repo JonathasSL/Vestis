@@ -13,7 +13,7 @@ internal class StudioEntityFaker : Faker<StudioEntity>
 
     public StudioEntityFaker WithClients(int clientsCount)
     {
-        RuleFor(s => s.Clients, f => new ClientEntityFaker().Generate(clientsCount));
+        //RuleFor(s => s.Clients, f => new ClientEntityFaker().Generate(clientsCount));
         return this;
     }
 

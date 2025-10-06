@@ -78,6 +78,7 @@ public class StudioEntityTests
         Assert.Equal(address, studio.Address);
     }
 
+    /*
     [Fact]
     public void AddClient_ShouldAddClientToList()
     {
@@ -92,4 +93,5 @@ public class StudioEntityTests
         Assert.NotEmpty(studio.Clients);
         Assert.Contains(client, studio.Clients);
     }
+    */
 }

@@ -6,7 +6,7 @@ internal class StudioMembershipEntityFaker : Faker<StudioMembershipEntity>
     {
         RuleFor(sm => sm.Id, f => Guid.NewGuid());
         RuleFor(sm => sm.User, f => new UserEntityFaker().Generate());
-        RuleFor(sm => sm.Role, f => new RoleEntityFaker().Generate());
+        RuleFor(sm => sm.Role, f => new Faker().Random.Word());
         RuleFor(sm => sm.Studio, f => new StudioEntityFaker().Generate());
     }
 }

@@ -7,7 +7,7 @@ public class StudioMembershipEntityTests
     {
         // Arrange
         var membership = new StudioMembershipEntityFaker().Generate();
-        var newRole = new RoleEntityFaker().Generate();
+        var newRole = new Faker().Random.Word();
 
         //Act
         membership.ChangeRole(newRole);
