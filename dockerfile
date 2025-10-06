@@ -6,12 +6,12 @@ WORKDIR /src
 
 # Copia o arquivo de projeto e restaura dependências
 # Isso permite que o Docker use o cache da camada para restauração de pacotes
-COPY ["./Vestis/Vestis.01-Presentation.csproj", "."]
+COPY ["./Vestis/Vestis.01-Presentation.csproj", "./Vestis/"]
 RUN dotnet restore
 
 # Copia todo o código-fonte restante
 COPY . .
-WORKDIR "/src"
+WORKDIR "/src/Vestis/"
 
 # Publica a aplicação em modo Release
 RUN dotnet publish -c Release -o /app/publish
