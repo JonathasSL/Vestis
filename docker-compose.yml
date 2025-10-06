@@ -1,0 +1,30 @@
+services:
+  # Define o serviço da sua API .NET
+  api:
+    # Diz ao Docker Compose para construir a imagem a partir do Dockerfile neste diretório
+    build:
+      context: . 
+      dockerfile: Dockerfile
+    
+    # Nome amigável do contêiner
+    container_name: vestis-api-container
+    
+    # Mapeamento de portas (Host:Container)
+    # Acessível na sua máquina via http://localhost:8080
+    ports:
+      - "8080:8080"
+      
+    # Variáveis de Ambiente
+    environment:
+      # Injeta a string de conexão completa com o nome de host interno
+      ConnectionStrings__DefaultConnection: "Server=host.docker.internal;Database=VestisDB;User Id=sa;TrustServerCertificate=True"
+      
+      # Define o ambiente da aplicação (útil para o Swagger)
+      ASPNETCORE_ENVIRONMENT: "development"
+      
+    # Garante que, se o contêiner cair, ele tente reiniciar
+    restart: "unless-stopped"
+    
+    # Opcional: Se você usa um volume para persistência ou logs
+    # volumes:
+    #   - ./logs:/app/logs

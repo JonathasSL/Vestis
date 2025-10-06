@@ -6,7 +6,7 @@ WORKDIR /src
 
 # Copia o arquivo de projeto e restaura dependências
 # Isso permite que o Docker use o cache da camada para restauração de pacotes
-COPY ["./Vestis/Vestis.01-Presentation.csproj", "./Vestis/"]
+COPY ["./Vestis/Vestis.01-Presentation.csproj", "."]
 RUN dotnet restore
 
 # Copia todo o código-fonte restante
@@ -34,4 +34,4 @@ ENV ASPNETCORE_URLS=http://+8080
 
 # Define o ponto de entrada para iniciar a aplicação
 # Substitua 'MyApp.dll' pelo nome da sua DLL de saída (geralmente o nome do projeto + .dll)
-ENTRYPOINT ["dotnet", "Vestis.dll"]
+ENTRYPOINT ["dotnet", "./Vestis/bin/Debug/net9.0/Vestis.dll"] 
