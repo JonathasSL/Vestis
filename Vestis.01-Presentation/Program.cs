@@ -39,14 +39,14 @@ if (builder.Environment.IsDevelopment())
             });
     });
 
-    //builder.WebHost.ConfigureKestrel(serverOptions =>
-    //{
-    //    serverOptions.ListenAnyIP(7232, listenOptions =>
-    //    {
-    //        listenOptions.UseHttps();
-    //        Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port}");
-    //    });
-    //});
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+        serverOptions.ListenAnyIP(7232, listenOptions =>
+        {
+            listenOptions.UseHttps();
+            Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port}");
+        });
+    });
 }
 
 // Add services to the container.
