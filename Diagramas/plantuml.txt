@@ -1,0 +1,157 @@
+@startuml
+' Classe Base
+class BaseEntity<TId> {
+TId Id
+DateTime CreatedDate
+DateTime? UpdatedDate
+DateTime? DeletedDate
+}
+
+' Classe para representar Endereço estruturado
+class Address extends BaseEntity {
+  +string Street
+  +string Number
+  +string City
+  +string State
+  +string PostalCode
+  +string Country
+}
+
+' Classe que representa o Studio
+class Studio extends BaseEntity {
+  +Guid Id
+  +string Name
+  +string ContactEmail
+  +string PhoneNumber
+  +Address Address
+  --
+  +List<Client> Clients
+  +List<Project> Projects
+}
+
+' Classe que representa o Usuário do sistema
+class User extends BaseEntity {
+  +Guid Id
+  +string Name
+  +string Email
+  +string Password
+  +DateTime CreatedAt
+  +DateTime UpdatedAt
+  --
+  +List<StudioMembership> StudioMemberships
+}
+
+' Classe de associação entre User e Studio com Role
+class StudioMembership extends BaseEntity {
+  +Guid Id
+  --
+  +Role Role
+}
+
+' Classe que define uma Role e suas Permissions
+class Role extends BaseEntity {
+  +Guid Id
+  +string Name
+  --
+  +List<Permission> Permissions
+}
+
+' Classe que representa as Permissions associadas à Role
+class Permission extends BaseEntity {
+  +Guid Id
+  +string Name
+  +string Description
+}
+
+' Classe que representa o Cliente
+class Client extends BaseEntity {
+  +Guid Id
+  +string Name
+  +string ContactEmail
+  +string PhoneNumber
+  +Address Address
+  --
+  +List<BodyMeasurementGroup> MeasurementGroups
+}
+
+' Classe que representa um grupo de medições realizadas em uma data específica
+class BodyMeasurementGroup extends BaseEntity {
+  +Guid Id
+  +DateTime MeasurementDate
+  --
+  +List<MeasurementEntry> Entries
+}
+
+' Classe que representa uma única entrada de medição, permitindo definição dinâmica de regiões
+class MeasurementEntry extends BaseEntity {
+  +Guid Id
+  +string RegionName
+  +decimal Value
+  +string Unit
+}
+
+' Classe que representa um Projeto ou encomenda do Studio
+class Project extends BaseEntity {
+  +Guid Id
+  +string Description
+  +DateTime StartDate
+  +DateTime? EndDate
+}
+
+' --- Entidade Produto ---
+class Product extends BaseEntity {
+  +Guid Id
+  +string Name
+  +string Description
+  +string Category
+  +decimal? Price
+  +Guid StudioId
+  --
+  +List<ProductUnit> Units
+}
+
+' --- Unidade física de um produto ---
+class ProductUnit extends BaseEntity {
+  +Guid Id
+  +string Code
+  +ProductUnitStatus Status
+  +Guid ProductId
+  +Guid? ClientId
+  +DateTime? RentedDate
+  +DateTime? ExpectedReturnDate
+  --
+  +Product Product
+  +Client? Client
+}
+
+' --- Enumeração de status ---
+enum ProductUnitStatus {
+  Available
+  Rented
+  Repair
+  Reserved
+}
+
+
+
+' Relacionamentos
+
+Studio "1" -- "1" Address : has >
+Studio "1" o-- "*" Client : serves
+Studio "1" o-- "*" Project : develops
+Studio "1" o-- "*" Product : owns >
+
+ProductUnit --> Client : rented_by
+
+
+' 1-to-many
+Client "1" o-- "*" BodyMeasurementGroup : records
+Product "1" o-- "*" ProductUnit : has >
+BodyMeasurementGroup "1" o-- "*" MeasurementEntry : contains
+
+' Relação many-to-many entre User e Studio via StudioMembership
+User "1" -- "*" StudioMembership
+Studio "1" -- "*" StudioMembership
+StudioMembership --> Role : has
+Role "1" o-- "*" Permission : has
+@enduml
