@@ -5,7 +5,7 @@ using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis.Shared.Extensions;
 
-namespace Vestis._01_Presentation.Controllers;
+namespace Controllers;
 
 [Authorize]
 public class StudiosController : VestisController

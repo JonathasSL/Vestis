@@ -27,7 +27,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vestis.02-Application\Vestis.02-Application.csproj" />
+    <ProjectReference Include="..\Vestis._02_Application\Vestis._02_Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Bibliotecas\Documents\DEV\Repositories\Vestis\Vestis._01_Presentation\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\Bibliotecas\Documents\DEV\Repositories\Vestis\Vestis._01_Presentation\.editorconfig" />
   </ItemGroup>
 
 </Project>

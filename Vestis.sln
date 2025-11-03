@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis.02-Application", "Vestis.02-Application\Vestis.02-Application.csproj", "{852F805A-7EAB-4995-A02A-DA193DEACF0F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis.03-Domain", "Vestis.03-Domain\Vestis.03-Domain.csproj", "{04F24252-11BF-485E-B8C9-663E92B8ADDF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis.04-Infrasctructure", "Vestis.04-Infrasctructure\Vestis.04-Infrasctructure.csproj", "{F8DE69B7-48B7-4CBC-8E8A-4D80E511611E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis.Shared", "Vestis.Shared\Vestis.Shared.csproj", "{6E1AD34C-3B13-4F8D-954F-0F6358D7CB40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis.03-Domain.tests", "Vestis.03-Domain.tests\Vestis.03-Domain.tests.csproj", "{525A92DD-AA09-4D49-9F51-09EE3FA5658A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._01_Presentation", "Vestis._01_Presentation\Vestis._01_Presentation.csproj", "{FAA10ED8-7DDA-B5C7-E4C4-B75523ED0FFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis.01-Presentation", "Vestis.01-Presentation\Vestis.01-Presentation.csproj", "{9D9B204F-2368-7EDC-5026-988978A5A96C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._02_Application", "Vestis._02_Application\Vestis._02_Application.csproj", "{C16C2854-B2ED-CCDB-CB61-6D26E930C149}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._03_Domain", "Vestis._03_Domain\Vestis._03_Domain.csproj", "{0B422769-4B36-DE0F-5E61-D467F556E971}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._03_Domain.tests", "Vestis._03_Domain.tests\Vestis._03_Domain.tests.csproj", "{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._04_Infrasctructure", "Vestis._04_Infrasctructure\Vestis._04_Infrasctructure.csproj", "{A720F7A9-6322-707C-BAE5-94B96FDDDC01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,30 +21,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{852F805A-7EAB-4995-A02A-DA193DEACF0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{852F805A-7EAB-4995-A02A-DA193DEACF0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{852F805A-7EAB-4995-A02A-DA193DEACF0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{852F805A-7EAB-4995-A02A-DA193DEACF0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{04F24252-11BF-485E-B8C9-663E92B8ADDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04F24252-11BF-485E-B8C9-663E92B8ADDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04F24252-11BF-485E-B8C9-663E92B8ADDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04F24252-11BF-485E-B8C9-663E92B8ADDF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F8DE69B7-48B7-4CBC-8E8A-4D80E511611E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8DE69B7-48B7-4CBC-8E8A-4D80E511611E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8DE69B7-48B7-4CBC-8E8A-4D80E511611E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8DE69B7-48B7-4CBC-8E8A-4D80E511611E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6E1AD34C-3B13-4F8D-954F-0F6358D7CB40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6E1AD34C-3B13-4F8D-954F-0F6358D7CB40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E1AD34C-3B13-4F8D-954F-0F6358D7CB40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E1AD34C-3B13-4F8D-954F-0F6358D7CB40}.Release|Any CPU.Build.0 = Release|Any CPU
-		{525A92DD-AA09-4D49-9F51-09EE3FA5658A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{525A92DD-AA09-4D49-9F51-09EE3FA5658A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{525A92DD-AA09-4D49-9F51-09EE3FA5658A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{525A92DD-AA09-4D49-9F51-09EE3FA5658A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D9B204F-2368-7EDC-5026-988978A5A96C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D9B204F-2368-7EDC-5026-988978A5A96C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D9B204F-2368-7EDC-5026-988978A5A96C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D9B204F-2368-7EDC-5026-988978A5A96C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAA10ED8-7DDA-B5C7-E4C4-B75523ED0FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAA10ED8-7DDA-B5C7-E4C4-B75523ED0FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAA10ED8-7DDA-B5C7-E4C4-B75523ED0FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAA10ED8-7DDA-B5C7-E4C4-B75523ED0FFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C16C2854-B2ED-CCDB-CB61-6D26E930C149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C16C2854-B2ED-CCDB-CB61-6D26E930C149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C16C2854-B2ED-CCDB-CB61-6D26E930C149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C16C2854-B2ED-CCDB-CB61-6D26E930C149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B422769-4B36-DE0F-5E61-D467F556E971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B422769-4B36-DE0F-5E61-D467F556E971}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B422769-4B36-DE0F-5E61-D467F556E971}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B422769-4B36-DE0F-5E61-D467F556E971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A720F7A9-6322-707C-BAE5-94B96FDDDC01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A720F7A9-6322-707C-BAE5-94B96FDDDC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A720F7A9-6322-707C-BAE5-94B96FDDDC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A720F7A9-6322-707C-BAE5-94B96FDDDC01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

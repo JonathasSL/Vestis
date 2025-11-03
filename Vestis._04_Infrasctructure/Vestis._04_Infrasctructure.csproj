@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vestis.03-Domain\Vestis.03-Domain.csproj" />
+    <ProjectReference Include="..\Vestis._03_Domain\Vestis._03_Domain.csproj" />
     <ProjectReference Include="..\Vestis.Shared\Vestis.Shared.csproj" />
   </ItemGroup>
 

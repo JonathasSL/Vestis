@@ -10,7 +10,7 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var types = Assembly.Load("Vestis.03-Domain").GetTypes();
+        var types = Assembly.Load("Vestis._03_Domain").GetTypes();
         var entities = types.Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Entity"));
 
         foreach (var entity in entities)
