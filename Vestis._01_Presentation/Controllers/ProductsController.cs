@@ -1,16 +1,17 @@
 ﻿using Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Vestis._02_Application.Models;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis.Shared.Extensions;
 
 namespace Vestis._01_Presentation.Controllers;
 
 [ApiController]
-[Route("api/studios/{studioId:string}/[controller]")]
+[Route("api/studios/{studioId:Guid}/[controller]")]
 public class ProductsController : VestisController
 {
 	[HttpGet]
-	public async Task<IActionResult> GetAll(string studioId)
+	public async Task<IActionResult> GetAll(string studioId, [FromQuery] string? name)
 	{
 		if (string.IsNullOrEmpty(studioId))
 			return BadRequest("StudioId is required");
@@ -20,9 +21,14 @@ public class ProductsController : VestisController
 
 		try
 		{
-			var studioProducts = _service.GetAllProductsByStudio(studioGuid).ToList();
+			List<ProductModel> studioProducts;
+			if (name is null)
+				studioProducts = _service.GetAllProductsByStudio(studioGuid).ToList();
+			else
+				studioProducts =_service.GetByNameAndStudio(name, studioGuid).ToList();
+
 			if (studioProducts.Any())
-				return Ok(studioProducts);
+				return Ok(studioProducts.ToList());
 			else
 				return NotFound();
 		}
@@ -47,7 +53,7 @@ public class ProductsController : VestisController
 		
 		try
 		{
-			var product = _service.GetProductByStudio(productId, studioGuid);
+			var product = _service.GetProductByStudio(productGuid, studioGuid);
 
 			if (product is null)
 				return NotFound();

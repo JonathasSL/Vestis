@@ -1,14 +1,16 @@
-﻿namespace Vestis._03_Domain.Entities;
+﻿using System.Security.Cryptography.X509Certificates;
+
+namespace Vestis._03_Domain.Entities;
 
 public class ProductEntity : BaseEntity<Guid>
 {
     //StudioEntity OwnerStudio { get; }
-    string Name { get; }
-    string? Description { get; }
-    string? Category { get; }
-    decimal? Price { get; }
-    int UnitCount { get; }
-    string? ImgUrl { get; }
+    public string Name { get; }
+    public string? Description { get; }
+    public string? Category { get; }
+    public double? Price { get; }
+    public int UnitCount { get; }
+    public string? ImgUrl { get; }
 
     //List<ProductUnitEntity> InventoryList { get; }
 
@@ -17,8 +19,9 @@ public class ProductEntity : BaseEntity<Guid>
         string name,
         string? description,
         string? category,
-        decimal? price,
-        int unitCount)
+        double? price,
+        int unitCount,
+        string imgUrl)
     {
         //this.OwnerStudio = ownerStudio;
         this.Name = name;
@@ -27,8 +30,9 @@ public class ProductEntity : BaseEntity<Guid>
         this.Price = price;
         this.UnitCount = unitCount;
         //this.InventoryList = new ();
+        this.ImgUrl = imgUrl;
     }
 
-    [Obsolete("For ORM use only", true)]
+    [Obsolete("For ORM use only")]
     public ProductEntity() { }
 }

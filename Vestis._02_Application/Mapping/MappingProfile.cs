@@ -26,5 +26,7 @@ public class MappingProfile : Profile
 
         CreateMap<UserEntity, UserModel>()
             .ForMember(entity => entity.Password, opt => opt.Ignore());
+
+        CreateMap<ProductEntity, ProductModel>();
     }
 }
