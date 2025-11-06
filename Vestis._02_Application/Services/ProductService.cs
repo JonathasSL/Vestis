@@ -13,14 +13,44 @@ internal class ProductService : CRUDService<ProductModel, ProductEntity, Guid>, 
 {
     private IEnumerable<ProductModel> testProducts;
 
-    public IEnumerable<ProductModel> GetAllProductsByStudio(Guid studioId)
+    public IEnumerable<ProductModel> GetProductsByStudioWithFilters(Guid studioId, Dictionary<string, string>? filters)
     {
         //var inventoryModelList = _mapper.Map<IEnumerable<ProductModel>>(
         //    _repository.GetProductsByStudioIdAsync(studioId).Result
         //);
 
-		//var inventoryModelList = _mapper.Map<IEnumerable<ProductModel>>(testProducts);
-        return testProducts;
+        //var inventoryModelList = _mapper.Map<IEnumerable<ProductModel>>(testProducts);
+        IEnumerable<ProductModel> result = new List<ProductModel>();
+        if (filters.Any())
+        {
+            foreach (var filter in filters)
+            {
+                switch (filter.Key.ToLower())
+                {
+                    case "name":
+                        result = result.Concat(testProducts.Where(p => p.Name != null && p.Name.Contains(filter.Value, StringComparison.OrdinalIgnoreCase)));
+                        break;
+                    case "category":
+                        result = result.Concat(testProducts.Where(p => p.Category != null && p.Category.Equals(filter.Value, StringComparison.OrdinalIgnoreCase)));
+                        break;
+                    case "minprice":
+                        if (decimal.TryParse(filter.Value, out var minPrice))
+                            result = result.Concat(testProducts.Where(p => p.Price.HasValue && p.Price.Value >= minPrice));
+                        break;
+                    case "maxprice":
+                        if (decimal.TryParse(filter.Value, out var maxPrice))
+                            result = result.Concat(testProducts.Where(p => p.Price.HasValue && p.Price.Value <= maxPrice));
+                        break;
+                
+                }
+            }
+        }
+        else
+        {
+            return testProducts;
+        }
+
+        return result;
     }
 
     public ProductModel GetProductByStudio(Guid productId, Guid studioGuid)
@@ -28,16 +58,6 @@ internal class ProductService : CRUDService<ProductModel, ProductEntity, Guid>, 
         return _mapper.Map<ProductModel>(
             _repository.GetProductByIdAndStudioIdAsync(productId, studioGuid)
         );
-    }
-
-    public IEnumerable<ProductModel> GetByNameAndStudio(string productName, Guid studioId)
-    {
-        //return _mapper.Map<ProductModel>(
-        //    _repository.GetProductByNameAndStudioIdAsync(productName, studioId)
-
-        //);
-
-        return testProducts.Where(p => p.Name.Contains(productName));
     }
 
     private IProductRepository _repository;

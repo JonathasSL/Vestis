@@ -11,21 +11,22 @@ namespace Vestis._01_Presentation.Controllers;
 public class ProductsController : VestisController
 {
 	[HttpGet]
-	public async Task<IActionResult> GetAll(string studioId, [FromQuery] string? name)
+	public async Task<IActionResult> GetAll(string studioId)
 	{
 		if (string.IsNullOrEmpty(studioId))
 			return BadRequest("StudioId is required");
 
-		if (!Guid.TryParse(studioId, out var studioGuid) || !Guid.TryParse(studioId, out var productGuid))
+		if (!Guid.TryParse(studioId, out var studioGuid))
 			return BadRequest("Invalid GUID format.");
 
+		List<ProductModel> studioProducts;
 		try
 		{
-			List<ProductModel> studioProducts;
-			if (name is null)
-				studioProducts = _service.GetAllProductsByStudio(studioGuid).ToList();
-			else
-				studioProducts =_service.GetByNameAndStudio(name, studioGuid).ToList();
+			var filters = Request.Query.ToDictionary(
+				q => q.Key, 
+				q => q.Value.ToString());
+
+				studioProducts =_service.GetProductsByStudioWithFilters(studioGuid, filters).ToList();
 
 			if (studioProducts.Any())
 				return Ok(studioProducts.ToList());

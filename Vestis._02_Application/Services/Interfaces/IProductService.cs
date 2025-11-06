@@ -5,7 +5,6 @@ namespace Vestis._02_Application.Services.Interfaces;
 
 public interface IProductService : ICRUDService<ProductModel, ProductEntity, Guid>
 {
-    IEnumerable<ProductModel> GetAllProductsByStudio(Guid studioId);
-    IEnumerable<ProductModel> GetByNameAndStudio(string productName, Guid studioId);
+    IEnumerable<ProductModel> GetProductsByStudioWithFilters(Guid studioId, Dictionary<string, string>? filters);
     ProductModel GetProductByStudio(Guid productId, Guid studioGuid);
 }
