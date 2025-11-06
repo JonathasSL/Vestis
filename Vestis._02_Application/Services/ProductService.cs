@@ -15,12 +15,9 @@ internal class ProductService : CRUDService<ProductModel, ProductEntity, Guid>, 
 
     public IEnumerable<ProductModel> GetProductsByStudioWithFilters(Guid studioId, Dictionary<string, string>? filters)
     {
-        //var inventoryModelList = _mapper.Map<IEnumerable<ProductModel>>(
-        //    _repository.GetProductsByStudioIdAsync(studioId).Result
-        //);
+        IEnumerable<ProductModel> result = new List<ProductModel>();
 
         //var inventoryModelList = _mapper.Map<IEnumerable<ProductModel>>(testProducts);
-        IEnumerable<ProductModel> result = new List<ProductModel>();
         if (filters.Any())
         {
             foreach (var filter in filters)
@@ -47,7 +44,11 @@ internal class ProductService : CRUDService<ProductModel, ProductEntity, Guid>, 
         }
         else
         {
-            return testProducts;
+           //result = _mapper.Map<IEnumerable<ProductModel>>(
+           //     _repository.GetProductsByStudioIdAsync(studioId).Result
+           // );
+
+            result = testProducts;
         }
 
         return result;
