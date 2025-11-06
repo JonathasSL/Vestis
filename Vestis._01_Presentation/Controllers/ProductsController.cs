@@ -26,7 +26,7 @@ public class ProductsController : VestisController
 				q => q.Key, 
 				q => q.Value.ToString());
 
-				studioProducts =_service.GetProductsByStudioWithFilters(studioGuid, filters).ToList();
+			studioProducts =_service.GetProductsByStudioWithFilters(studioGuid, filters).ToList();
 
 			if (studioProducts.Any())
 				return Ok(studioProducts.ToList());

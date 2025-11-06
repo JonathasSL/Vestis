@@ -15,7 +15,7 @@ internal class ProductService : CRUDService<ProductModel, ProductEntity, Guid>, 
 
     public IEnumerable<ProductModel> GetProductsByStudioWithFilters(Guid studioId, Dictionary<string, string>? filters)
     {
-        IEnumerable<ProductModel> result = new List<ProductModel>();
+        IEnumerable<ProductModel> result = testProducts;
 
         //var inventoryModelList = _mapper.Map<IEnumerable<ProductModel>>(testProducts);
         if (filters.Any())
@@ -25,18 +25,18 @@ internal class ProductService : CRUDService<ProductModel, ProductEntity, Guid>, 
                 switch (filter.Key.ToLower())
                 {
                     case "name":
-                        result = result.Concat(testProducts.Where(p => p.Name != null && p.Name.Contains(filter.Value, StringComparison.OrdinalIgnoreCase)));
+                        result = result.Where(p => p.Name != null && p.Name.Contains(filter.Value, StringComparison.OrdinalIgnoreCase));
                         break;
                     case "category":
-                        result = result.Concat(testProducts.Where(p => p.Category != null && p.Category.Equals(filter.Value, StringComparison.OrdinalIgnoreCase)));
+                        result = result.Where(p => p.Category != null && p.Category.Equals(filter.Value, StringComparison.OrdinalIgnoreCase));
                         break;
                     case "minprice":
                         if (decimal.TryParse(filter.Value, out var minPrice))
-                            result = result.Concat(testProducts.Where(p => p.Price.HasValue && p.Price.Value >= minPrice));
+                            result = result.Where(p => p.Price.HasValue && p.Price.Value >= minPrice);
                         break;
                     case "maxprice":
                         if (decimal.TryParse(filter.Value, out var maxPrice))
-                            result = result.Concat(testProducts.Where(p => p.Price.HasValue && p.Price.Value <= maxPrice));
+                            result = result.Where(p => p.Price.HasValue && p.Price.Value <= maxPrice);
                         break;
                 
                 }
