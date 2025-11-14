@@ -24,6 +24,6 @@ public class UsersController : VestisController
 
         var user = await _userService.GetById(userId.Value);
 
-        return Ok(user);
+		return Ok(user);
     }
 }

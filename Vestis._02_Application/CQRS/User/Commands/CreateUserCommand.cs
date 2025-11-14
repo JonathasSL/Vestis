@@ -6,4 +6,5 @@ namespace Vestis._02_Application.CQRS.User.Commands;
 public record CreateUserCommand(
     string Name,
     string Email,
-    string Password) : IRequest<UserEntity>;
+    string Password,
+    string ProfileImg = null) : IRequest<UserEntity>;

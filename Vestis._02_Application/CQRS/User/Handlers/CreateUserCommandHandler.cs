@@ -1,9 +1,4 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vestis._02_Application.CQRS.User.Commands;
 using Vestis._02_Application.Services;
 using Vestis._03_Domain.Entities;
@@ -26,7 +21,8 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserE
         var user = new UserEntity(
             request.Name,
             request.Email,
-            hasher.Hash(request.Password));
+            hasher.Hash(request.Password),
+            request.ProfileImg);
 
         user = await _repository.CreateAsync(user);
         

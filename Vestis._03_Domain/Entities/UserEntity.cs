@@ -8,12 +8,14 @@ public class UserEntity : BaseEntity<Guid>
     [EmailAddress]
     public string Email { get; private set; }
     public string Password { get; private set; }
+    public string? ProfileImg { get; private set; }
 
-    public UserEntity(string name, string email, string password)
+    public UserEntity(string name, string email, string password, string profileImg = null)
     {
         Name = name;
         Email = email;
         Password = password;
+        ProfileImg = profileImg;
     }
 
     //Constructor for EF
@@ -43,6 +45,14 @@ public class UserEntity : BaseEntity<Guid>
         if (Password != password)
         {
             Password = password;
+            SetAsUpdated();
+        }
+    }
+    public void ChangeProfileImg(string? profileImg)
+    {
+        if (ProfileImg != profileImg)
+        {
+            ProfileImg = profileImg;
             SetAsUpdated();
         }
     }
