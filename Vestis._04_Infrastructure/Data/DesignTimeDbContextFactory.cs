@@ -9,7 +9,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<Applicatio
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var config = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../Vestis"))
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../Vestis._01_Presentation"))
             .AddJsonFile("appsettings.json")
             .Build();
 

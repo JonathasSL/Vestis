@@ -1,6 +1,6 @@
-@Vestis_HostAddress = http://localhost:5209
+@Vestis_HostAddress = http://localhost:7232
 
-GET {{Vestis_HostAddress}}/tailors/
+GET {{Vestis_HostAddress}}/
 Accept: application/json
 
 ###

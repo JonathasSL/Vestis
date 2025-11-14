@@ -16,8 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vestis._03_Domain\Vestis._03_Domain.csproj" />
-    <ProjectReference Include="..\Vestis._04_Infrasctructure\Vestis._04_Infrasctructure.csproj" />
     <ProjectReference Include="..\Vestis.Shared\Vestis.Shared.csproj" />
+    <ProjectReference Include="..\Vestis._04_Infrastructure\Vestis._04_Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._03_Domain", "Vestis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._03_Domain.tests", "Vestis._03_Domain.tests\Vestis._03_Domain.tests.csproj", "{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._04_Infrasctructure", "Vestis._04_Infrasctructure\Vestis._04_Infrasctructure.csproj", "{A720F7A9-6322-707C-BAE5-94B96FDDDC01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vestis._04_Infrastructure", "Vestis._04_Infrastructure\Vestis._04_Infrastructure.csproj", "{B20DB9D7-811C-5F30-7E61-7E09CBC33880}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF0956E4-9B47-6F08-63DD-BA3BA4B00EE8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A720F7A9-6322-707C-BAE5-94B96FDDDC01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A720F7A9-6322-707C-BAE5-94B96FDDDC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A720F7A9-6322-707C-BAE5-94B96FDDDC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A720F7A9-6322-707C-BAE5-94B96FDDDC01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B20DB9D7-811C-5F30-7E61-7E09CBC33880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B20DB9D7-811C-5F30-7E61-7E09CBC33880}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B20DB9D7-811C-5F30-7E61-7E09CBC33880}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B20DB9D7-811C-5F30-7E61-7E09CBC33880}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
