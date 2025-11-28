@@ -37,7 +37,7 @@ jobs:
 
       # --- Aplicar migrations EF Core (inserir ANTES do passo de deploy) ---
       - name: Install dotnet-ef global tool
-        run: dotnet tool install --global dotnet-ef --version 8.0.0 || true
+        run: dotnet tool install --global dotnet-ef --version 9.* || true
         # Ajuste a versão se seu projeto usa outra versão do EF Core
 
       - name: Add dotnet tools to PATH
@@ -49,7 +49,7 @@ jobs:
         env:
           # Secret com a connection string ADO.NET do Azure SQL
           ConnectionStrings__DefaultConnection: ${{ secrets.AZURE_SQL_CONNECTION }}
-          ASPNETCORE_ENVIRONMENT: ${{ env.environment }}
+          ASPNETCORE_ENVIRONMENT: '${{ env.ENVIRONMENT }}'
         run: |
           dotnet ef database update --project ./Vestis._04_Infrastructure
 
@@ -82,4 +82,5 @@ jobs:
           slot-name: 'Production'
           package: .
           
+
 
