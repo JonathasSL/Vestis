@@ -24,7 +24,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserE
             hasher.Hash(request.Password),
             request.ProfileImg);
 
-        user = await _repository.CreateAsync(user);
+        user = await _repository.CreateAsync(user, cancellationToken);
         
         return user;
     }

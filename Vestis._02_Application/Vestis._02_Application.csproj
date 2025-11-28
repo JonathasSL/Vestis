@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Vestis._04_Infrastructure\Vestis._04_Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\Product\Validators\" />
+  </ItemGroup>
+
 </Project>

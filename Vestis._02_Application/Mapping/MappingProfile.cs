@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Vestis._02_Application.Mapping.Address;
+using Vestis._02_Application.Mapping.Product;
 using Vestis._02_Application.Mapping.Studio;
 using Vestis._02_Application.Mapping.StudioMembership;
 using Vestis._02_Application.Models;
+using Vestis._02_Application.Models.Product;
 using Vestis._03_Domain.Entities;
 
 namespace Vestis._02_Application.Mapping;
@@ -27,6 +29,7 @@ public class MappingProfile : Profile
         CreateMap<UserEntity, UserModel>()
             .ForMember(entity => entity.Password, opt => opt.Ignore());
 
-        CreateMap<ProductEntity, ProductModel>();
+        CreateMap<ProductEntity, ProductModel>()
+            .ConvertUsing<ProductEntityToProductModelConverter>();
     }
 }

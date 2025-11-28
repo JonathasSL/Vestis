@@ -30,7 +30,7 @@ public class CreateStudioCommandHandler : IRequestHandler<CreateStudioCommand, S
             studio.ChangeAddress(address);
         }
 
-        studio = await _studioRepository.CreateAsync(studio);
+        studio = await _studioRepository.CreateAsync(studio, cancellationToken);
 
         await _mediator.Send(new CreateStudioMembershipCommand(request.UserId, studio.Id, "Owner"), cancellationToken);
 

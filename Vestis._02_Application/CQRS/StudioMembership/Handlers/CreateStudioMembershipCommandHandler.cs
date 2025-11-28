@@ -29,7 +29,7 @@ public class CreateStudioMembershipCommandHandler : IRequestHandler<CreateStudio
         
         var entity = new StudioMembershipEntity(user, request.Role, studio);
 
-        entity = await _studioMembershipRepository.CreateAsync(entity);
+        entity = await _studioMembershipRepository.CreateAsync(entity, cancellationToken);
 
         return entity;
     }

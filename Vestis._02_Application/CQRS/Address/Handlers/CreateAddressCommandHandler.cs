@@ -28,7 +28,7 @@ public class CreateAddressCommandHandler : IRequestHandler<CreateAddressCommand,
         address.ChangeComplement(request.Complement);
         address.ChangeCountry(request.Country);
 
-        address = await _repository.CreateAsync(address);
+        address = await _repository.CreateAsync(address, cancellationToken);
         return address;
     }
 }

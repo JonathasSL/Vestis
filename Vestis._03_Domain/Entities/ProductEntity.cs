@@ -1,27 +1,25 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace Vestis._03_Domain.Entities;
+﻿namespace Vestis._03_Domain.Entities;
 
 public class ProductEntity : BaseEntity<Guid>
 {
     //StudioEntity OwnerStudio { get; }
-    public string Name { get; }
-    public string? Description { get; }
-    public string? Category { get; }
-    public double? Price { get; }
-    public int UnitCount { get; }
-    public string? ImgUrl { get; }
+    public string Name { get; private set; }
+    public string? Description { get; private set; }
+    public string? Category { get; private set; }
+    public double? Price { get; private set; }
+    public int UnitCount { get; private set; }
+    public string? ImgUrl { get; private set; }
 
-    //List<ProductUnitEntity> InventoryList { get; }
+    //Lazy<List<ProductUnitEntity>> InventoryList { get; }
 
     public ProductEntity(
         //StudioEntity ownerStudio,
         string name,
-        string? description,
         string? category,
-        double? price,
-        int unitCount,
-        string imgUrl)
+        string? description = null,
+        double? price = 0,
+        int unitCount = 1,
+        string? imgUrl = null)
     {
         //this.OwnerStudio = ownerStudio;
         this.Name = name;
@@ -35,4 +33,11 @@ public class ProductEntity : BaseEntity<Guid>
 
     [Obsolete("For ORM use only")]
     public ProductEntity() { }
+
+    public void UpdateAmmount(int quantity)
+    {
+        if (quantity < 0 && Math.Abs(quantity) > this.UnitCount)
+            throw new InvalidOperationException("Insufficient stock to reduce by the specified quantity.");
+        this.UnitCount += quantity;
+    }
 }

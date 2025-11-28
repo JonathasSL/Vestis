@@ -8,7 +8,7 @@ public interface IRepository<T, TId>
 {
     Task<T> GetByIdAsync(TId id);
     Task<IEnumerable<T>> GetAllAsync();
-    Task<T> CreateAsync(T entity);
+    Task<T> CreateAsync(T entity, CancellationToken cancellationToken);
     Task<T> Update(T entity);
-    Task SoftDeleteAsync(T entity);
+    Task<bool> SoftDeleteAsync(T entity);
 }

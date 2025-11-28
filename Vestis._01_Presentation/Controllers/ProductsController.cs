@@ -1,6 +1,6 @@
 ﻿using Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Vestis._02_Application.Models;
+using Vestis._02_Application.Models.Product;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis.Shared.Extensions;
 
@@ -26,7 +26,7 @@ public class ProductsController : VestisController
 				q => q.Key, 
 				q => q.Value.ToString());
 
-			studioProducts =_service.GetProductsByStudioWithFilters(studioGuid, filters).ToList();
+			studioProducts =_service.GetProductsByStudioWithFiltersAsync(studioGuid, filters);
 
 			if (studioProducts.Any())
 				return Ok(studioProducts.ToList());
@@ -49,12 +49,12 @@ public class ProductsController : VestisController
 		if (string.IsNullOrEmpty(productId))
 			return BadRequest("ProductId is required");
 
-		if (!Guid.TryParse(studioId, out var studioGuid) || !Guid.TryParse(studioId, out var productGuid))
+		if (!Guid.TryParse(studioId, out var studioGuid) || !Guid.TryParse(productId, out var productGuid))
 			return BadRequest($"Invalid GUID format. studioId: {studioId} - productId: {productId}");
 		
 		try
 		{
-			var product = _service.GetProductByStudio(productGuid, studioGuid);
+			var product = _service.GetProductByStudio(productGuid, studioGuid).Result;
 
 			if (product is null)
 				return NotFound();
@@ -69,21 +69,47 @@ public class ProductsController : VestisController
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Post(string studioId, [FromBody] string value)
+	public async Task<IActionResult> Register(string studioId, [FromBody] ProductModel requestModel)
 	{
-		return NoContent();
+		try
+		{
+			var responseModel = _service.RegisterProduct(requestModel);
+			if (responseModel is null)
+				return BadRequest("Could not register product");
+			else
+				return CreatedAtAction(nameof(Register), new { studioId = studioId, productId = responseModel.Id }, responseModel);
+		} catch (Exception e)
+		{
+			_logger.LogError(e.ExceptionStack(out _));
+			return StatusCode(500);
+		}
 	}
 
-	[HttpPut("{id}")]
-	public async Task<IActionResult> Put(string studioId, int id, [FromBody] string value)
+		[HttpPut("{id}")]
+	public async Task<IActionResult> Put(string studioId, int id, [FromBody] ProductModel requestModel)
 	{
 		return NoContent();
 	}
 
 	[HttpDelete("{id}")]
-	public async Task<IActionResult> Delete(string studioId, int id)
+	public async Task<IActionResult> Delete(string studioId, Guid id)
 	{
-		return NoContent();
+		if (string.IsNullOrEmpty(studioId))
+			return BadRequest("StudioId is required");
+
+		if (!Guid.TryParse(studioId, out var studioGuid))
+			return BadRequest("Invalid GUID format.");
+
+		try
+		{
+			_service.Delete(id);
+			return Ok();
+		}
+		catch (Exception e)
+		{
+
+			throw;
+		}
 	}
 
 	private IProductService _service;

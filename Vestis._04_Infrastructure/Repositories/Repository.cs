@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrasctructure.Data;
 using Vestis._04_Infrasctructure.Repositories.Interfaces;
@@ -10,6 +11,7 @@ internal class Repository<T, TId> : IRepository<T, TId>
     where TId : struct
 {
     private readonly DbSet<T> _dbSet;
+    private readonly Logger<Repository<T, TId>> _logger;
 
     public Repository(ApplicationDbContext context)
     {
@@ -20,23 +22,51 @@ internal class Repository<T, TId> : IRepository<T, TId>
 
     public Task<IEnumerable<T>> GetAllAsync() => Task.FromResult(BeginQuery().AsEnumerable());
 
-    public Task<T> CreateAsync(T entity)
+    public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken)
     {
-        _dbSet.Add(entity);
-        return Task.FromResult(entity);
+        try
+        {
+            var entityEntry = await _dbSet.AddAsync(entity, cancellationToken);
+            return entityEntry.Entity;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Error when creating entity: {entity.GetType().Name}, Id: {entity.Id} ", e);
+            return null;
+        }
+
     }
 
-    public async Task SoftDeleteAsync(T entity)
+    public async Task<bool> SoftDeleteAsync(T entity)
     {
-        entity.SetAsDeleted();
-        _dbSet.Update(entity);
+        var entityId = entity.Id;
+        try
+        {
+            //_dbSet.
+            entity.SetAsDeleted();
+            _dbSet.Update(entity);
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Error when softDeleting entity: {entity.GetType().Name}, Id: {entity.Id} ", e);
+            return false;
+        }
     }
 
     public async Task<T> Update(T entity)
     {
-        entity.SetAsUpdated();
-        _dbSet.Update(entity);
-        return entity;
+        try
+        {
+            entity.SetAsUpdated();
+            var result = _dbSet.Update(entity).Entity;
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Error when updating entity: {entity.GetType().Name}, Id: {entity.Id} ", e);
+            return null;
+        }
     }
 
     protected IQueryable<T> BeginQuery() => _dbSet.Where(e => !e.DeletedDate.HasValue);

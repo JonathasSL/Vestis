@@ -30,12 +30,12 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
         _repository = repository;
     }
 
-    public virtual async Task<TModel> CreateByMapping(TModel model)
+    public virtual async Task<TModel> CreateByMapping(TModel model, CancellationToken cancellationToken)
     {
         try
         {
             var entity = _mapper.Map<TEntity>(model);
-            var result = await _repository.CreateAsync(entity);
+            var result = await _repository.CreateAsync(entity, cancellationToken);
             return _mapper.Map<TModel>(result);
         }
         catch (Exception e)

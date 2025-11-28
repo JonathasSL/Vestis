@@ -46,7 +46,7 @@ public class StudioMembershipController : VestisController
         if (value != null)
             return BadRequest("Value cannot be null or empty.");
 
-        var newMembership = await _studioMembershipService.CreateByMapping(value);
+        var newMembership = await _studioMembershipService.CreateByMapping(value, cancellationToken);
 
         if  (newMembership is { })
             return Ok(newMembership);
