@@ -49,10 +49,9 @@ jobs:
         env:
           # Secret com a connection string ADO.NET do Azure SQL
           ConnectionStrings__DefaultConnection: ${{ secrets.AZURE_SQL_CONNECTION }}
-          ASPNETCORE_ENVIRONMENT: 'Production'
+          ASPNETCORE_ENVIRONMENT: ${{ env.environment }}
         run: |
-          # Ajuste se migrations estiverem em outro projeto; aqui usamos o projeto que você indicou
-          dotnet ef database update --project Vestis._01_Presentation/Vestis._01_Presentation.csproj --startup-project Vestis._01_Presentation
+          dotnet ef database update --project ./Vestis._04_Infrastructure
 
 
   deploy:
@@ -83,3 +82,4 @@ jobs:
           slot-name: 'Production'
           package: .
           
+
