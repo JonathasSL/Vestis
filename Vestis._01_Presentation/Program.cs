@@ -25,37 +25,47 @@ builder.Services.RegisterAllScopedDependencies(logger);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var _allowSpecificOrigins = "_allowCORS";
-var connectionString = string.Empty;
+
+// Configuração: sempre prioriza env var (Azure). Se não existir, usa appsettings (local).
 if (builder.Environment.IsDevelopment())
 {
-	builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
-	connectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+	builder.Configuration
+		.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+		.AddEnvironmentVariables();
 
 	builder.Services.AddCors(options =>
-    {
-        options.AddPolicy(name: _allowSpecificOrigins,
-            policy =>
-            {
-                policy.AllowAnyOrigin()
-                    //.WithOrigins("development.internal")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-            });
-    });
+	{
+		options.AddPolicy(name: _allowSpecificOrigins,
+			policy =>
+			{
+				policy.AllowAnyOrigin()
+					//.WithOrigins("development.internal")
+					.AllowAnyHeader()
+					.AllowAnyMethod();
+			});
+	});
 
-    builder.WebHost.ConfigureKestrel(serverOptions =>
-    {
-        serverOptions.ListenAnyIP(7232, listenOptions =>
-        {
-            listenOptions.UseHttps();
-            Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port}");
-        });
-    });
+	builder.WebHost.ConfigureKestrel(serverOptions =>
+	{
+		serverOptions.ListenAnyIP(7232, listenOptions =>
+		{
+			listenOptions.UseHttps();
+			Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port}");
+		});
+	});
 }
 else
 {
-	connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+	builder.Configuration.AddEnvironmentVariables();
 }
+
+var connectionString =
+	builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]
+	?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrWhiteSpace(connectionString))
+	throw new InvalidOperationException(
+		"Connection string não configurada. Defina a env var 'AZURE_SQL_CONNECTIONSTRING' (prioritário) ou configure 'ConnectionStrings:DefaultConnection' em appsettings*.json.");
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -75,9 +85,9 @@ AddCQRS();
 #region builder methods
 void AddDatabse(string connectionString)
 	=> builder.Services.AddDbContext<ApplicationDbContext>(
-		options => options.UseSqlServer(
-			connectionString,
-			b => b.MigrationsAssembly("Vestis._04_Infrasctructure"))
+	 options => options.UseSqlServer(
+		 connectionString,
+		 b => b.MigrationsAssembly("Vestis._04_Infrasctructure"))
 	);
 
 void ConfigureJWT()
@@ -183,7 +193,13 @@ if (app.Environment.IsDevelopment())
     app.UseCors(_allowSpecificOrigins);
 }
 
-System.Console.WriteLine("       ____   ____               __  .__            _____ __________.___ \r\n       \\   \\ /   /____   _______/  |_|__| ______   /  _  \\\\______   \\   |\r\n        \\   Y   // __ \\ /  ___/\\   __\\  |/  ___/  /  /_\\  \\|     ___/   |\r\n         \\     /\\  ___/ \\___ \\  |  | |  |\\___ \\  /    |    \\    |   |   |\r\n          \\___/  \\___  >____  > |__| |__/____  > \\____|__  /____|   |___|\r\n                     \\/     \\/               \\/          \\/\n");
+System.Console.WriteLine(@"       ____   ____               __  .__            _____ __________.___ 
+       \   \ /   /____   _______/  |_|__| ______   /  _  \______   \   |
+        \   Y   // __ \ /  ___/\   __\  |/  ___/  /  /_\  \|     ___/   |
+         \     /\  ___/ \___ \  |  | |  |\___ \  /    |    \    |   |   |
+          \___/  \___  >____  > |__| |__/____  > \____|__  /____|   |___|
+                     \/     \/               \/          \/
+");
 System.Console.WriteLine($"EnvironmentName: {app.Environment.EnvironmentName}");
 System.Console.WriteLine($"Application started at {DateTime.Now}\n");
 
