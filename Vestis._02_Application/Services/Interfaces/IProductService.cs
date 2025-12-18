@@ -8,4 +8,5 @@ public interface IProductService : ICRUDService<ProductModel, ProductEntity, Gui
     List<ProductModel> GetProductsByStudioWithFiltersAsync(Guid studioId, Dictionary<string, string>? filters);
     Task<ProductModel> GetProductByStudio(Guid productId, Guid studioGuid);
     ProductModel RegisterProduct(ProductModel requestModel);
+    void DeleteProduct(Guid productId, Guid studioId);
 }

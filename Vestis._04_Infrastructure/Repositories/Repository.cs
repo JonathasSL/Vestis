@@ -39,10 +39,8 @@ internal class Repository<T, TId> : IRepository<T, TId>
 
     public async Task<bool> SoftDeleteAsync(T entity)
     {
-        var entityId = entity.Id;
         try
         {
-            //_dbSet.
             entity.SetAsDeleted();
             _dbSet.Update(entity);
             return true;

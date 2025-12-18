@@ -54,7 +54,7 @@ public class ProductsController : VestisController
 		
 		try
 		{
-			var product = _service.GetProductByStudio(productGuid, studioGuid).Result;
+			var product = await _service.GetProductByStudio(productGuid, studioGuid);
 
 			if (product is null)
 				return NotFound();
@@ -85,7 +85,7 @@ public class ProductsController : VestisController
 		}
 	}
 
-		[HttpPut("{id}")]
+	[HttpPut("{id}")]
 	public async Task<IActionResult> Put(string studioId, int id, [FromBody] ProductModel requestModel)
 	{
 		return NoContent();
@@ -102,13 +102,13 @@ public class ProductsController : VestisController
 
 		try
 		{
-			_service.Delete(id);
+			_service.DeleteProduct(id, studioGuid);
 			return Ok();
 		}
 		catch (Exception e)
 		{
-
-			throw;
+			_logger.LogError(e.ExceptionStack(out _));
+			return StatusCode(500);
 		}
 	}
 
