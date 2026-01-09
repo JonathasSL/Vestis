@@ -47,10 +47,18 @@ if (builder.Environment.IsDevelopment())
 
 	builder.WebHost.ConfigureKestrel(serverOptions =>
 	{
+		// LAN-friendly endpoints for development
+		// - HTTP avoids local network HTTPS certificate issues when accessing by IP
+		// - HTTPS keeps parity with local dev scenarios
+		serverOptions.ListenAnyIP(5209, listenOptions =>
+		{
+			Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port} (HTTP)");
+		});
+
 		serverOptions.ListenAnyIP(7232, listenOptions =>
 		{
 			listenOptions.UseHttps();
-			Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port}");
+			Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port} (HTTPS)");
 		});
 	});
 }
