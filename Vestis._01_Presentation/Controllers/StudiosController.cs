@@ -20,7 +20,7 @@ public class StudiosController : VestisController
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -38,7 +38,7 @@ public class StudiosController : VestisController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] StudioModel studioModel)
+    public async Task<IActionResult> Create([FromBody] StudioModel studioModel, CancellationToken cancellationToken)
     {
         try
         {
@@ -56,4 +56,20 @@ public class StudiosController : VestisController
             return StatusCode(500);
         }
     }
+
+	[HttpGet]
+	public async Task<IActionResult> GetMyStudios(CancellationToken cancellationToken)
+	{
+		try
+		{
+			var userId = User?.GetUserId();
+			var studios = _service.GetStudiosByUserId(userId.Value, cancellationToken);
+			return Ok(studios);
+		}
+		catch (Exception e)
+		{
+			_logger.LogError(e.ExceptionStack(out _));
+			return StatusCode(500);
+		}
+	}
 }

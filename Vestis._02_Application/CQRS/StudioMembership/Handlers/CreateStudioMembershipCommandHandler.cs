@@ -31,6 +31,9 @@ public class CreateStudioMembershipCommandHandler : IRequestHandler<CreateStudio
 
         entity = await _studioMembershipRepository.CreateAsync(entity, cancellationToken);
 
+        user.StudioMemberships.Add(entity);
+        studio.StudioMemberships.Add(entity);
+
         return entity;
     }
 }

@@ -4,12 +4,17 @@ namespace Vestis._03_Domain.Entities;
 
 public class UserEntity : BaseEntity<Guid>
 {
+    #region properties
     public string Name { get; private set; }
     [EmailAddress]
     public string Email { get; private set; }
     public string Password { get; private set; }
     public string? ProfileImg { get; private set; }
 
+    public ICollection<StudioMembershipEntity> StudioMemberships { get; private set; } = new List<StudioMembershipEntity>();
+    #endregion properties
+    
+    #region behavior
     public UserEntity(string name, string email, string password, string profileImg = null)
     {
         Name = name;
@@ -56,4 +61,5 @@ public class UserEntity : BaseEntity<Guid>
             SetAsUpdated();
         }
     }
+    #endregion behavior
 }

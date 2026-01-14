@@ -9,19 +9,21 @@ public class StudioMembershipEntityConfiguration : IEntityTypeConfiguration<Stud
 {
     public void Configure(EntityTypeBuilder<StudioMembershipEntity> builder)
     {
-        builder.ToTable(nameof(StudioMembershipEntity).Replace("Entity",string.Empty).Pluralize());
+        builder.ToTable(nameof(StudioMembershipEntity).Replace("Entity", string.Empty).Pluralize());
 
         builder.HasKey(x => x.Id);
 
         builder.HasOne(s => s.User)
-            .WithOne()
-            .HasForeignKey<StudioMembershipEntity>(s => s.UserId)
-            .IsRequired(true);
+            .WithMany(u => u.StudioMemberships)
+            .HasForeignKey(s => s.UserId)
+            .IsRequired();
 
         builder.HasOne(s => s.Studio)
-            .WithOne()
-            .HasForeignKey<StudioMembershipEntity>(s => s.StudioId)
-            .IsRequired(true);
+            .WithMany(st => st.StudioMemberships)
+            .HasForeignKey(s => s.StudioId)
+            .IsRequired();
+
+        builder.HasIndex(x => new { x.UserId, x.StudioId }).IsUnique();
 
         /*
         builder.HasOne(s => s.Client)

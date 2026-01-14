@@ -7,4 +7,5 @@ namespace Vestis._02_Application.Services.Interfaces;
 public interface IStudioService : ICRUDService<StudioModel, StudioEntity, Guid>
 {
     Task<CommandResult<StudioModel>> Create(Guid contextUser, StudioModel model);
+    List<StudioModel> GetStudiosByUserId(Guid userId, CancellationToken cancellationToken);
 }

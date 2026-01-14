@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel;
 using Vestis._02_Application.Common;
 using Vestis._02_Application.CQRS.Address.Commands;
 using Vestis._02_Application.CQRS.Studio.Commands;
@@ -14,6 +15,7 @@ namespace Vestis._02_Application.Services;
 
 public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStudioService
 {
+    private readonly IStudioRepository _repository;
     public StudioService(
         IMapper mapper,
         IMediator mediator,
@@ -21,6 +23,7 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
         ILogger<StudioService> logger, 
         IStudioRepository repository) : base(mapper, mediator, businessNotificationContext, logger, repository)
     {
+        _repository = repository;
     }
 
     public async Task<CommandResult<StudioModel>> Create(Guid contextUser, StudioModel model)
@@ -64,4 +67,10 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
         }
     }
 
+
+    public List<StudioModel> GetStudiosByUserId(Guid userId, CancellationToken cancellationToken)
+    {
+        var studios = _repository.GetByUserAsync(userId, cancellationToken).Result;
+        return _mapper.Map<List<StudioModel>>(studios);
+    }
 }

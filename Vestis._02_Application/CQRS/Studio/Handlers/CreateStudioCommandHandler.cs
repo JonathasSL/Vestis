@@ -32,7 +32,7 @@ public class CreateStudioCommandHandler : IRequestHandler<CreateStudioCommand, S
 
         studio = await _studioRepository.CreateAsync(studio, cancellationToken);
 
-        await _mediator.Send(new CreateStudioMembershipCommand(request.UserId, studio.Id, "Owner"), cancellationToken);
+       _ = await _mediator.Send(new CreateStudioMembershipCommand(request.UserId, studio.Id, "Owner"), cancellationToken);
 
         return studio;
     }

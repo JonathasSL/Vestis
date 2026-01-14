@@ -9,4 +9,12 @@ internal class StudioRepository : Repository<StudioEntity, Guid>, IStudioReposit
     public StudioRepository(ApplicationDbContext context) : base(context)
     {
     }
+
+    public async Task<List<StudioEntity>> GetByUserAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var studio = BeginQueryReadOnly()
+            .Where(s => s.StudioMemberships.Any(sm => sm.UserId == userId));
+
+        return studio.ToList();
+    }
 }
