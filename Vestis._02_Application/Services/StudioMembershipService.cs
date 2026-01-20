@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Vestis._02_Application.Common;
-using Vestis._02_Application.Models;
+using Vestis._02_Application.Models.Studio;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrasctructure.Repositories.Interfaces;

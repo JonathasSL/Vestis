@@ -9,12 +9,12 @@ namespace Vestis._03_Domain.Entities;
 
 public class ProductUnitEntity : BaseEntity<Guid>
 {
-    ProductEntity Product { get; set; }
-    string Code { get; set; }
-    ProductUnitStatusEnum Status { get; set; }
-    decimal? RentedPrice { get; set; }
-    DateTime? RentedDate { get; set; }
-    DateTime? ExpectedReturnDate { get; set; }
+    public virtual ProductEntity Product { get; private set; }
+    public string Code { get; private set; }
+    public ProductUnitStatusEnum Status { get; private set; }
+    public decimal? RentedPrice { get; private set; }
+    public DateTime? RentedDate { get; private set; }
+    public DateTime? ExpectedReturnDate { get; private set; }
     //ClientEntity? CurrentClient { get; set; }
 
     [Obsolete("For ORM use only", true)]

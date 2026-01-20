@@ -7,9 +7,9 @@ public class StudioEntity : BaseEntity<Guid>
     public string ContactEmail { get; private set; }
     public string PhoneNumber { get; private set; }
     public Guid? AddressId { get; private set; }
-    public AddressEntity? Address { get; private set; }
+    public virtual AddressEntity? Address { get; private set; }
 
-    public ISet<StudioMembershipEntity> StudioMemberships { get; private set; } = new HashSet<StudioMembershipEntity>();
+    public virtual ISet<StudioMembershipEntity> StudioMemberships { get; private set; } = new HashSet<StudioMembershipEntity>();
 
     /*
     public List<ProjectEntity> Projects { get; private set; }

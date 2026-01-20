@@ -3,9 +3,9 @@
 public class BodyMeasurementEntity : BaseEntity<Guid>
 {
     public DateTime MeasurementDate { get; private set; }
-    public List<MeasurementEntryEntity> Entries { get; private set; }
+    public virtual List<MeasurementEntryEntity> Entries { get; private set; }
     public Guid ProjectId { get; private set; }
-    public ProjectEntity Project { get; private set; }
+    public virtual ProjectEntity Project { get; private set; }
 
     public BodyMeasurementEntity(DateTime measurementDate)
     {

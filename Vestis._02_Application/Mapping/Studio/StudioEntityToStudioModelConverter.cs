@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Vestis._02_Application.Models;
+using Vestis._02_Application.Models.Studio;
 using Vestis._03_Domain.Entities;
 
 namespace Vestis._02_Application.Mapping.Studio;

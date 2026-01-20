@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Vestis._02_Application.Models;
+using Vestis._02_Application.Models.Studio;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis.Shared.Extensions;
 

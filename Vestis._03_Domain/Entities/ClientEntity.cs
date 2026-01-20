@@ -7,9 +7,9 @@ public class ClientEntity : BaseEntity<Guid>
     public string Name { get; private set; }
     public string? Email { get; private set; }
     public string? PhoneNumber { get; private set; }
-    public AddressEntity? Address { get; private set; }
+    public virtual AddressEntity? Address { get; private set; }
     public Guid? AddressId { get; private set; }
-    public StudioEntity Studio { get; private set; }
+    public virtual StudioEntity Studio { get; private set; }
     public Guid StudioId { get; private set; }
 
     public ClientEntity(string name)

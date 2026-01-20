@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -93,9 +94,11 @@ AddCQRS();
 #region builder methods
 void AddDatabse(string connectionString)
 	=> builder.Services.AddDbContext<ApplicationDbContext>(
-	 options => options.UseSqlServer(
-		 connectionString,
-		 b => b.MigrationsAssembly("Vestis._04_Infrasctructure"))
+	 options => options
+		.UseLazyLoadingProxies()
+		.UseSqlServer(
+			connectionString,
+			b => b.MigrationsAssembly("Vestis._04_Infrasctructure"))
 	);
 
 void ConfigureJWT()

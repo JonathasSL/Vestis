@@ -10,7 +10,7 @@ internal class StudioRepository : Repository<StudioEntity, Guid>, IStudioReposit
     {
     }
 
-    public async Task<List<StudioEntity>> GetByUserAsync(Guid userId, CancellationToken cancellationToken)
+    public async Task<List<StudioEntity>> GetByUserAsyncReadOnly(Guid userId, CancellationToken cancellationToken)
     {
         var studio = BeginQueryReadOnly()
             .Where(s => s.StudioMemberships.Any(sm => sm.UserId == userId));

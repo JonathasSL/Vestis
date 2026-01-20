@@ -5,7 +5,8 @@ using System.ComponentModel;
 using Vestis._02_Application.Common;
 using Vestis._02_Application.CQRS.Address.Commands;
 using Vestis._02_Application.CQRS.Studio.Commands;
-using Vestis._02_Application.Models;
+using Vestis._02_Application.CQRS.Studio.Query;
+using Vestis._02_Application.Models.Studio;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrasctructure.Repositories.Interfaces;
@@ -68,9 +69,9 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
     }
 
 
-    public List<StudioModel> GetStudiosByUserId(Guid userId, CancellationToken cancellationToken)
+    public CommandResult<List<StudioSummaryModel>> GetStudiosByUserId(Guid userId, CancellationToken cancellationToken)
     {
-        var studios = _repository.GetByUserAsync(userId, cancellationToken).Result;
-        return _mapper.Map<List<StudioModel>>(studios);
+        var query = new GetStudiosByUserIdQuery(userId);
+        return _mediator.Send(query, cancellationToken).Result;
     }
 }

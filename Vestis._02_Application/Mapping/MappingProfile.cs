@@ -5,6 +5,7 @@ using Vestis._02_Application.Mapping.Studio;
 using Vestis._02_Application.Mapping.StudioMembership;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Models.Product;
+using Vestis._02_Application.Models.Studio;
 using Vestis._03_Domain.Entities;
 
 namespace Vestis._02_Application.Mapping;

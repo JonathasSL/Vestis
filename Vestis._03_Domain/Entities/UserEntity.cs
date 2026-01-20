@@ -11,7 +11,7 @@ public class UserEntity : BaseEntity<Guid>
     public string Password { get; private set; }
     public string? ProfileImg { get; private set; }
 
-    public ICollection<StudioMembershipEntity> StudioMemberships { get; private set; } = new List<StudioMembershipEntity>();
+    public virtual ICollection<StudioMembershipEntity> StudioMemberships { get; private set; } = new List<StudioMembershipEntity>();
     #endregion properties
     
     #region behavior

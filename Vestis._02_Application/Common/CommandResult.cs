@@ -1,6 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-
-namespace Vestis._02_Application.Common;
+﻿namespace Vestis._02_Application.Common;
 
 public class CommandResult<T>
 {

@@ -4,7 +4,7 @@ public class RoleEntity : BaseEntity<Guid>
 {
     public string Name { get; private set; }
     public string Description { get; private set; }
-    public HashSet<PermissionEntity> Permissions { get; private set; }
+    public virtual HashSet<PermissionEntity> Permissions { get; private set; }
 
     public RoleEntity(string name, string description, StudioEntity studio)
     {

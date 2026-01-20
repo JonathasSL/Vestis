@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Vestis._02_Application.Models;
+using Vestis._02_Application.Models.Studio;
 using Vestis._03_Domain.Entities;
 
 namespace Vestis._02_Application.Mapping.StudioMembership;
@@ -10,11 +10,11 @@ public class StudioMembershipEntityToStudioMembershipModel : ITypeConverter<Stud
     {
         if (source == null) return null;
 
-        return new StudioMembershipModel
-        {
-            UserId = source.UserId,
-            StudioId = source.StudioId,
-            Role = source.Role
-        };
+        if (destination == null)
+            destination = new StudioMembershipModel();
+
+        destination.Role = source.Role;
+
+        return destination;
     }
 }

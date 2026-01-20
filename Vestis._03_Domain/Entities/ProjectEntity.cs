@@ -7,10 +7,10 @@ public class ProjectEntity : BaseEntity<Guid>
     public string Name { get; private set; }
     public string Description { get; private set; }
     public Guid StudioId { get; private set; }
-    public StudioEntity Studio { get; private set; }
+    public virtual StudioEntity Studio { get; private set; }
     public Guid ClientId { get; private set; }
-    public ClientEntity Client { get; private set; }
-    public BodyMeasurementEntity BodyMeasurements { get; private set; }
+    public virtual ClientEntity Client { get; private set; }
+    public virtual BodyMeasurementEntity BodyMeasurements { get; private set; }
     
     public ProjectEntity(StudioEntity studioEntity, string name)
     {

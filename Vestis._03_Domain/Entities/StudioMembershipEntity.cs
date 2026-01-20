@@ -3,7 +3,7 @@
 public class StudioMembershipEntity : BaseEntity<Guid>
 {
     public Guid UserId {  get; private set; }
-    public UserEntity User { get; private set; }
+    public virtual UserEntity User { get; private set; }
     /*
     public Guid? ClientId { get; private set; }
     public ClientEntity? Client { get; private set; }
@@ -14,7 +14,7 @@ public class StudioMembershipEntity : BaseEntity<Guid>
     public RoleEntity Role { get; private set; }
     */
     public Guid StudioId { get; private set; }
-    public StudioEntity Studio { get; private set; }
+    public virtual StudioEntity Studio { get; private set; }
 
     public StudioMembershipEntity(UserEntity user, string roleName, StudioEntity studio)
     {
