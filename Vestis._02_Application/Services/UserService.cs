@@ -83,7 +83,7 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
     }
 
     [Obsolete("Método usado apenas para demonstração e testes.")]
-    public async Task<UserModel> GetUserAsync()
+    public async Task<UserModel> GetTestUserAsync()
     {
         const string url = "https://randomuser.me/api/?results=1";
         var response = await _httpClient.GetAsync(url);

@@ -9,4 +9,5 @@ public interface IUserService : ICRUDService<UserModel, UserEntity, Guid>
     Task<UserModel> Create(RegisterDTO model);
     Task<bool> ExistsAsync(string email);
     Task<string> AuthenticateAsync(string email, string password);
+    Task<UserModel> GetTestUserAsync();
 }

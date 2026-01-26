@@ -26,4 +26,12 @@ public class UsersController : VestisController
 
 		return Ok(user);
     }
+
+	[AllowAnonymous]
+	[HttpGet("test-user")]
+	public IActionResult TestUser()
+	{
+		var user = _userService.GetTestUserAsync().Result;
+		return Ok(user);
+	}
 }
