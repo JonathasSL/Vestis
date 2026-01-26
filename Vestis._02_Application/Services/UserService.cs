@@ -6,6 +6,7 @@ using System.Text.Json;
 using Vestis._02_Application.Common;
 using Vestis._02_Application.CQRS.User.Commands;
 using Vestis._02_Application.Models;
+using Vestis._02_Application.Models.Auth;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrasctructure.Repositories.Interfaces;
@@ -32,7 +33,7 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
         _httpClient = httpClient;
     }
 
-    public async Task<UserModel> Create(UserModel model)
+    public async Task<UserModel> Create(RegisterDTO model)
     {
         var command = CreateCommand(model);
         var createdUser = await _mediator.Send(command);
@@ -40,7 +41,7 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
         var responseModel = _mapper.Map<UserModel>(createdUser);
         return responseModel;
 
-        CreateUserCommand CreateCommand(UserModel model)
+        CreateUserCommand CreateCommand(RegisterDTO model)
         {
             if (model is null)
                 return null;

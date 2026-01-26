@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Vestis._02_Application.Models;
+using Vestis._02_Application.Models.Auth;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._04_Infrasctructure.Data;
 
@@ -15,12 +16,12 @@ public class AuthController : VestisController
     }
 
     [HttpPost()]
-    public async Task<IActionResult> RegisterAsync([FromBody] UserModel userModel)
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO dto)
     {
-        if (await _userService.ExistsAsync(userModel.Email))
+        if (await _userService.ExistsAsync(dto.Email))
             return BadRequest(new { message = "User with this email already exists" });
         
-        var user = await _userService.Create(userModel);
+        var user = await _userService.Create(dto);
         //TODO: Send Email validation instead of authenticate
         //var token = await _userService.AuthenticateAsync(user.Email, userModel.Password);
         
@@ -31,12 +32,12 @@ public class AuthController : VestisController
     }
     
     [HttpPost()]
-    public async Task<IActionResult> Login([FromBody] UserModel userModel)
+    public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
-        if (userModel == null || string.IsNullOrEmpty(userModel.Email) || string.IsNullOrEmpty(userModel.Password))
+        if (dto == null || string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
             return BadRequest(new { message = "Email and password are required" });
 
-        var token = await _userService.AuthenticateAsync(userModel.Email, userModel.Password);
+        var token = await _userService.AuthenticateAsync(dto.Email, dto.Password);
 
         return token != null ? Ok(new { token }) : Unauthorized();
     }
