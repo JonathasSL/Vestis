@@ -83,40 +83,49 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
     }
 
     [Obsolete("Método usado apenas para demonstração e testes.")]
-    public async Task<UserModel> GetTestUserAsync()
+    public async Task<List<UserModel>> GetTestUserAsync(int count)
     {
-        const string url = "https://randomuser.me/api/?results=1";
-        var response = await _httpClient.GetAsync(url);
-        response.EnsureSuccessStatusCode();
+        var json = await requestUserData();
+        var data = json.GetProperty("results").EnumerateArray().ToList();
 
-        var json = await response.Content.ReadAsStringAsync();
+        var users = new List<UserModel>();
 
-        // Desserializa parcialmente (não precisa mapear tudo)
-        using var doc = JsonDocument.Parse(json);
-        var root = doc.RootElement;
-        var user = root.GetProperty("results")[0];
-
-        var id = user.GetProperty("login").GetProperty("uuid").GetString() ?? Guid.NewGuid().ToString();
-        var firstName = user.GetProperty("name").GetProperty("first").GetString() ?? string.Empty;
-        var lastName = user.GetProperty("name").GetProperty("last").GetString() ?? string.Empty;
-        var email = user.GetProperty("email").GetString() ?? string.Empty;
-
-        string profileImg = string.Empty;
-        if (user.TryGetProperty("picture", out var picture))
+        foreach (var user in data)
         {
-            profileImg =
-                picture.GetProperty("large").GetString()
-                ?? picture.GetProperty("medium").GetString()
-                ?? picture.GetProperty("thumbnail").GetString()
-                ?? string.Empty;
+            var id = user.GetProperty("login").GetProperty("uuid").GetString() ?? Guid.NewGuid().ToString();
+            var firstName = user.GetProperty("name").GetProperty("first").GetString().Trim() ?? string.Empty;
+            var lastName = user.GetProperty("name").GetProperty("last").GetString().Trim() ?? string.Empty;
+            var email = user.GetProperty("email").GetString().Trim() ?? string.Empty;
+
+            string profileImg = string.Empty;
+            if (user.TryGetProperty("picture", out var picture))
+            {
+                profileImg =
+                    picture.GetProperty("large").GetString()
+                    ?? picture.GetProperty("medium").GetString()
+                    ?? picture.GetProperty("thumbnail").GetString()
+                    ?? string.Empty;
+            }
+
+            users.Add(new UserModel
+            {
+                Id = new Guid(id),
+                Name = $"{firstName} {lastName}".Trim(),
+                Role = email,
+                ProfileImg = profileImg
+            });
         }
 
-        return new UserModel
+        return users;
+
+        async Task<JsonElement> requestUserData()
         {
-            Id = new Guid(id),
-            Name = $"{firstName} {lastName}".Trim(),
-            Role = email,
-            ProfileImg = profileImg
-        };
+            string url = $"https://randomuser.me/api/?results={count}";
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonDocument.Parse(json).RootElement;
+        }
     }
 }

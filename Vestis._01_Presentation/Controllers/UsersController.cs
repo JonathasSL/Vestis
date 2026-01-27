@@ -28,10 +28,10 @@ public class UsersController : VestisController
     }
 
 	[AllowAnonymous]
-	[HttpGet("test-user")]
-	public IActionResult TestUser()
+	[HttpGet("{count}")]
+	public IActionResult TestUser([FromRoute] int count)
 	{
-		var user = _userService.GetTestUserAsync().Result;
+		var user = _userService.GetTestUserAsync(count).Result;
 		return Ok(user);
 	}
 }
