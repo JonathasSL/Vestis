@@ -27,24 +27,35 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var _allowSpecificOrigins = "_allowCORS";
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy(name: _allowSpecificOrigins, policy =>
+	{
+		if (builder.Environment.IsDevelopment())
+		{
+			policy.AllowAnyOrigin()
+				.AllowAnyHeader()
+				.AllowAnyMethod();
+			return;
+		}
+
+		var corsOriginsRaw = builder.Configuration["CORS_ORIGINS"];
+		var origins = string.IsNullOrWhiteSpace(corsOriginsRaw)
+			? ["https://vestis-frontend.vercel.app"]
+			: corsOriginsRaw.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+		policy.WithOrigins(origins)
+			.AllowAnyHeader()
+			.AllowAnyMethod();
+	});
+});
+
 // Configuração: sempre prioriza env var (Azure). Se não existir, usa appsettings (local).
 if (builder.Environment.IsDevelopment())
 {
 	builder.Configuration
 		.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
 		.AddEnvironmentVariables();
-
-	builder.Services.AddCors(options =>
-	{
-		options.AddPolicy(name: _allowSpecificOrigins,
-			policy =>
-			{
-				policy.AllowAnyOrigin()
-					//.WithOrigins("development.internal")
-					.AllowAnyHeader()
-					.AllowAnyMethod();
-			});
-	});
 
 	builder.WebHost.ConfigureKestrel(serverOptions =>
 	{
@@ -194,6 +205,9 @@ if (args.Length > 0)
 if (app.Environment.IsProduction())
     app.UseHttpsRedirection();
 
+// CORS deve vir antes de autenticação/autorização e endpoints.
+app.UseCors(_allowSpecificOrigins);
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
@@ -201,7 +215,6 @@ app.MapControllers();
 if (app.Environment.IsDevelopment())
 {
     UseSwagger();
-    app.UseCors(_allowSpecificOrigins);
 }
 
 System.Console.WriteLine(@"       ____   ____               __  .__            _____ __________.___ 
