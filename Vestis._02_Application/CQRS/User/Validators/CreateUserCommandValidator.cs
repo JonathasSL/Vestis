@@ -5,6 +5,9 @@ namespace Vestis._02_Application.CQRS.User.Validators;
 
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
+    private const int _NameMaxLength = 256;
+    private const int _EmailMaxLength = 256;
+
     public CreateUserCommandValidator()
     {
         NameRules();
@@ -13,18 +16,16 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     }
     private void NameRules()
     {
-        var characterLimit = 256;
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.")
-            .MaximumLength(characterLimit).WithMessage($"Name must not exceed {characterLimit} characters.");
+            .MaximumLength(_NameMaxLength).WithMessage($"Name must not exceed {_NameMaxLength} characters.");
     }
     private void EmailRules()
     {
-        var characterLimit = 100;
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("Email must be a valid email address.")
-            .MaximumLength(characterLimit).WithMessage($"Email must not exceed {characterLimit} characters.");
+            .MaximumLength(_EmailMaxLength).WithMessage($"Email must not exceed {_EmailMaxLength} characters.");
     }
     private void PasswordRules()
     {

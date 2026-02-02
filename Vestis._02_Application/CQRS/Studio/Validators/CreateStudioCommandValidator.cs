@@ -5,6 +5,9 @@ namespace Vestis._02_Application.CQRS.Studio.Validators;
 
 public class CreateStudioCommandValidator : AbstractValidator<CreateStudioCommand>
 {
+    private const int _StudioMaxLength = 256;
+    private const int _EmailMaxLength = 256;
+
     public CreateStudioCommandValidator()
     {
         UserRules();
@@ -24,22 +27,20 @@ public class CreateStudioCommandValidator : AbstractValidator<CreateStudioComman
 
     private void NameRules()
     {
-        var characterLimit = 256;
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage("Name is required.")
-            .MaximumLength(characterLimit)
-            .WithMessage($"Name must not exceed {characterLimit} characters.");
+            .MaximumLength(_StudioMaxLength)
+            .WithMessage($"Name must not exceed {_StudioMaxLength} characters.");
     }
 
     private void ContactEmailRules()
     {
-        var characterLimit = 100;
         RuleFor(x => x.ContactEmail)
             .EmailAddress()
             .WithMessage("Contact email must be a valid email address.")
-            .MaximumLength(characterLimit)
-            .WithMessage($"Contact email must not exceed {characterLimit} characters.");
+            .MaximumLength(_EmailMaxLength)
+            .WithMessage($"Contact email must not exceed {_EmailMaxLength} characters.");
     }
 
     private void PhoneNumberRules()
