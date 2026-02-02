@@ -17,6 +17,9 @@ using Vestis._02_Application.Services;
 using Vestis._04_Infrasctructure.Data;
 using Vestis.Shared.Extensions;
 
+var systemName = "Vestis.API";
+Console.Title = systemName;
+
 #region builder
 
 var builder = WebApplication.CreateBuilder(args);
@@ -193,12 +196,21 @@ var app = builder.Build();
 
 if (args.Length > 0)
 {
-    // Verifica se foi passado um argumento para gerar o YAML
-    if (args.Any(arg => arg.Equals("generate_yaml", StringComparison.OrdinalIgnoreCase)))
-    {
-        GenerateYaml();
-        return;
-    }
+	if (args.Any(arg => arg.Equals("generate_yaml", StringComparison.OrdinalIgnoreCase)))
+	{
+		GenerateYaml();
+		Console.WriteLine($"[{systemName}] YAML file generated.");
+	}
+	if (args.Any(arg => arg.Equals("migrate_database", StringComparison.OrdinalIgnoreCase)))
+	{
+		using (var scope = app.Services.CreateScope())
+		{
+			var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+			dbContext.Database.Migrate();
+			Console.WriteLine($"[{systemName}] Database migrated");
+		}
+	}
+	return;
 }
 
 
@@ -217,7 +229,8 @@ if (app.Environment.IsDevelopment())
     UseSwagger();
 }
 
-System.Console.WriteLine(@"       ____   ____               __  .__            _____ __________.___ 
+System.Console.WriteLine(
+@"       ____   ____               __  .__            _____ __________.___ 
        \   \ /   /____   _______/  |_|__| ______   /  _  \______   \   |
         \   Y   // __ \ /  ___/\   __\  |/  ___/  /  /_\  \|     ___/   |
          \     /\  ___/ \___ \  |  | |  |\___ \  /    |    \    |   |   |
