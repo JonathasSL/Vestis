@@ -7,6 +7,9 @@ namespace Vestis._04_Infrastructure.Mapping;
 
 public class StudioEntityConfiguration : IEntityTypeConfiguration<StudioEntity>
 {
+    private const int _StudioMaxLength = 256;
+    private const int _EmailMaxLength = 256;
+
     public void Configure(EntityTypeBuilder<StudioEntity> builder)
     {
         builder.ToTable(nameof(StudioEntity).Replace("Entity", string.Empty).Pluralize());
@@ -15,10 +18,10 @@ public class StudioEntityConfiguration : IEntityTypeConfiguration<StudioEntity>
 
         builder.Property(e => e.Name)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(_StudioMaxLength);
 
         builder.Property(e => e.ContactEmail)
-            .HasMaxLength(100);
+            .HasMaxLength(_EmailMaxLength);
 
         builder.Property(e => e.PhoneNumber)
             .HasMaxLength(20);

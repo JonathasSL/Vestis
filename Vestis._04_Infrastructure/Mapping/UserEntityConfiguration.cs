@@ -7,6 +7,9 @@ namespace Vestis._04_Infrastructure.Mapping;
 
 public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 {
+    private const int _NameMaxLength = 256;
+    private const int _EmailMaxLength = 256;
+
     public void Configure(EntityTypeBuilder<UserEntity> builder)
     {
         builder.ToTable(nameof(UserEntity).Replace("Entity", string.Empty).Pluralize());
@@ -15,11 +18,11 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.Property(x => x.Name)
             .IsRequired()
-            .HasMaxLength(128);
+            .HasMaxLength(_NameMaxLength);
 
         builder.Property(x => x.Email)
             .IsRequired()
-            .HasMaxLength(128);
+            .HasMaxLength(_EmailMaxLength);
 
         builder.Property(x => x.Password)
             .IsRequired()

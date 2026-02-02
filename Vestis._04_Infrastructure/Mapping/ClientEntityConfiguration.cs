@@ -7,6 +7,8 @@ namespace Vestis._04_Infrastructure.Mapping;
 
 public class ClientEntityConfiguration : IEntityTypeConfiguration<ClientEntity>
 {
+    private const int _NameMaxLength = 256;
+
     public void Configure(EntityTypeBuilder<ClientEntity> builder)
     {
         builder.ToTable(nameof(ClientEntity).Replace("Entity", string.Empty).Pluralize());
@@ -15,17 +17,6 @@ public class ClientEntityConfiguration : IEntityTypeConfiguration<ClientEntity>
 
         builder.Property(c => c.Name)
             .IsRequired()
-            .HasMaxLength(128);
-        /*
-        builder.HasOne(c => c.Studio)
-            .WithMany(s => s.Clients)
-            .HasForeignKey(c => c.StudioId).IsRequired(true)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        builder.HasOne(c => c.Address)
-            .WithOne().IsRequired(false)
-            .HasForeignKey<ClientEntity>(c => c.AddressId)
-            .OnDelete(DeleteBehavior.Cascade);
-        */
+            .HasMaxLength(_NameMaxLength);
     }
 }
