@@ -11,6 +11,8 @@ public class StudioEntity : BaseEntity<Guid>
 
     public virtual ISet<StudioMembershipEntity> StudioMemberships { get; private set; } = new HashSet<StudioMembershipEntity>();
 
+    public virtual ISet<ProductEntity> Products { get; private set; } = new HashSet<ProductEntity>();
+
     /*
     public List<ProjectEntity> Projects { get; private set; }
     public virtual List<ClientEntity> Clients { get; private set; }

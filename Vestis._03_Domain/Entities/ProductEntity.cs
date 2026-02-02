@@ -2,18 +2,18 @@
 
 public class ProductEntity : BaseEntity<Guid>
 {
-    //StudioEntity OwnerStudio { get; }
+    public Guid StudioId { get; private set; }
+    public virtual StudioEntity Studio { get; private set; }
     public string Name { get; private set; }
     public string? Description { get; private set; }
     public string? Category { get; private set; }
     public double? Price { get; private set; }
     public int UnitCount { get; private set; }
     public string? ImgUrl { get; private set; }
-
-    //Lazy<List<ProductUnitEntity>> InventoryList { get; }
+    public virtual ISet<ProductUnitEntity> ProductUnits { get; private set; } = new HashSet<ProductUnitEntity>();
 
     public ProductEntity(
-        //StudioEntity ownerStudio,
+        StudioEntity studio,
         string name,
         string? category,
         string? description = null,
@@ -21,13 +21,13 @@ public class ProductEntity : BaseEntity<Guid>
         int unitCount = 1,
         string? imgUrl = null)
     {
-        //this.OwnerStudio = ownerStudio;
+        this.Studio = studio;
+        this.StudioId = studio.Id;
         this.Name = name;
         this.Description = description;
         this.Category = category;
         this.Price = price;
         this.UnitCount = unitCount;
-        //this.InventoryList = new ();
         this.ImgUrl = imgUrl;
     }
 

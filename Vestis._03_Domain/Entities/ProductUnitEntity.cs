@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vestis._03_Domain.Enumerators;
+﻿using Vestis._03_Domain.Enumerators;
 
 namespace Vestis._03_Domain.Entities;
 
 public class ProductUnitEntity : BaseEntity<Guid>
 {
+    public Guid ProductId { get; private set; }
     public virtual ProductEntity Product { get; private set; }
     public string Code { get; private set; }
     public ProductUnitStatusEnum Status { get; private set; }
@@ -23,6 +19,7 @@ public class ProductUnitEntity : BaseEntity<Guid>
     public ProductUnitEntity(ProductEntity product, string code)
     {
         this.Product = product;
+        this.ProductId = product.Id;
         this.Code = code;
         this.Status = ProductUnitStatusEnum.Available;
     }

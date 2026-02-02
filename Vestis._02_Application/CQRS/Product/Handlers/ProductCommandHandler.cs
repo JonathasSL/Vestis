@@ -8,9 +8,15 @@ namespace Vestis._02_Application.CQRS.Product.Handlers;
 public class ProductCommandHandler : IRequestHandler<CreateProductCommand, ProductEntity>, IRequestHandler<DeleteProductCommand, bool>
 {
     private readonly IProductRepository _repository;
+    private readonly IStudioRepository _studioRepository;
     public async Task<ProductEntity> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
+        var studio = await _studioRepository.GetByIdAsync(request.studioId);
+        if (studio is null)
+            throw new InvalidOperationException($"Studio '{request.studioId}' was not found.");
+
         var entity = new ProductEntity(
+            studio,
             request.name,
             request.category,
             request.description,
@@ -31,8 +37,9 @@ public class ProductCommandHandler : IRequestHandler<CreateProductCommand, Produ
     }
 
 
-    public ProductCommandHandler(IProductRepository repository)
+    public ProductCommandHandler(IProductRepository repository, IStudioRepository studioRepository)
     {
         _repository = repository;
+        _studioRepository = studioRepository;
     }
 }
