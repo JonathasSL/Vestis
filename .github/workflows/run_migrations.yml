@@ -1,0 +1,46 @@
+name: migrate-database
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Ambiente alvo (development | staging | production)"
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+concurrency:
+  group: migrate-database-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    name: Run DB migrations
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build (Release)
+        run: dotnet build -c Release --no-restore
+
+      # IMPORTANTE:
+      # - O Program "já pega a connection string", mas no GitHub Actions ela precisa existir
+      #   como variável de ambiente/secret (por ambiente) ou vir de outro provider seguro (ex: Key Vault).
+      # - Este workflow NÃO define a connection string para evitar "chute" do nome da variável.
+      - name: Run migrate_database
+        run: dotnet run -c Release --project Vestis._01_Presentation/Vestis._01_Presentation.csproj migrate_database
