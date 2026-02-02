@@ -14,7 +14,7 @@ using Vestis._02_Application.Common;
 using Vestis._02_Application.Configurations;
 using Vestis._02_Application.Mapping;
 using Vestis._02_Application.Services;
-using Vestis._04_Infrasctructure.Data;
+using Vestis._04_Infrastructure.Data;
 using Vestis.Shared.Extensions;
 
 var systemName = "Vestis.API";
@@ -112,7 +112,7 @@ void AddDatabse(string connectionString)
 		.UseLazyLoadingProxies()
 		.UseSqlServer(
 			connectionString,
-			b => b.MigrationsAssembly("Vestis._04_Infrasctructure"))
+			b => b.MigrationsAssembly("Vestis._04_Infrastructure"))
 	);
 
 void ConfigureJWT()

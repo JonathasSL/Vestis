@@ -1,12 +1,6 @@
-﻿using Azure;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vestis._04_Infrasctructure.Data;
+using Vestis._04_Infrastructure.Data;
 
 namespace Vestis._02_Application.Behavior;
 
@@ -33,7 +27,7 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         {
             await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
             _logger.LogInformation("Transaction started for request: {Command}", typeof(TRequest).Name);
-            
+
             response = await next();
 
             await _dbContext.SaveChangesAsync(cancellationToken);

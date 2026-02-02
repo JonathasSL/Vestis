@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace Vestis._04_Infrasctructure.Data;
+namespace Vestis._04_Infrastructure.Data;
 
 public class ApplicationDbContext : DbContext
 {

@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Vestis._02_Application.CQRS.Product.Query;
 using Vestis._02_Application.Models.Product;
-using Vestis._04_Infrasctructure.ObjectQuery;
-using Vestis._04_Infrasctructure.Repositories.Interfaces;
+using Vestis._04_Infrastructure.ObjectQuery;
+using Vestis._04_Infrastructure.Repositories.Interfaces;
 using Vestis.Shared.Extensions;
 
 namespace Vestis._02_Application.CQRS.Product.Handlers;

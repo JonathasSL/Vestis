@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Vestis._02_Application.CQRS.StudioMembership.Commands;
 using Vestis._03_Domain.Entities;
-using Vestis._04_Infrasctructure.Repositories.Interfaces;
+using Vestis._04_Infrastructure.Repositories.Interfaces;
 
 namespace Vestis._02_Application.CQRS.StudioMembership.Handlers;
 

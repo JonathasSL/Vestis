@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Vestis._02_Application.Common;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
-using Vestis._04_Infrasctructure.Repositories.Interfaces;
+using Vestis._04_Infrastructure.Repositories.Interfaces;
 using Vestis.Shared.Extensions;
 
 namespace Vestis._02_Application.Services;

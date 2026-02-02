@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Vestis._04_Infrasctructure.Migrations
+namespace Vestis._04_Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class addingProfileImmageToUser : Migration
