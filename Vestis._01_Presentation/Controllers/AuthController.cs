@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Vestis._02_Application.Models;
 using Vestis._02_Application.Models.Auth;
 using Vestis._02_Application.Services.Interfaces;
-using Vestis._04_Infrasctructure.Data;
 
 namespace Controllers;
 
@@ -10,7 +8,7 @@ public class AuthController : VestisController
 {
     private readonly IUserService _userService;
 
-    public AuthController(ApplicationDbContext context, IUserService userService)
+    public AuthController(IUserService userService)
     {
         _userService = userService;
     }

@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Vestis._04_Infrasctructure.Data;
+using Vestis._04_Infrastructure.Data;
 
 #nullable disable
 
-namespace Vestis._04_Infrasctructure.Migrations
+namespace Vestis._04_Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250620215558_AddingAddressToStudio")]

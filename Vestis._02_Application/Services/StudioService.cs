@@ -9,7 +9,7 @@ using Vestis._02_Application.CQRS.Studio.Query;
 using Vestis._02_Application.Models.Studio;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
-using Vestis._04_Infrasctructure.Repositories.Interfaces;
+using Vestis._04_Infrastructure.Repositories.Interfaces;
 using Vestis.Shared.Extensions;
 
 namespace Vestis._02_Application.Services;

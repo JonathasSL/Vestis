@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vestis._03_Domain.Entities;
 
-namespace Vestis._04_Infrasctructure.Mapping;
+namespace Vestis._04_Infrastructure.Mapping;
 
 public class RoleEntityConfiguration : IEntityTypeConfiguration<RoleEntity>
 {
