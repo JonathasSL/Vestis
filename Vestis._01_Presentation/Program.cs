@@ -5,7 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Reflection;
 using System.Text;
+using Vestis._01_Presentation.Swagger;
 using Vestis._02_Application;
 using Vestis._02_Application.Behavior;
 using Vestis._02_Application.Common;
@@ -172,6 +174,32 @@ void AddSwagger()
 				Url = new Uri("https://vestis.com")
 			}
 		});
+
+		options.CustomSchemaIds(type => type.FullName);
+
+		var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+		var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+		if (File.Exists(xmlPath))
+			options.IncludeXmlComments(xmlPath);
+
+		var bearerScheme = new OpenApiSecurityScheme
+		{
+			Name = "Authorization",
+			Description = "JWT Authorization header usando o esquema Bearer. Ex: \"Bearer {token}\"",
+			In = ParameterLocation.Header,
+			Type = SecuritySchemeType.Http,
+			Scheme = "bearer",
+			BearerFormat = "JWT",
+			Reference = new OpenApiReference
+			{
+				Type = ReferenceType.SecurityScheme,
+				Id = "Bearer"
+			}
+		};
+
+		options.AddSecurityDefinition("Bearer", bearerScheme);
+
+		options.OperationFilter<AuthorizeCheckOperationFilter>();
 	});
 }
 
@@ -248,7 +276,7 @@ void UseSwagger()
 	app.UseSwaggerUI(c =>
 	{
 		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vestis API V1");
-		c.RoutePrefix = string.Empty;
+		c.RoutePrefix = "swagger";
 	});
 }
 
@@ -264,8 +292,8 @@ void GenerateYaml()
 	var yamlOutput = stringWriter.ToString();
 
 	// Define o caminho para salvar o arquivo dentro do projeto
-	var directoryPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "swagger");
-	var filePath = Path.Combine(directoryPath, "api-spec.yaml");
+	var directoryPath = Path.Combine(app.Environment.ContentRootPath, "artifacts", "openapi");
+	var filePath = Path.Combine(directoryPath, "api-spec.v1.yaml");
 
 	// Garante que o diretório existe
 	if (!Directory.Exists(directoryPath))
@@ -275,7 +303,6 @@ void GenerateYaml()
 	File.WriteAllText(filePath, yamlOutput);
 
 	Console.WriteLine($"Arquivo YAML gerado em: {filePath}");
-	return; // Encerra a aplicação após gerar o YAML
 }
 
 #endregion build app methods
