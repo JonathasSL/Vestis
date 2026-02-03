@@ -1,8 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Proxies;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
@@ -215,7 +213,7 @@ if (args.Length > 0)
 
 
 if (app.Environment.IsProduction())
-    app.UseHttpsRedirection();
+	app.UseHttpsRedirection();
 
 // CORS deve vir antes de autenticação/autorização e endpoints.
 app.UseCors(_allowSpecificOrigins);
@@ -226,7 +224,7 @@ app.MapControllers();
 
 if (app.Environment.IsDevelopment())
 {
-    UseSwagger();
+	UseSwagger();
 }
 
 System.Console.WriteLine(
@@ -246,38 +244,38 @@ app.Run();
 #region build app methods
 void UseSwagger()
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vestis API V1");
-        c.RoutePrefix = string.Empty;
-    });
+	app.UseSwagger();
+	app.UseSwaggerUI(c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Vestis API V1");
+		c.RoutePrefix = string.Empty;
+	});
 }
 
 void GenerateYaml()
 {
-        // Obtém o serviço responsável por gerar a documentação Swagger
-        var swaggerProvider = app.Services.GetRequiredService<ISwaggerProvider>();
-        var swaggerDoc = swaggerProvider.GetSwagger("v1");
+	// Obtém o serviço responsável por gerar a documentação Swagger
+	var swaggerProvider = app.Services.GetRequiredService<ISwaggerProvider>();
+	var swaggerDoc = swaggerProvider.GetSwagger("v1");
 
-        // Serializa para YAML
-        var stringWriter = new StringWriter();
-        swaggerDoc.SerializeAsV3(new OpenApiYamlWriter(stringWriter));
-        var yamlOutput = stringWriter.ToString();
+	// Serializa para YAML
+	var stringWriter = new StringWriter();
+	swaggerDoc.SerializeAsV3(new OpenApiYamlWriter(stringWriter));
+	var yamlOutput = stringWriter.ToString();
 
-        // Define o caminho para salvar o arquivo dentro do projeto
-        var directoryPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "swagger");
-        var filePath = Path.Combine(directoryPath, "api-spec.yaml");
+	// Define o caminho para salvar o arquivo dentro do projeto
+	var directoryPath = Path.Combine(app.Environment.ContentRootPath, "wwwroot", "swagger");
+	var filePath = Path.Combine(directoryPath, "api-spec.yaml");
 
-        // Garante que o diretório existe
-        if (!Directory.Exists(directoryPath))
-            Directory.CreateDirectory(directoryPath);
+	// Garante que o diretório existe
+	if (!Directory.Exists(directoryPath))
+		Directory.CreateDirectory(directoryPath);
 
-        // Salva o arquivo
-        File.WriteAllText(filePath, yamlOutput);
+	// Salva o arquivo
+	File.WriteAllText(filePath, yamlOutput);
 
-        Console.WriteLine($"Arquivo YAML gerado em: {filePath}");
-        return; // Encerra a aplicação após gerar o YAML
+	Console.WriteLine($"Arquivo YAML gerado em: {filePath}");
+	return; // Encerra a aplicação após gerar o YAML
 }
 
 #endregion build app methods
