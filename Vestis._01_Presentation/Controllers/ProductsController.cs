@@ -1,4 +1,5 @@
 ﻿using Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vestis._02_Application.Models.Product;
 using Vestis._02_Application.Services.Interfaces;
@@ -7,6 +8,7 @@ using Vestis.Shared.Extensions;
 namespace Vestis._01_Presentation.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/studios/{studioId:Guid}/[controller]")]
 public class ProductsController : VestisController
 {
