@@ -65,7 +65,8 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.Property<string>("ZipCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
@@ -121,7 +122,8 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -147,9 +149,6 @@ namespace Vestis._04_Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BodyMeasurementEntityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("BodyMeasurementId")
                         .HasColumnType("uniqueidentifier");
 
@@ -161,7 +160,8 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -171,7 +171,7 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BodyMeasurementEntityId");
+                    b.HasIndex("BodyMeasurementId");
 
                     b.ToTable("MeasurementEntries", (string)null);
                 });
@@ -190,11 +190,13 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
@@ -237,6 +239,9 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.Property<double?>("Price")
                         .HasColumnType("float");
 
+                    b.Property<Guid>("StudioId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("UnitCount")
                         .HasColumnType("int");
 
@@ -244,6 +249,8 @@ namespace Vestis._04_Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("StudioId");
 
                     b.ToTable("Products", (string)null);
                 });
@@ -254,16 +261,38 @@ namespace Vestis._04_Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("ExpectedReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("RentedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("RentedPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductUnits", (string)null);
                 });
@@ -320,11 +349,13 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -345,7 +376,8 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.Property<string>("ContactEmail")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -355,18 +387,22 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("AddressId")
+                        .IsUnique()
+                        .HasFilter("[AddressId] IS NOT NULL");
 
                     b.ToTable("Studios", (string)null);
                 });
@@ -399,7 +435,8 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.HasIndex("StudioId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "StudioId")
+                        .IsUnique();
 
                     b.ToTable("StudioMemberships", (string)null);
                 });
@@ -418,15 +455,18 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("ProfileImg")
                         .HasColumnType("nvarchar(max)");
@@ -436,6 +476,9 @@ namespace Vestis._04_Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users", (string)null);
                 });
 
@@ -444,7 +487,7 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.ProjectEntity", "Project")
                         .WithOne("BodyMeasurements")
                         .HasForeignKey("Vestis._03_Domain.Entities.BodyMeasurementEntity", "ProjectId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -459,7 +502,7 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.StudioEntity", "Studio")
                         .WithMany()
                         .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Address");
@@ -469,9 +512,13 @@ namespace Vestis._04_Infrastructure.Migrations
 
             modelBuilder.Entity("Vestis._03_Domain.Entities.MeasurementEntryEntity", b =>
                 {
-                    b.HasOne("Vestis._03_Domain.Entities.BodyMeasurementEntity", null)
+                    b.HasOne("Vestis._03_Domain.Entities.BodyMeasurementEntity", "BodyMeasurement")
                         .WithMany("Entries")
-                        .HasForeignKey("BodyMeasurementEntityId");
+                        .HasForeignKey("BodyMeasurementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BodyMeasurement");
                 });
 
             modelBuilder.Entity("Vestis._03_Domain.Entities.PermissionEntity", b =>
@@ -479,10 +526,32 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.RoleEntity", "Role")
                         .WithMany("Permissions")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Vestis._03_Domain.Entities.ProductEntity", b =>
+                {
+                    b.HasOne("Vestis._03_Domain.Entities.StudioEntity", "Studio")
+                        .WithMany("Products")
+                        .HasForeignKey("StudioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Studio");
+                });
+
+            modelBuilder.Entity("Vestis._03_Domain.Entities.ProductUnitEntity", b =>
+                {
+                    b.HasOne("Vestis._03_Domain.Entities.ProductEntity", "Product")
+                        .WithMany("ProductUnits")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Vestis._03_Domain.Entities.ProjectEntity", b =>
@@ -490,13 +559,13 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.ClientEntity", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Vestis._03_Domain.Entities.StudioEntity", "Studio")
                         .WithMany()
                         .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -507,8 +576,9 @@ namespace Vestis._04_Infrastructure.Migrations
             modelBuilder.Entity("Vestis._03_Domain.Entities.StudioEntity", b =>
                 {
                     b.HasOne("Vestis._03_Domain.Entities.AddressEntity", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
+                        .WithOne()
+                        .HasForeignKey("Vestis._03_Domain.Entities.StudioEntity", "AddressId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Address");
                 });
@@ -518,13 +588,13 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.StudioEntity", "Studio")
                         .WithMany("StudioMemberships")
                         .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Vestis._03_Domain.Entities.UserEntity", "User")
                         .WithMany("StudioMemberships")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Studio");
@@ -535,6 +605,11 @@ namespace Vestis._04_Infrastructure.Migrations
             modelBuilder.Entity("Vestis._03_Domain.Entities.BodyMeasurementEntity", b =>
                 {
                     b.Navigation("Entries");
+                });
+
+            modelBuilder.Entity("Vestis._03_Domain.Entities.ProductEntity", b =>
+                {
+                    b.Navigation("ProductUnits");
                 });
 
             modelBuilder.Entity("Vestis._03_Domain.Entities.ProjectEntity", b =>
@@ -550,6 +625,8 @@ namespace Vestis._04_Infrastructure.Migrations
 
             modelBuilder.Entity("Vestis._03_Domain.Entities.StudioEntity", b =>
                 {
+                    b.Navigation("Products");
+
                     b.Navigation("StudioMemberships");
                 });
 

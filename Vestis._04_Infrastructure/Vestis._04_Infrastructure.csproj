@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Vestis.Shared\Vestis.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
