@@ -30,6 +30,6 @@ public class StudioEntityConfiguration : IEntityTypeConfiguration<StudioEntity>
             .WithOne()
             .HasForeignKey<StudioEntity>(x => x.AddressId)
             .IsRequired(false)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }

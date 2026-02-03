@@ -16,6 +16,6 @@ public class ProjectEntityConfiguration : IEntityTypeConfiguration<ProjectEntity
             .WithMany()
             .HasForeignKey(p => p.StudioId)
             .IsRequired(true)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }

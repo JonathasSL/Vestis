@@ -19,6 +19,7 @@ public sealed class ProductUnitEntityConfiguration : IEntityTypeConfiguration<Pr
         builder.HasOne(x => x.Product)
             .WithMany(p => p.ProductUnits)
             .HasForeignKey(x => x.ProductId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }
