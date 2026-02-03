@@ -6,9 +6,10 @@ This document describes the manual deployment workflow (`deploy-to-azure-manual.
 
 The workflow provides a complete deployment pipeline that:
 1. **Builds** the .NET application with tests
-2. **Deploys** the application to Azure App Service
-3. **Runs** database migrations on the deployed application
-4. **Restarts** the App Service to ensure the application is running with the latest changes
+2. **Runs** database migrations locally before deployment
+3. **Deploys** the application to Azure App Service
+
+**Important**: Migrations run BEFORE deployment to ensure the database schema is updated before the new code is deployed. This ensures a safer deployment process.
 
 ## Trigger
 
@@ -25,6 +26,7 @@ The following secrets must be configured in your GitHub repository settings:
 
 ### Additional Required Secrets
 - `AZURE_RESOURCE_GROUP`: The name of the Azure Resource Group containing the App Service (e.g., "vestis-prod-rg")
+- `DATABASE_CONNECTION_STRING`: Database connection string for running migrations
 
 ## Environment Configuration
 
@@ -49,33 +51,26 @@ Environment-specific protection rules can be configured in GitHub repository set
   - Publish application
   - Upload build artifact
 
-### 2. Deploy Job
-- **Runs on**: Windows runner
+### 2. Migrate Job
+- **Runs on**: Ubuntu runner
 - **Depends on**: Build job
+- **Purpose**: Executes database migrations locally before deployment
+- **Steps**:
+  - Checkout code
+  - Setup .NET 9.x
+  - Restore dependencies
+  - Build in Release configuration
+  - Run `dotnet run migrate_database` (executes migrations as shown in Program.cs)
+- **Note**: Uses the `DATABASE_CONNECTION_STRING` secret for database access
+
+### 3. Deploy Job
+- **Runs on**: Windows runner
+- **Depends on**: Migrate job
 - **Purpose**: Deploys the application to Azure App Service
 - **Steps**:
   - Download build artifact
   - Login to Azure using service principal
   - Deploy to Azure Web App using official `azure/webapps-deploy@v3` action
-
-### 3. Migrate Job
-- **Runs on**: Ubuntu runner
-- **Depends on**: Deploy job
-- **Purpose**: Executes database migrations on the deployed application
-- **Steps**:
-  - Login to Azure
-  - Run `dotnet Vestis._01_Presentation.dll migrate_database` via Kudu API
-- **Note**: This job uses the Kudu REST API to execute commands directly on the App Service
-
-### 4. Restart App Job
-- **Runs on**: Ubuntu runner
-- **Depends on**: Migrate job
-- **Condition**: Only runs if migration succeeds
-- **Purpose**: Restarts the App Service and verifies it's running
-- **Steps**:
-  - Login to Azure
-  - Restart App Service using Azure CLI
-  - Verify App Service state
 
 ## How to Use
 
@@ -90,14 +85,12 @@ Environment-specific protection rules can be configured in GitHub repository set
 ```
 Build
   ↓
-Deploy (requires Build)
+Migrate (requires Build)
   ↓
-Migrate (requires Deploy)
-  ↓
-Restart App (requires Migrate to succeed)
+Deploy (requires Migrate)
 ```
 
-Each job will only run if the previous job succeeds, ensuring a safe deployment process.
+Each job will only run if the previous job succeeds, ensuring a safe deployment process. Migrations run BEFORE deployment to ensure database compatibility.
 
 ## Monitoring
 
@@ -112,9 +105,10 @@ You can monitor the workflow execution in the GitHub Actions UI:
 ### Migration Failures
 If the migration job fails:
 1. Check the job logs for error messages
-2. Verify database connection strings are configured in App Service configuration
-3. Ensure the App Service has network access to the database
+2. Verify `DATABASE_CONNECTION_STRING` secret is correctly configured
+3. Ensure the database is accessible from GitHub Actions runners
 4. Check if there are any pending migration conflicts
+5. Verify the connection string format matches what the application expects
 
 ### Deployment Failures
 If the deployment job fails:
@@ -122,12 +116,7 @@ If the deployment job fails:
 2. Check that the App Service name and resource group are correct
 3. Ensure the service principal has appropriate permissions
 4. Review App Service deployment logs in Azure Portal
-
-### Restart Failures
-If the restart job fails:
-1. Check if the App Service is accessible
-2. Verify the resource group name is correct
-3. Ensure the service principal has restart permissions
+5. Note: Deployment only happens if migrations succeed
 
 ## Security Considerations
 

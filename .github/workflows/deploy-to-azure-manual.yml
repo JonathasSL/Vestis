@@ -1,6 +1,7 @@
 # Manual deployment workflow for Azure App Service with database migrations
-# This workflow builds, deploys to Azure, runs migrations, and restarts the app
+# This workflow builds the app, runs migrations, then deploys to Azure
 # Trigger: Manual (workflow_dispatch)
+# Sequence: build → migrate → deploy
 
 name: Manual Deploy to Azure with Migrations
 
@@ -55,10 +56,37 @@ jobs:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
 
+  migrate:
+    name: Run Database Migrations
+    runs-on: ubuntu-latest
+    needs: build
+    environment: ${{ inputs.environment }}
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build (Release)
+        run: dotnet build -c Release --no-restore
+
+      - name: Run database migrations
+        run: dotnet run -c Release --project Vestis._01_Presentation/Vestis._01_Presentation.csproj migrate_database
+        env:
+          ConnectionStrings__DefaultConnection: ${{ secrets.DATABASE_CONNECTION_STRING }}
+
   deploy:
     name: Deploy to Azure App Service
     runs-on: windows-latest
-    needs: build
+    needs: migrate
     environment: ${{ inputs.environment }}
     permissions:
       id-token: write
@@ -84,65 +112,3 @@ jobs:
           app-name: 'Vestis'
           slot-name: 'Production'
           package: .
-
-  migrate:
-    name: Run Database Migrations
-    runs-on: ubuntu-latest
-    needs: deploy
-    environment: ${{ inputs.environment }}
-    timeout-minutes: 15
-    
-    steps:
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2ADFF4852E41459CAE2BCB454BDC6573 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8B4C81BD5F31455484435C3CF38984ED }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9B4FAF157A734E3EB1C281D35553F021 }}
-
-      - name: Run database migrations via Kudu API
-        run: |
-          echo "Running database migrations on Azure App Service via Kudu API..."
-          
-          # Get publish profile credentials
-          PUBLISH_PROFILE=$(az webapp deployment list-publishing-profiles --name Vestis --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --xml)
-          
-          # Extract username and password from publish profile
-          USERNAME=$(echo "$PUBLISH_PROFILE" | grep -oPm1 "(?<=userName=\")[^\"]+")
-          PASSWORD=$(echo "$PUBLISH_PROFILE" | grep -oPm1 "(?<=userPWD=\")[^\"]+")
-          
-          # Run migration command via Kudu API
-          curl -X POST \
-            "https://Vestis.scm.azurewebsites.net/api/command" \
-            -u "$USERNAME:$PASSWORD" \
-            -H "Content-Type: application/json" \
-            -d '{"command":"cd D:\\home\\site\\wwwroot && dotnet Vestis._01_Presentation.dll migrate_database","dir":"D:\\home\\site\\wwwroot"}' \
-            --fail-with-body
-          
-          echo "Database migrations completed successfully"
-
-  restart-app:
-    name: Restart Application
-    runs-on: ubuntu-latest
-    needs: migrate
-    if: success()
-    environment: ${{ inputs.environment }}
-    
-    steps:
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2ADFF4852E41459CAE2BCB454BDC6573 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8B4C81BD5F31455484435C3CF38984ED }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9B4FAF157A734E3EB1C281D35553F021 }}
-
-      - name: Restart Azure App Service
-        run: |
-          echo "Restarting Azure App Service..."
-          az webapp restart --name Vestis --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-          echo "App Service restarted successfully"
-
-      - name: Verify App Service is running
-        run: |
-          echo "Verifying App Service status..."
-          az webapp show --name Vestis --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --query state -o tsv
