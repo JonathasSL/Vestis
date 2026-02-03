@@ -16,12 +16,14 @@ public class StudioMembershipEntityConfiguration : IEntityTypeConfiguration<Stud
         builder.HasOne(s => s.User)
             .WithMany(u => u.StudioMemberships)
             .HasForeignKey(s => s.UserId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.HasOne(s => s.Studio)
             .WithMany(st => st.StudioMemberships)
             .HasForeignKey(s => s.StudioId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.HasIndex(x => new { x.UserId, x.StudioId }).IsUnique();
 

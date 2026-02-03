@@ -23,6 +23,7 @@ public class MeasurementEntryEntityConfiguration : IEntityTypeConfiguration<Meas
         builder.HasOne(m => m.BodyMeasurement)
             .WithMany(b => b.Entries)
             .HasForeignKey(m => m.BodyMeasurementId)
-            .IsRequired(true);
+            .IsRequired(true)
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }

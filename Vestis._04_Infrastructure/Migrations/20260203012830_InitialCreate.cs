@@ -87,8 +87,7 @@ namespace Vestis._04_Infrastructure.Migrations
                         name: "FK_Studios_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -167,8 +166,7 @@ namespace Vestis._04_Infrastructure.Migrations
                         name: "FK_Products_Studios_StudioId",
                         column: x => x.StudioId,
                         principalTable: "Studios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -190,14 +188,12 @@ namespace Vestis._04_Infrastructure.Migrations
                         name: "FK_StudioMemberships_Studios_StudioId",
                         column: x => x.StudioId,
                         principalTable: "Studios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_StudioMemberships_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -226,8 +222,7 @@ namespace Vestis._04_Infrastructure.Migrations
                         name: "FK_Projects_Studios_StudioId",
                         column: x => x.StudioId,
                         principalTable: "Studios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -252,8 +247,7 @@ namespace Vestis._04_Infrastructure.Migrations
                         name: "FK_ProductUnits_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -274,8 +268,7 @@ namespace Vestis._04_Infrastructure.Migrations
                         name: "FK_BodyMeasurements_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -297,8 +290,7 @@ namespace Vestis._04_Infrastructure.Migrations
                         name: "FK_MeasurementEntries_BodyMeasurements_BodyMeasurementId",
                         column: x => x.BodyMeasurementId,
                         principalTable: "BodyMeasurements",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

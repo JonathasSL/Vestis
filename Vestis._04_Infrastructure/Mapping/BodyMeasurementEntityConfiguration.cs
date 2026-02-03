@@ -20,7 +20,7 @@ public class BodyMeasurementEntityConfiguration : IEntityTypeConfiguration<BodyM
             .WithOne(p => p.BodyMeasurements)
             .HasForeignKey<BodyMeasurementEntity>(b => b.ProjectId)
             .IsRequired(true)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 
 }

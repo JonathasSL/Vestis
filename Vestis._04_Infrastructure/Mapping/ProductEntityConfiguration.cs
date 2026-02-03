@@ -16,11 +16,13 @@ public sealed class ProductEntityConfiguration : IEntityTypeConfiguration<Produc
         builder.HasOne(x => x.Studio)
             .WithMany(s => s.Products)
             .HasForeignKey(x => x.StudioId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.ClientNoAction);
 
         builder.HasMany(x => x.ProductUnits)
             .WithOne(u => u.Product)
             .HasForeignKey(u => u.ProductId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.ClientNoAction);
     }
 }

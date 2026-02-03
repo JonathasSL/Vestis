@@ -12,7 +12,7 @@ using Vestis._04_Infrastructure.Data;
 namespace Vestis._04_Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260203005137_InitialCreate")]
+    [Migration("20260203012830_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -490,7 +490,7 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.ProjectEntity", "Project")
                         .WithOne("BodyMeasurements")
                         .HasForeignKey("Vestis._03_Domain.Entities.BodyMeasurementEntity", "ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -518,7 +518,7 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.BodyMeasurementEntity", "BodyMeasurement")
                         .WithMany("Entries")
                         .HasForeignKey("BodyMeasurementId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
                     b.Navigation("BodyMeasurement");
@@ -540,7 +540,7 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.StudioEntity", "Studio")
                         .WithMany("Products")
                         .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
                     b.Navigation("Studio");
@@ -551,7 +551,7 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.ProductEntity", "Product")
                         .WithMany("ProductUnits")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -568,7 +568,7 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.StudioEntity", "Studio")
                         .WithMany()
                         .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -581,7 +581,7 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.AddressEntity", "Address")
                         .WithOne()
                         .HasForeignKey("Vestis._03_Domain.Entities.StudioEntity", "AddressId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.ClientNoAction);
 
                     b.Navigation("Address");
                 });
@@ -591,13 +591,13 @@ namespace Vestis._04_Infrastructure.Migrations
                     b.HasOne("Vestis._03_Domain.Entities.StudioEntity", "Studio")
                         .WithMany("StudioMemberships")
                         .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
                     b.HasOne("Vestis._03_Domain.Entities.UserEntity", "User")
                         .WithMany("StudioMemberships")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientNoAction)
                         .IsRequired();
 
                     b.Navigation("Studio");
