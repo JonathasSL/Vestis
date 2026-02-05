@@ -239,6 +239,12 @@ void AddCQRS()
 #region build app
 var app = builder.Build();
 
+Console.WriteLine();
+Console.WriteLine("app:");
+Console.WriteLine($"app.Configuration.GetValue<string>(); '{app.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")}'");
+
+
+
 if (args.Length > 0)
 {
 	if (args.Any(arg => arg.Equals("generate_yaml", StringComparison.OrdinalIgnoreCase)))
