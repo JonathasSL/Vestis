@@ -83,10 +83,10 @@ else
 }
 
 var connectionString =
-	Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING")
-	?? builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")
-	?? builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]
-	?? builder.Configuration.GetConnectionString("DefaultConnection");
+	Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING").EmptyToNull()
+	?? builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING").EmptyToNull()
+	?? builder.Configuration["AZURE_SQL_CONNECTIONSTRING"].EmptyToNull()
+	?? builder.Configuration.GetConnectionString("DefaultConnection").EmptyToNull();
 
 if (string.IsNullOrWhiteSpace(connectionString))
 	throw new InvalidOperationException(
