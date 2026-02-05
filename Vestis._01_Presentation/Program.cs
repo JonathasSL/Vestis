@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
 {
 	options.AddPolicy(name: _allowSpecificOrigins, policy =>
 	{
-		if (builder.Environment.IsDevelopment())
+		if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("local"))
 		{
 			policy.AllowAnyOrigin()
 				.AllowAnyHeader()
@@ -54,7 +54,7 @@ builder.Services.AddCors(options =>
 });
 
 // Configuração: sempre prioriza env var (Azure). Se não existir, usa appsettings (local).
-if (builder.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("local"))
 {
 	builder.Configuration
 		.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
@@ -81,6 +81,12 @@ else
 {
 	builder.Configuration.AddEnvironmentVariables();
 }
+
+
+Console.WriteLine($"Environment.GetEnvironmentVariable '{Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING")}'");
+Console.WriteLine($"builder.Configuration.GetValue<string>() '{builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")}'");
+Console.WriteLine($"builder.Configuration[] '{builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]}'");
+Console.WriteLine($"builder.Configuration.GetConnectionString() '{builder.Configuration.GetConnectionString("DefaultConnection")}'");
 
 var connectionString =
 	Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING").EmptyToNull()
@@ -252,7 +258,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("local"))
 {
 	UseSwagger();
 }

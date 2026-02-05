@@ -1,6 +1,6 @@
 @Vestis_HostAddress = http://localhost:7232
 
-GET {{Vestis_HostAddress}}/
+GET {{Vestis_HostAddress}}/swagger
 Accept: application/json
 
 ###
