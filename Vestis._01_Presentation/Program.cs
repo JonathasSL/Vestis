@@ -83,7 +83,8 @@ else
 }
 
 var connectionString =
-	builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")
+	Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING")
+	?? builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")
 	?? builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]
 	?? builder.Configuration.GetConnectionString("DefaultConnection");
 
