@@ -83,7 +83,8 @@ else
 }
 
 var connectionString =
-	builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]
+	builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")
+	?? builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]
 	?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (string.IsNullOrWhiteSpace(connectionString))
