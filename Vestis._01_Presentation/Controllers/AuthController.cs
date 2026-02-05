@@ -39,4 +39,11 @@ public class AuthController : VestisController
 
         return token != null ? Ok(new { token }) : Unauthorized();
     }
+
+	[HttpGet]
+	public async Task<IActionResult> Variables()
+	{
+		var vars = Environment.GetEnvironmentVariables();
+		return Ok(new { vars });
+	}
 }
