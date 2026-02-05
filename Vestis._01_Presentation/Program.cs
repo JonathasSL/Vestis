@@ -89,20 +89,25 @@ else if (builder.Environment.IsProduction())
 }
 
 
-Console.WriteLine($"Environment.GetEnvironmentVariable() '{Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING")}'");
-Console.WriteLine($"builder.Configuration.GetValue<string>() '{builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")}'");
-Console.WriteLine($"builder.Configuration[] '{builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]}'");
-Console.WriteLine($"builder.Configuration.GetConnectionString() '{builder.Configuration.GetConnectionString("DefaultConnection")}'");
+
+var env = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+Console.WriteLine($"Environment.GetEnvironmentVariable() '{env}'");
+var getValue = builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING");
+Console.WriteLine($"builder.Configuration.GetValue<string>() '{getValue}'");
+var config = builder.Configuration["AZURE_SQL_CONNECTIONSTRING"];
+Console.WriteLine($"builder.Configuration[] '{config}'");
+var getConnStr = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"builder.Configuration.GetConnectionString() '{getConnStr}'");
 
 var connectionString =
-	Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING").EmptyToNull()
-	?? builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING").EmptyToNull()
-	?? builder.Configuration["AZURE_SQL_CONNECTIONSTRING"].EmptyToNull()
-	?? builder.Configuration.GetConnectionString("DefaultConnection").EmptyToNull();
+	env.EmptyToNull()
+	?? getValue.EmptyToNull()
+	?? config.EmptyToNull()
+	?? getConnStr.EmptyToNull();
 
 if (string.IsNullOrWhiteSpace(connectionString))
 	throw new InvalidOperationException(
-		"Connection string não configurada. Defina a env var 'AZURE_SQL_CONNECTIONSTRING' (prioritário) ou configure 'ConnectionStrings:DefaultConnection' em appsettings*.json.");
+		$"Connection string não configurada: '{connectionString}'. Defina a env var 'AZURE_SQL_CONNECTIONSTRING' (prioritário) ou configure 'ConnectionStrings:DefaultConnection' em appsettings*.json.");
 
 // Add services to the container.
 builder.Services.AddControllers();
