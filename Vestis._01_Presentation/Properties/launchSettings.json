@@ -1,23 +1,26 @@
-﻿{
-  "$schema": "https://json.schemastore.org/launchsettings.json",
+{
   "profiles": {
     "lan": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://dev.local:7232;https://192.168.1.20:7232;http://192.168.1.20:5209",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_ENVIRONMENT": "local",
+        "AZURE_SQL_CONNECTIONSTRING": "Server=localhost;Database=VestisDB;Trusted_Connection=True;TrustServerCertificate=True"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://dev.local:7232;https://localhost:7232;https://localhost:5209"
+      //"applicationUrl": "https://dev.local:7232;https://192.168.1.7:7232;http://192.168.1.7:5209"
     },
     "localhost": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7232;https://localhost:5209",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_ENVIRONMENT": "local",
+        //"AZURE_SQL_CONNECTIONSTRING": "Server=localhost;Database=VestisDB;Trusted_Connection=True;TrustServerCertificate=True"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7232;https://localhost:5209"
     }
-  }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json"
 }
