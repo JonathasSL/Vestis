@@ -1,7 +1,7 @@
 # Manual deployment workflow for Azure App Service with database migrations
-# This workflow builds the app, runs migrations, then deploys to Azure
+# This workflow builds the app, runs migrations after approval, then deploys
 # Trigger: Manual (workflow_dispatch)
-# Sequence: build → migrate → deploy
+# Sequence: build → approval → migrate → deploy
 
 name: Manual Deploy to Azure with Migrations
 
@@ -28,7 +28,7 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: read
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,38 +48,35 @@ jobs:
         run: dotnet test --configuration Release --no-build --verbosity normal
 
       - name: Publish application
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish -c Release -o "${{ env.DOTNET_ROOT }}/myapp"
 
-      - name: Upload artifact for deployment job
+      - name: Upload artifact for migration and deploy jobs
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{ env.DOTNET_ROOT }}/myapp
 
   migrate:
     name: Run Database Migrations
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     environment: ${{ inputs.environment }}
     timeout-minutes: 15
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
+    steps:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.0.x"
+          dotnet-version: '9.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build (Release)
-        run: dotnet build -c Release --no-restore
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+          path: ${{ github.workspace }}/myapp
 
       - name: Run database migrations
-        run: dotnet run -c Release --project Vestis._01_Presentation/Vestis._01_Presentation.csproj migrate_database
+        run: dotnet "${{ github.workspace }}/myapp/Vestis._01_Presentation.dll" migrate_database
         env:
           ConnectionStrings__DefaultConnection: ${{ secrets.DATABASE_CONNECTION_STRING }}
 
@@ -91,13 +88,14 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-      
+          path: ${{ github.workspace }}/myapp
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -110,5 +108,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'Vestis'
-          slot-name: 'Production'
-          package: .
+          slot-name: ${{ inputs.environment }}
+          package: ${{ github.workspace }}/myapp
