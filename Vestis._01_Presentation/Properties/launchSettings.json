@@ -5,7 +5,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "local",
-      },
+        "AZURE_SQL_CONNECTIONSTRING": "Server=localhost;Database=VestisDB;Trusted_Connection=True;TrustServerCertificate=True"
+    },
       "dotnetRunMessages": true,
       "applicationUrl": "https://dev.local:7232;https://localhost:7232;https://localhost:5209"
       //"applicationUrl": "https://dev.local:7232;https://192.168.1.7:7232;http://192.168.1.7:5209"
