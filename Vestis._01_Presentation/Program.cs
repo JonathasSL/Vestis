@@ -54,17 +54,15 @@ builder.Services.AddCors(options =>
 });
 
 // Configuração: sempre prioriza env var (Azure). Se não existir, usa appsettings (local).
-if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("local"))
+if (builder.Environment.IsEnvironment("local"))
 {
 	builder.Configuration
-		.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+		.AddJsonFile("appsettings.local.json", optional: false, reloadOnChange: true)
 		.AddEnvironmentVariables();
+
 
 	builder.WebHost.ConfigureKestrel(serverOptions =>
 	{
-		// LAN-friendly endpoints for development
-		// - HTTP avoids local network HTTPS certificate issues when accessing by IP
-		// - HTTPS keeps parity with local dev scenarios
 		serverOptions.ListenAnyIP(5209, listenOptions =>
 		{
 			Console.WriteLine($"Listening in: {listenOptions.IPEndPoint.Address} port: {listenOptions.IPEndPoint.Port} (HTTP)");
@@ -77,13 +75,21 @@ if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("lo
 		});
 	});
 }
-else
+else if (builder.Environment.IsDevelopment())
 {
-	builder.Configuration.AddEnvironmentVariables();
+	builder.Configuration
+		.AddJsonFile("appsettings.development.json", optional: true, reloadOnChange: true)
+		.AddEnvironmentVariables();
+}
+else if (builder.Environment.IsProduction())
+{
+	builder.Configuration
+		.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+		.AddEnvironmentVariables();
 }
 
 
-Console.WriteLine($"Environment.GetEnvironmentVariable '{Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING")}'");
+Console.WriteLine($"Environment.GetEnvironmentVariable() '{Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING")}'");
 Console.WriteLine($"builder.Configuration.GetValue<string>() '{builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")}'");
 Console.WriteLine($"builder.Configuration[] '{builder.Configuration["AZURE_SQL_CONNECTIONSTRING"]}'");
 Console.WriteLine($"builder.Configuration.GetConnectionString() '{builder.Configuration.GetConnectionString("DefaultConnection")}'");
