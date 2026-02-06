@@ -91,19 +91,19 @@ else if (builder.Environment.IsProduction())
 
 
 var env = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
-Console.WriteLine($"Environment.GetEnvironmentVariable() '{env}'");
-var getValue = builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING");
-Console.WriteLine($"builder.Configuration.GetValue<string>() '{getValue}'");
-var config = builder.Configuration["AZURE_SQL_CONNECTIONSTRING"];
-Console.WriteLine($"builder.Configuration[] '{config}'");
-var getConnStr = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine($"builder.Configuration.GetConnectionString() '{getConnStr}'");
+//Console.WriteLine($"Environment.GetEnvironmentVariable() '{env}'");
+//var getValue = builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING");
+//Console.WriteLine($"builder.Configuration.GetValue<string>() '{getValue}'");
+//var config = builder.Configuration["AZURE_SQL_CONNECTIONSTRING"];
+//Console.WriteLine($"builder.Configuration[] '{config}'");
+//var getConnStr = builder.Configuration.GetConnectionString("DefaultConnection");
+//Console.WriteLine($"builder.Configuration.GetConnectionString() '{getConnStr}'");
 
 var connectionString =
-	env.EmptyToNull()
-	?? getValue.EmptyToNull()
-	?? config.EmptyToNull()
-	?? getConnStr.EmptyToNull();
+	env.EmptyToNull();
+	//?? getValue.EmptyToNull()
+	//?? config.EmptyToNull()
+	//?? getConnStr.EmptyToNull();
 
 if (string.IsNullOrWhiteSpace(connectionString))
 	throw new InvalidOperationException(
@@ -239,9 +239,9 @@ void AddCQRS()
 #region build app
 var app = builder.Build();
 
-Console.WriteLine();
-Console.WriteLine("app:");
-Console.WriteLine($"app.Configuration.GetValue<string>(); '{app.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")}'");
+//Console.WriteLine();
+//Console.WriteLine("app:");
+//Console.WriteLine($"app.Configuration.GetValue<string>(); '{app.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")}'");
 
 
 
@@ -262,6 +262,16 @@ if (args.Length > 0)
 		}
 	}
 	return;
+}
+else if (!app.Environment.IsProduction())
+{
+	using (var scope = app.Services.CreateScope())
+	{
+		var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+		dbContext.Database.Migrate();
+		app.Logger.LogInformation($"[{systemName}] Database migrated");
+	}
+	app.Logger.LogInformation($"Application started in {app.Environment.EnvironmentName} environment. Database migrated.");
 }
 
 
