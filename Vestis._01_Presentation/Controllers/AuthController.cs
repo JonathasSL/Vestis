@@ -41,8 +41,11 @@ public class AuthController : VestisController
     }
 
 	[HttpGet]
-	public async Task<IActionResult> Variables()
+	public async Task<IActionResult> Variables([FromRoute] string key)
 	{
+		if (key != "vestis_admin_key")
+			return Unauthorized();
+
 		var vars = Environment.GetEnvironmentVariables();
 		return Ok(new { vars });
 	}
