@@ -15,6 +15,8 @@ using Vestis._02_Application.Configurations;
 using Vestis._02_Application.Mapping;
 using Vestis._02_Application.Services;
 using Vestis._04_Infrastructure.Data;
+using Vestis._04_Infrastructure.Email;
+using Vestis._04_Infrastructure.Email.Interfaces;
 using Vestis.Shared.Extensions;
 
 var systemName = "Vestis.API";
@@ -27,6 +29,7 @@ var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<
 
 builder.Services.RegisterAllScopedDependencies(logger);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 var _allowSpecificOrigins = "_allowCORS";
 
@@ -91,19 +94,9 @@ else if (builder.Environment.IsProduction())
 
 
 var env = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
-//Console.WriteLine($"Environment.GetEnvironmentVariable() '{env}'");
-//var getValue = builder.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING");
-//Console.WriteLine($"builder.Configuration.GetValue<string>() '{getValue}'");
-//var config = builder.Configuration["AZURE_SQL_CONNECTIONSTRING"];
-//Console.WriteLine($"builder.Configuration[] '{config}'");
-//var getConnStr = builder.Configuration.GetConnectionString("DefaultConnection");
-//Console.WriteLine($"builder.Configuration.GetConnectionString() '{getConnStr}'");
 
 var connectionString =
 	env.EmptyToNull();
-	//?? getValue.EmptyToNull()
-	//?? config.EmptyToNull()
-	//?? getConnStr.EmptyToNull();
 
 if (string.IsNullOrWhiteSpace(connectionString))
 	throw new InvalidOperationException(
@@ -122,6 +115,8 @@ AddSwagger();
 builder.Services.AddSingleton<JwtService>();
 
 AddCQRS();
+
+ConfigureEmailService();
 #endregion Builder
 
 #region builder methods
@@ -233,6 +228,14 @@ void AddCQRS()
 
 	// Adiciona o contexto de notificação de negócios
 	builder.Services.AddScoped<BusinessNotificationContext>();
+}
+
+void ConfigureEmailService()
+{
+	builder.Services.Configure<EmailSettings>(
+		builder.Configuration.GetSection("EmailSettings")
+		);
+	builder.Services.AddScoped<IEmailSender, AzureEmailSender>();
 }
 #endregion builder methods
 
