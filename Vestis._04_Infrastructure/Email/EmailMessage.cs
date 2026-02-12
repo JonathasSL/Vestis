@@ -1,4 +1,4 @@
-﻿namespace Vestis._02_Application.Common;
+﻿namespace Vestis._04_Infrastructure.Email;
 
 public class EmailMessage
 {
