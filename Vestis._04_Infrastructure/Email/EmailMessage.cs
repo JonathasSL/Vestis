@@ -2,16 +2,33 @@
 
 public class EmailMessage
 {
-    public IReadOnlyCollection<string> ToEmail { get; private set; }
-    public string Subject { get; private set; }
-    public string Body { get; private set; }
-    public bool IsHtml { get; private set; }
+    public string Subject { get; }
+    public string Body { get; }
+    public bool IsHtml { get; }
 
-    public EmailMessage(IEnumerable<string> toEmail, string subject, string body, bool isHtml = false)
+    public IReadOnlyCollection<string> To { get; }
+    public IReadOnlyCollection<string>? Cc { get; }
+    public IReadOnlyCollection<string>? Bcc { get; }
+
+    public EmailMessage(
+        string subject,
+        string body,
+        bool isHtml,
+        IEnumerable<string> to,
+        IEnumerable<string>? cc = null,
+        IEnumerable<string>? bcc = null)
     {
-        ToEmail = toEmail.ToList().AsReadOnly();
+        if (string.IsNullOrWhiteSpace(subject))
+            throw new ArgumentException("Subject is required.");
+
+        if (to == null || !to.Any())
+            throw new ArgumentException("At least one recipient is required.");
+
         Subject = subject;
         Body = body;
         IsHtml = isHtml;
+        To = to.Select(e => e.Trim()).ToList();
+        Cc = cc?.Select(e => e.Trim()).ToList();
+        Bcc = bcc?.Select(e => e.Trim()).ToList();
     }
 }

@@ -17,6 +17,7 @@ using Vestis._02_Application.Services;
 using Vestis._04_Infrastructure.Data;
 using Vestis._04_Infrastructure.Email;
 using Vestis._04_Infrastructure.Email.Interfaces;
+using Vestis._04_Infrastructure.Email.Settings;
 using Vestis.Shared.Extensions;
 
 var systemName = "Vestis.API";
@@ -232,19 +233,28 @@ void AddCQRS()
 
 void ConfigureEmailService()
 {
-	builder.Services.Configure<EmailSettings>(
-		builder.Configuration.GetSection("EmailSettings")
-		);
-	builder.Services.AddScoped<IEmailSender, AzureEmailSender>();
+	var emailSettings = builder.Configuration.GetSection("EmailSettings").Get<EmailSettings>();
+
+	builder.Services.AddSingleton(emailSettings);
+
+
+	if (builder.Environment.IsProduction())
+		builder.Services.AddScoped<IEmailSender, AzureEmailSender>();
+	else if (builder.Environment.IsEnvironment("Local"))
+	{
+		var localSettings = builder.Configuration.GetSection("EmailSettings:Local").Get<LocalEmailSettings>();
+		builder.Services.AddSingleton(localSettings);
+		builder.Services.AddScoped<IEmailSender, LocalEmailSender>();
+	}
+	else
+		builder.Services.AddScoped<IEmailSender, LocalEmailSender>();
+
+
 }
 #endregion builder methods
 
 #region build app
 var app = builder.Build();
-
-//Console.WriteLine();
-//Console.WriteLine("app:");
-//Console.WriteLine($"app.Configuration.GetValue<string>(); '{app.Configuration.GetValue<string>("AZURE_SQL_CONNECTIONSTRING")}'");
 
 
 
