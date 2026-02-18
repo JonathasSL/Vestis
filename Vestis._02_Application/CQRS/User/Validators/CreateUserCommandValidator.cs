@@ -7,6 +7,7 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
     private const int _NameMaxLength = 256;
     private const int _EmailMaxLength = 256;
+    private const int _PasswordMaxLength = 256;
 
     public CreateUserCommandValidator()
     {
@@ -29,11 +30,10 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     }
     private void PasswordRules()
     {
-        var characterLimit = 32;
         RuleFor(x => x.Password)
             .NotEmpty()
             .WithMessage("Password is required.")
             .MinimumLength(8).WithMessage("Password must be at least 8 characters long.")
-            .MaximumLength(characterLimit).WithMessage($"Password must not exceed {characterLimit} characters.");
+            .MaximumLength(_PasswordMaxLength).WithMessage($"Password must not exceed {_PasswordMaxLength} characters.");
     }
 }
