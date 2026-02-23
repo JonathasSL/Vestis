@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Vestis._02_Application.Models.Auth;
-using Vestis._02_Application.Services.Interfaces;
+using Vestis._02_Application.Services.Interfaces.User;
 
 namespace Controllers;
 

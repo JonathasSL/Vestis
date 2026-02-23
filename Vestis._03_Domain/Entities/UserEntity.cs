@@ -10,8 +10,10 @@ public class UserEntity : BaseEntity<Guid>
     public string Email { get; private set; }
     public string Password { get; private set; }
     public string? ProfileImg { get; private set; }
+    public bool IsEmailConfirmed { get; private set; }
 
     public virtual ICollection<StudioMembershipEntity> StudioMemberships { get; private set; } = new List<StudioMembershipEntity>();
+    public virtual ICollection<EmailVerificationTokenEntity> EmailVerificationTokens { get; private set; } = new List<EmailVerificationTokenEntity>();
     #endregion properties
     
     #region behavior
@@ -21,12 +23,21 @@ public class UserEntity : BaseEntity<Guid>
         Email = email;
         Password = password;
         ProfileImg = profileImg;
+        IsEmailConfirmed = false;
     }
 
     //Constructor for EF
     [Obsolete("This constructor is for EF use only.")]
     public UserEntity() { }
 
+    public void ConfirmEmail()
+    {
+        if (!IsEmailConfirmed)
+        {
+            IsEmailConfirmed = true;
+            SetAsUpdated();
+        }
+    }
     public void ChangeName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))

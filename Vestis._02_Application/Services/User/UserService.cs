@@ -7,7 +7,7 @@ using Vestis._02_Application.Common;
 using Vestis._02_Application.CQRS.User.Commands;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Models.Auth;
-using Vestis._02_Application.Services.Interfaces;
+using Vestis._02_Application.Services.Interfaces.User;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrastructure.Repositories.Interfaces;
 

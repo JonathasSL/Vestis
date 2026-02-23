@@ -2,7 +2,7 @@
 using Vestis._02_Application.Models.Auth;
 using Vestis._03_Domain.Entities;
 
-namespace Vestis._02_Application.Services.Interfaces;
+namespace Vestis._02_Application.Services.Interfaces.User;
 
 public interface IUserService : ICRUDService<UserModel, UserEntity, Guid>
 {

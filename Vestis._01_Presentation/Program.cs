@@ -276,7 +276,7 @@ if (args.Length > 0)
 	}
 	return;
 }
-else if (!app.Environment.IsProduction())
+else if (!app.Environment.IsProduction() && !app.Environment.IsEnvironment("Local"))
 {
 	using (var scope = app.Services.CreateScope())
 	{

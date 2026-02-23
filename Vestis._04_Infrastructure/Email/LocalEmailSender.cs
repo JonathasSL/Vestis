@@ -37,7 +37,7 @@ public class LocalEmailSender : IEmailSender
 
         email.Body = bodyBuilder.ToMessageBody();
 
-        var email2 = new MimeMessage(_from, message.To.Select(address => MailboxAddress.Parse(address)), bodyBuilder.ToMessageBody());
+        //var email2 = new MimeMessage(_from, message.To.Select(address => MailboxAddress.Parse(address)), bodyBuilder.ToMessageBody());
 
         try
         {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Vestis._02_Application.Services.Interfaces;
+using Vestis._02_Application.Services.Interfaces.User;
 using Vestis.Shared.Extensions;
 
 namespace Controllers;
