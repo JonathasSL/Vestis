@@ -239,15 +239,14 @@ void ConfigureEmailService()
 
 
 	if (builder.Environment.IsProduction())
-		builder.Services.AddScoped<IEmailSender, AzureEmailSender>();
-	else if (builder.Environment.IsEnvironment("Local"))
 	{
-		var localSettings = builder.Configuration.GetSection("EmailSettings:Local").Get<LocalEmailSettings>();
-		builder.Services.AddSingleton(localSettings);
-		builder.Services.AddScoped<IEmailSender, LocalEmailSender>();
+		builder.Services.AddScoped<IEmailSender, AzureEmailSender>();
+		return;
 	}
-	else
-		builder.Services.AddScoped<IEmailSender, LocalEmailSender>();
+
+	var localSettings = builder.Configuration.GetSection("EmailSettings:Local").Get<LocalEmailSettings>();
+	builder.Services.AddSingleton(localSettings);
+	builder.Services.AddScoped<IEmailSender, LocalEmailSender>();
 
 
 }
@@ -276,7 +275,7 @@ if (args.Length > 0)
 	}
 	return;
 }
-else if (!app.Environment.IsProduction() && !app.Environment.IsEnvironment("Local"))
+else if (!app.Environment.IsProduction() && !app.Environment.IsEnvironment("local"))
 {
 	using (var scope = app.Services.CreateScope())
 	{
