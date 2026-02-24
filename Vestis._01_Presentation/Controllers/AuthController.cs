@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using Vestis._02_Application.Common;
 using Vestis._02_Application.Models.Auth;
 using Vestis._02_Application.Services.Interfaces.User;
 
@@ -7,10 +9,17 @@ namespace Controllers;
 public class AuthController : VestisController
 {
     private readonly IUserService _userService;
+    private readonly IUserVerificationService _userVerificationService;
+    private readonly BusinessNotificationContext _businessNotificationContext;
 
-    public AuthController(IUserService userService)
+    public AuthController(
+        IUserService userService,
+        IUserVerificationService userVerificationService,
+        BusinessNotificationContext businessNotificationContext)
     {
         _userService = userService;
+        _userVerificationService = userVerificationService;
+        _businessNotificationContext = businessNotificationContext;
     }
 
     [HttpPost()]
@@ -20,8 +29,6 @@ public class AuthController : VestisController
             return BadRequest(new { message = "User with this email already exists" });
         
         var user = await _userService.Create(dto);
-        //TODO: Send Email validation instead of authenticate
-        //var token = await _userService.AuthenticateAsync(user.Email, userModel.Password);
         
         if (user != null)
             return Created();
@@ -38,6 +45,24 @@ public class AuthController : VestisController
         var token = await _userService.AuthenticateAsync(dto.Email, dto.Password);
 
         return token != null ? Ok(new { token }) : Unauthorized();
+    }
+
+    [HttpPost()]
+    public async Task<IActionResult> VerifyEmail([FromBody] EmailVerificationDTO dto)
+    {
+        if (dto == null || string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Code))
+            return BadRequest(new { mensagens = new[] { "Email e código são obrigatórios." } });
+
+        var token = await _userVerificationService.VerifyEmailAsync(dto.Email, dto.Code);
+
+        if (!string.IsNullOrWhiteSpace(token))
+            return Ok(new { token });
+
+        var mensagens = _businessNotificationContext.Notifications.Any()
+            ? _businessNotificationContext.Notifications
+            : new[] { "Token inválido." };
+
+        return BadRequest(new { mensagens });
     }
 
 	[HttpGet]

@@ -1,4 +1,5 @@
-﻿using Vestis._03_Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Vestis._03_Domain.Entities;
 using Vestis._04_Infrastructure.Data;
 using Vestis._04_Infrastructure.Repositories.Interfaces;
 
@@ -10,12 +11,15 @@ internal class EmailVerificationTokenEntityRepository : Repository<EmailVerifica
     {
     }
 
-    public Task<EmailVerificationTokenEntity?> GetByUserIdAsync(Guid userId)
+    public async Task<List<EmailVerificationTokenEntity>> GetValidByEmailAndCodeAsync(string email, string code, CancellationToken cancellationToken)
     {
-        return Task.FromResult(
-            BeginQuery()
-            .FirstOrDefault(e => e.UserId == userId)
-            );
-    }
+        var query = BeginQuery()
+            .Include(e => e.User)
+            .Where(e => e.Token.Equals(code)
+                        && e.User.Email.Equals(email)
+                        && !e.IsUsed);
 
+        var x = query.ToList();
+        return await query.ToListAsync(cancellationToken);
+    }
 }
