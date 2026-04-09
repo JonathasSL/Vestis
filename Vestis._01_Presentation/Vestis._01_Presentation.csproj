@@ -32,11 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EditorConfigFiles Remove="D:\Bibliotecas\Documents\DEV\Repositories\Vestis\Vestis._01_Presentation\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="D:\Bibliotecas\Documents\DEV\Repositories\Vestis\Vestis._01_Presentation\.editorconfig" />
+    <None Include=".editorconfig" />
   </ItemGroup>
 
 </Project>
