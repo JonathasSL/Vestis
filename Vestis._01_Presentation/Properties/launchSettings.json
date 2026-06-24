@@ -3,7 +3,7 @@
     "lan": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://dev.local:7232/swagger",
+      "launchUrl": "https://localhost:7232/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "local",
         "AZURE_SQL_CONNECTIONSTRING": "Server=localhost;Database=VestisDB;Trusted_Connection=True;TrustServerCertificate=True"
@@ -15,7 +15,7 @@
     "localhost": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://dev.local:7232/swagger",
+      "launchUrl": "https://localhost:7232/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "local"
       },
