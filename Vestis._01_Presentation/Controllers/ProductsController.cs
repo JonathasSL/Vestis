@@ -33,7 +33,7 @@ public class ProductsController : VestisController
 			if (studioProducts.Any())
 				return Ok(studioProducts.ToList());
 			else
-				return NotFound();
+				return NoContent();
 		}
 		catch (Exception e)
 		{
