@@ -16,27 +16,33 @@ internal class ProductService : CRUDService<ProductModel, ProductEntity, Guid>, 
     //private IEnumerable<ProductModel> testProducts;
     private IProductRepository _repository;
 
-    public List<ProductModel> GetProductsByStudioWithFiltersAsync(Guid studioId, Dictionary<string, string>? filters)
+    public CommandResult<List<ProductModel>> GetProductsByStudioWithFiltersAsync(Guid studioId, Dictionary<string, string>? filters)
     {        
         var command = CreateSearchQuery(studioId, filters);
         var result = _mediator.Send(command).Result;
 
-        return result;
+        return CommandResult<List<ProductModel>>.Success(result);
     }
-
-    public async Task<ProductModel> GetProductByStudio(Guid productId, Guid studioGuid)
+    public async Task<CommandResult<ProductModel>> GetProductByStudio(Guid productId, Guid studioGuid)
     {
         var entity = await _repository.GetProductByIdAndStudioIdAsync(productId, studioGuid);
-        return _mapper.Map<ProductModel>(entity);
+        
+        if (entity == null)
+            return CommandResult<ProductModel>.NotFound("Produto não encontrado.");
+
+        return CommandResult<ProductModel>.Success(_mapper.Map<ProductModel>(entity));
     }
 
-    public ProductModel RegisterProduct(ProductModel requestModel)
+    public CommandResult<ProductModel> RegisterProduct(ProductModel requestModel)
     {
         var command = CreateCommand(requestModel);
         var entity = _mediator.Send(command).Result;
 
+        if (_businessNotificationContext.HasNotifications)
+            return CommandResult<ProductModel>.Failure("Não foi possível registrar o produto", _businessNotificationContext.Notifications);
+
         var responseModel = _mapper.Map<ProductModel>(entity);
-        return responseModel;
+        return CommandResult<ProductModel>.Success(responseModel);
 
         CreateProductCommand CreateCommand(ProductModel model){
             return new CreateProductCommand(
@@ -51,10 +57,13 @@ internal class ProductService : CRUDService<ProductModel, ProductEntity, Guid>, 
         }
     }
 
-    public void DeleteProduct(Guid productId, Guid studioId)
+    // TODO: Se o produto nao existir para o studio informado, retornar NotFound em vez de void silencioso.
+    public CommandResult<bool> DeleteProduct(Guid productId, Guid studioId)
     {
         var command = new DeleteProductCommand(productId, studioId);
         _mediator.Send(command).Wait();
+
+        return CommandResult<bool>.Success(true);
     }
 
     private SearchProductsQuery CreateSearchQuery(Guid studioId, Dictionary<string, string>? filters)

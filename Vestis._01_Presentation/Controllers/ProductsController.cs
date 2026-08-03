@@ -54,43 +54,23 @@ public class ProductsController : VestisController
 		if (!Guid.TryParse(studioId, out var studioGuid) || !Guid.TryParse(productId, out var productGuid))
 			return BadRequest($"Invalid GUID format. studioId: {studioId} - productId: {productId}");
 		
-		try
-		{
-			var product = await _service.GetProductByStudio(productGuid, studioGuid);
+		var product = await _service.GetProductByStudio(productGuid, studioGuid);
 
-			if (product is null)
-				return NotFound();
-			else
-				return Ok(product);
-		}
-		catch (Exception e)
-		{
-			_logger.LogError(e.ExceptionStack(out _));
-			return StatusCode(500);
-		}
+		return FromResult(product);
 	}
 
 	[HttpPost]
 	public async Task<IActionResult> Register(string studioId, [FromBody] ProductModel requestModel)
 	{
-		try
-		{
-			var responseModel = _service.RegisterProduct(requestModel);
-			if (responseModel is null)
-				return BadRequest("Could not register product");
-			else
-				return CreatedAtAction(nameof(Register), new { studioId = studioId, productId = responseModel.Id }, responseModel);
-		} catch (Exception e)
-		{
-			_logger.LogError(e.ExceptionStack(out _));
-			return StatusCode(500);
-		}
+		var responseModel = _service.RegisterProduct(requestModel);
+		return FromResult(responseModel);
+
 	}
 
 	[HttpPut("{id}")]
 	public async Task<IActionResult> Put(string studioId, int id, [FromBody] ProductModel requestModel)
 	{
-		return NoContent();
+		throw new NotImplementedException();
 	}
 
 	[HttpDelete("{id}")]
@@ -102,16 +82,8 @@ public class ProductsController : VestisController
 		if (!Guid.TryParse(studioId, out var studioGuid))
 			return BadRequest("Invalid GUID format.");
 
-		try
-		{
-			_service.DeleteProduct(id, studioGuid);
-			return Ok();
-		}
-		catch (Exception e)
-		{
-			_logger.LogError(e.ExceptionStack(out _));
-			return StatusCode(500);
-		}
+		_service.DeleteProduct(id, studioGuid);
+		return Ok();
 	}
 
 	private IProductService _service;

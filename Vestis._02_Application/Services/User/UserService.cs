@@ -33,13 +33,20 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
         _httpClient = httpClient;
     }
 
-    public async Task<UserModel> Create(RegisterDTO model)
+    public async Task<CommandResult<UserModel>> Create(RegisterDTO model)
     {
+        if (await _repository.Exists(model.Email))
+            return CommandResult<UserModel>.Failure("Já existe um usuário cadastrado com este email.");
+
         var command = CreateCommand(model);
         var createdUser = await _mediator.Send(command);
 
+        if (_businessNotificationContext.HasNotifications) {
+            return CommandResult<UserModel>.Failure("Não foi possível criar o usuário.", _businessNotificationContext.Notifications.ToList());
+        }
+
         var responseModel = _mapper.Map<UserModel>(createdUser);
-        return responseModel;
+        return CommandResult<UserModel>.Success(responseModel);
 
         CreateUserCommand CreateCommand(RegisterDTO model)
         {
@@ -54,36 +61,31 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
         }
     }
 
-    public override async Task<UserModel> Update(Guid id, UserModel model)
+    public override async Task<CommandResult<UserModel>> Update(Guid id, UserModel model)
     {
         var entity = await _repository.GetByIdAsync(id);
         if (entity == null)
-            return null;
+            return CommandResult<UserModel>.NotFound("Usuário não encontrado.");
 
         _mapper.Map(model, entity);
         entity.ChangePassword(new PasswordHasher().Hash(model.Password));
         var result = await _repository.Update(entity);
 
-        return _mapper.Map<UserModel>(result);
+        return CommandResult<UserModel>.Success(_mapper.Map<UserModel>(result));
     }
 
-    public async Task<bool> ExistsAsync(string email)
-    {
-        return await _repository.Exists(email);
-    }
-
-    public async Task<string> AuthenticateAsync(string email, string password)
+    public async Task<CommandResult<string>> AuthenticateAsync(string email, string password)
     {
         var user = await _repository.GetByEmailAsync(email);
 
         if (user == null || !new PasswordHasher().Verify(password, user.Password))
-            return null;
+            return CommandResult<string>.Failure("Credenciais inválidas.");
 
-        return _jwtService.GenerateToken(user.Id.ToString(), user.Email);
+        return CommandResult<string>.Success(_jwtService.GenerateToken(user.Id.ToString(), user.Email));
     }
 
     [Obsolete("Método usado apenas para demonstração e testes.")]
-    public async Task<List<UserModel>> GetTestUserAsync(int count)
+    public async Task<CommandResult<List<UserModel>>> GetTestUserAsync(int count)
     {
         var json = await requestUserData();
         var data = json.GetProperty("results").EnumerateArray().ToList();
@@ -116,7 +118,7 @@ public class UserService : CRUDService<UserModel, UserEntity, Guid>, IUserServic
             });
         }
 
-        return users;
+        return CommandResult<List<UserModel>>.Success(users);
 
         async Task<JsonElement> requestUserData()
         {

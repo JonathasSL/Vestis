@@ -9,7 +9,6 @@ using Vestis.Shared.Extensions;
 
 namespace Vestis._02_Application.Services;
 
-
 public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, TEntity, TId>
     where TModel : class
     where TEntity : BaseEntity<TId>
@@ -30,96 +29,54 @@ public abstract class CRUDService<TModel, TEntity, TId> : ICRUDService<TModel, T
         _repository = repository;
     }
 
-    public virtual async Task<TModel> CreateByMapping(TModel model, CancellationToken cancellationToken)
+    public virtual async Task<CommandResult<TModel>> CreateByMapping(TModel model, CancellationToken cancellationToken)
     {
-        try
-        {
-            var entity = _mapper.Map<TEntity>(model);
-            var result = await _repository.CreateAsync(entity, cancellationToken);
-            return _mapper.Map<TModel>(result);
-        }
-        catch (Exception e)
-        {
-            var exceptionStack = e.ExceptionStack(out _);
-            _logger.LogError(exceptionStack);
-            throw;
-        }
+        var entity = _mapper.Map<TEntity>(model);
+        var result = await _repository.CreateAsync(entity, cancellationToken);
+        return CommandResult<TModel>.Success(_mapper.Map<TModel>(result));
     }
 
-    public virtual async Task<IEnumerable<TModel>>? GetAllAsync()
+    public virtual async Task<CommandResult<IEnumerable<TModel>>> GetAllAsync()
     {
-        try
-        {
-            var entityList = await _repository.GetAllAsync();
-            if (entityList == null)
-                return null;
+        var entityList = await _repository.GetAllAsync();
+        if (entityList == null)
+            return CommandResult<IEnumerable<TModel>>.NotFound();
 
-            var result = _mapper.Map<IEnumerable<TModel>>(entityList);
-            return result;
-        }
-        catch (Exception e)
-        {
-            var exceptionStack = e.ExceptionStack(out _);
-            _logger.LogError(exceptionStack);
-            throw;
-        }
+        var result = _mapper.Map<IEnumerable<TModel>>(entityList);
+        return CommandResult<IEnumerable<TModel>>.Success(result);
     }
 
-    public virtual async Task<TModel>? GetById(TId id)
+    public virtual async Task<CommandResult<TModel>?> GetById(TId id)
     {
-        try
-        {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                return null;
+        var entity = await _repository.GetByIdAsync(id);
+        if (entity == null)
+            return CommandResult<TModel>.NotFound();
 
-            return _mapper.Map<TModel>(entity);
-        }
-        catch (Exception e)
-        {
-            var exceptionStack = e.ExceptionStack(out _);
-            _logger.LogError(exceptionStack);
-            throw;
-        }
+        return CommandResult<TModel>.Success(_mapper.Map<TModel>(entity));
     }
 
-    public virtual async Task<TModel>? Update(TId id, TModel model)
+    public virtual async Task<CommandResult<TModel>?> Update(TId id, TModel model)
     {
-        try
-        {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                return null;
+        var entity = await _repository.GetByIdAsync(id);
+        if (entity == null)
+            return CommandResult<TModel>.NotFound();
 
-            _mapper.Map(model, entity);
+        _mapper.Map(model, entity);
 
-            var result = _repository.Update(entity);
-            return _mapper.Map<TModel>(result);
-        }
-        catch (Exception e)
-        {
-            var exceptionStack = e.ExceptionStack(out _);
-            _logger.LogError(exceptionStack);
-            throw;
-        }
+        var result = _repository.Update(entity);
+        return CommandResult<TModel>.Success(_mapper.Map<TModel>(result));
     }
 
-    public virtual async Task<TModel> Delete(TId id)
+    public virtual async Task<CommandResult<TModel>> Delete(TId id)
     {
-        try
-        {
-            var entity = await _repository.GetByIdAsync(id);
-            if (entity == null)
-                return null;
+        var entity = await _repository.GetByIdAsync(id);
+        if (entity == null)
+            return CommandResult<TModel>.NotFound();
 
-            await _repository.SoftDeleteAsync(entity);
-            return _mapper.Map<TModel>(entity);
-        }
-        catch (Exception e)
-        {
-            var exceptionStack = e.ExceptionStack(out _);
-            _logger.LogError(exceptionStack);
-            throw;
-        }
+        if (await _repository.SoftDeleteAsync(entity))
+            return CommandResult<TModel>.Success(_mapper.Map<TModel>(entity));
+        else
+            throw new Exception("Failed to delete entity.");
+
     }
 }
