@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.Text;
+using Vestis._01_Presentation.Middleware;
 using Vestis._01_Presentation.Swagger;
 using Vestis._02_Application;
 using Vestis._02_Application.Behavior;
@@ -29,7 +29,11 @@ var builder = WebApplication.CreateBuilder(args);
 var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
 
 builder.Services.RegisterAllScopedDependencies(logger);
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MappingProfile).Assembly));
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 
 var _allowSpecificOrigins = "_allowCORS";
@@ -96,12 +100,11 @@ else if (builder.Environment.IsProduction())
 
 var env = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 
-var connectionString =
-	env.EmptyToNull();
+var connectionString = env?.EmptyToNull();
 
 if (string.IsNullOrWhiteSpace(connectionString))
 	throw new InvalidOperationException(
-		$"Connection string não configurada: '{connectionString}'. Defina a env var 'AZURE_SQL_CONNECTIONSTRING' (prioritário) ou configure 'ConnectionStrings:DefaultConnection' em appsettings*.json.");
+		"Connection string não configurada. Defina a env var 'AZURE_SQL_CONNECTIONSTRING' (prioritário) ou configure 'ConnectionStrings:DefaultConnection' em appsettings*.json.");
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -235,6 +238,9 @@ void ConfigureEmailService()
 {
 	var emailSettings = builder.Configuration.GetSection("EmailSettings").Get<EmailSettings>();
 
+	if (emailSettings == null)
+		throw new InvalidOperationException("EmailSettings não configurado. Configure a seção 'EmailSettings' em appsettings*.json.");
+
 	builder.Services.AddSingleton(emailSettings);
 
 
@@ -245,6 +251,10 @@ void ConfigureEmailService()
 	}
 
 	var localSettings = builder.Configuration.GetSection("EmailSettings:Local").Get<LocalEmailSettings>();
+
+	if (localSettings == null)
+		throw new InvalidOperationException("LocalEmailSettings não configurado. Configure a seção 'EmailSettings:Local' em appsettings*.json para ambientes não produtivos.");
+
 	builder.Services.AddSingleton(localSettings);
 	builder.Services.AddScoped<IEmailSender, LocalEmailSender>();
 
@@ -297,6 +307,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
+app.UseExceptionHandler();
+
 if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("local"))
 {
 	UseSwagger();
@@ -309,6 +321,7 @@ System.Console.WriteLine(
          \     /\  ___/ \___ \  |  | |  |\___ \  /    |    \    |   |   |
           \___/  \___  >____  > |__| |__/____  > \____|__  /____|   |___|
                      \/     \/               \/          \/
+
 ");
 System.Console.WriteLine($"EnvironmentName: {app.Environment.EnvironmentName}");
 System.Console.WriteLine($"Application started at {DateTime.Now}\n");
@@ -335,7 +348,7 @@ void GenerateYaml()
 
 	// Serializa para YAML
 	var stringWriter = new StringWriter();
-	swaggerDoc.SerializeAsV3(new OpenApiYamlWriter(stringWriter));
+	//swaggerDoc.SerializeAsV3(new OpenApiYamlWriter(stringWriter));
 	var yamlOutput = stringWriter.ToString();
 
 	// Define o caminho para salvar o arquivo dentro do projeto
