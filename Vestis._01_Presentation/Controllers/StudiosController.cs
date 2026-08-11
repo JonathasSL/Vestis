@@ -41,5 +41,15 @@ public class StudiosController : VestisController
 		var result = _service.GetStudiosByUserId(userId.Value, cancellationToken);
 		return FromResult(result);
 	}
+
+	[HttpPut]
+	public async Task<IActionResult> Update([FromBody] StudioModel studioModel, CancellationToken cancellationToken)
+	{
+		var userId = User?.GetUserId();
+		if (!userId.HasValue)
+			return Unauthorized();
+
+		var result = await _service.Update(userId.Value, studioModel);
+		return FromResult(result);
 	}
 }

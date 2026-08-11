@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using Vestis._02_Application.Common;
 using Vestis._02_Application.Models.Auth;
 using Vestis._02_Application.Services.Interfaces.User;
@@ -25,17 +24,11 @@ public class AuthController : VestisController
     [HttpPost()]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO dto)
     {
-        if (await _userService.ExistsAsync(dto.Email))
-            return BadRequest(new { message = "User with this email already exists" });
-        
         var user = await _userService.Create(dto);
-        
-        if (user != null)
-            return Created();
-        else
-            return BadRequest();
+		
+		return FromResult(user);
     }
-    
+
     [HttpPost()]
     public async Task<IActionResult> Login([FromBody] LoginDTO dto)
     {
@@ -44,7 +37,7 @@ public class AuthController : VestisController
 
         var token = await _userService.AuthenticateAsync(dto.Email, dto.Password);
 
-        return token != null ? Ok(new { token }) : Unauthorized();
+        return FromResult(token);
     }
 
     [HttpPost()]
@@ -53,20 +46,17 @@ public class AuthController : VestisController
         if (dto == null || string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Code))
             return BadRequest(new { mensagens = new[] { "Email e código são obrigatórios." } });
 
-        var token = await _userVerificationService.VerifyEmailAsync(dto.Email, dto.Code);
-
-        if (!string.IsNullOrWhiteSpace(token))
-            return Ok(new { token });
+        var result = await _userVerificationService.VerifyEmailAsync(dto.Email, dto.Code);
 
         var mensagens = _businessNotificationContext.Notifications.Any()
             ? _businessNotificationContext.Notifications
             : new[] { "Token inválido." };
 
-        return BadRequest(new { mensagens });
+        return FromResult(result);
     }
 
 	[HttpGet]
-	public async Task<IActionResult> Variables([FromRoute] string key)
+	public async Task<IActionResult> Variables([FromQuery] string key)
 	{
 		if (key != "vestis_admin_key")
 			return Unauthorized();

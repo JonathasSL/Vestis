@@ -3,7 +3,8 @@ using Vestis._03_Domain.Entities;
 
 namespace Vestis._02_Application.CQRS.Address.Commands;
 
-public record CreateAddressCommand(
+public record UpdateAddressCommand(
+    Guid Id,
     string Street,
     string Number,
     string? Complement,
@@ -11,5 +12,4 @@ public record CreateAddressCommand(
     string City,
     string State,
     string ZipCode,
-    string Country = "BR"
-) : IRequest<AddressEntity>;
+    string Country = "BR") : IRequest<AddressEntity>;

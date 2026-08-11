@@ -21,25 +21,14 @@ public class ProductsController : VestisController
 		if (!Guid.TryParse(studioId, out var studioGuid))
 			return BadRequest("Invalid GUID format.");
 
-		List<ProductModel> studioProducts;
-		try
-		{
-			var filters = Request.Query.ToDictionary(
-				q => q.Key, 
-				q => q.Value.ToString());
+		
+		var filters = Request.Query.ToDictionary(
+			q => q.Key, 
+			q => q.Value.ToString());
 
-			studioProducts =_service.GetProductsByStudioWithFiltersAsync(studioGuid, filters);
+		var result =_service.GetProductsByStudioWithFiltersAsync(studioGuid, filters);
 
-			if (studioProducts.Any())
-				return Ok(studioProducts.ToList());
-			else
-				return NoContent();
-		}
-		catch (Exception e)
-		{
-			_logger.LogError(e.ExceptionStack(out _));
-			return StatusCode(500);
-		}
+		return FromResult(result);	
 	}
 
 	[HttpGet("{productId}")]

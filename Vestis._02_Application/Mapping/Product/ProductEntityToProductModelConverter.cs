@@ -1,9 +1,4 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vestis._02_Application.Models.Product;
 using Vestis._03_Domain.Entities;
 
@@ -11,6 +6,10 @@ namespace Vestis._02_Application.Mapping.Product;
 
 public class ProductEntityToProductModelConverter : ITypeConverter<ProductEntity, ProductModel>
 {
+    public ProductEntityToProductModelConverter()
+    {
+    }
+
     public ProductModel Convert(ProductEntity source, ProductModel destination, ResolutionContext context)
     {
         destination ??= new ProductModel();
@@ -19,7 +18,7 @@ public class ProductEntityToProductModelConverter : ITypeConverter<ProductEntity
         destination.UpdatedDate = source.UpdatedDate;
         destination.DeletedDate = source.DeletedDate;
 
-        //destination.StudioId = source.StudioId;
+        destination.StudioId = source.StudioId;
         destination.Name = source.Name;
         destination.Description = source.Description;
         destination.Category = source.Category;

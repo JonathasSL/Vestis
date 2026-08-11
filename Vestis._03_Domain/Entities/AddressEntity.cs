@@ -11,7 +11,7 @@ public class AddressEntity : BaseEntity<Guid>
     public string? Country { get; private set; } 
     public string ZipCode { get; private set; }
 
-    public AddressEntity(string street, string number, string neighborhood, string city, string state, string zipCode)
+    public AddressEntity(string street, string number, string neighborhood, string city, string state, string zipCode, string? complement = null, string? country = null)
     {
         Street = street;
         Number = number;
@@ -19,75 +19,85 @@ public class AddressEntity : BaseEntity<Guid>
         City = city;
         State = state;
         ZipCode = zipCode;
+        Complement = complement;
+        Country = country;
     }
 
     //Constructor for EF
     [Obsolete("This constructor is for EF use only.")]
     public AddressEntity() { }
 
-    public void ChangeStreet(string street)
+    public AddressEntity ChangeStreet(string street)
     {
         if (Street != street)
         {
             Street = street;
             SetAsUpdated();
         }
+        return this;
     }
-    public void ChangeNumber(string number)
+    public AddressEntity ChangeNumber(string number)
     {
         if (Number != number)
         {
             Number = number;
             SetAsUpdated();
         }
+        return this;
     }
-    public void ChangeComplement(string complement)
+    public AddressEntity ChangeComplement(string complement)
     {
         if (Complement != complement)
         {
             Complement = complement;
             SetAsUpdated();
         }
+        return this;
     }
-    public void ChangeNeighborhood(string neighborhood)
+    public AddressEntity ChangeNeighborhood(string neighborhood)
     {
         if (Neighborhood != neighborhood)
         {
             Neighborhood = neighborhood;
             SetAsUpdated();
         }
+        return this;
     }
-    public void ChangeCity(string city)
+    public AddressEntity ChangeCity(string city)
     {
         if (City != city)
         {
             City = city;
             SetAsUpdated();
         }
+        return this;
     }
-    public void ChangeState(string state)
+    public AddressEntity ChangeState(string state)
     {
         if (State != state)
         {
             State = state;
             SetAsUpdated();
         }
+        return this;
     }
-    public void ChangeCountry(string country)
+    public AddressEntity ChangeCountry(string country)
     {
         if (Country != country)
         {
             Country = country;
             SetAsUpdated();
         }
+        return this;
     }
-    public void ChangeZipCode(string zipCode)
+    public AddressEntity ChangeZipCode(string zipCode)
     {
         if (ZipCode != zipCode)
         {
             ZipCode = zipCode;
             SetAsUpdated();
         }
+        return this;
     }
 
     public override bool Equals(object? obj)

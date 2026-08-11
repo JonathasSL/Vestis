@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Vestis._02_Application.CQRS.Product.Query;
 using Vestis._02_Application.Models.Product;
 using Vestis._04_Infrastructure.ObjectQuery;
@@ -9,8 +10,9 @@ namespace Vestis._02_Application.CQRS.Product.Handlers;
 
 internal class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery, List<ProductModel>>
 {
+    private readonly IMapper _mapper;
     private readonly IProductRepository _repository;
-    
+
     public Task<List<ProductModel>> Handle(SearchProductsQuery request, CancellationToken cancellationToken)
     {
         var filters = new ProductFilters
@@ -22,8 +24,8 @@ internal class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery,
             MaxPrice = request.MaxPrice
         };
         var entities = _repository.GetProductsByStudioIdAsync(filters, cancellationToken).Result;
-        
-        
+
+        //TODO: Fix this mapping to use AutoMapper instead of manual mapping
         var models = entities.Select(p => new ProductModel
         {
             Id = p.Id,
@@ -38,8 +40,11 @@ internal class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery,
         return Task.FromResult(models);
     }
 
-    public SearchProductsQueryHandler(IProductRepository repository)
+    public SearchProductsQueryHandler(
+        IProductRepository repository,
+        IMapper mapper)
     {
         _repository = repository;
+        _mapper = mapper;
     }
 }

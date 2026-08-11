@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using System.Security.Cryptography;
 using System.Text;
+using Vestis._02_Application.Common;
 using Vestis._02_Application.CQRS.User.Commands;
 using Vestis._02_Application.Services.Interfaces.User;
 
@@ -29,9 +30,14 @@ internal class UserVerificationService : IUserVerificationService
         return Convert.ToBase64String(hashBytes);
     }
 
-    public async Task<string?> VerifyEmailAsync(string email, string code)
+    public async Task<CommandResult<string?>> VerifyEmailAsync(string email, string code)
     {
         var command = new UserEmailVerificationCommand(email, code);
-        return await _mediator.Send(command);
+        var token = await _mediator.Send(command);
+
+        if (token is not null)
+            return CommandResult<string?>.Success(token);
+        else
+            return CommandResult<string?>.NotFound();
     }
 }

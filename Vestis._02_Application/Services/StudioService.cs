@@ -68,4 +68,38 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
         var query = new GetStudiosByUserIdQuery(userId);
         return _mediator.Send(query, cancellationToken).Result;
     }
+
+    public async Task<CommandResult<StudioModel>> Update(Guid contextUser, StudioModel model)
+    {
+        try
+        {
+            var addressCommand = new UpdateAddressCommand(
+                model.Address.Id,
+                model.Address.Street,
+                model.Address.Number,
+                model.Address.Complement,
+                model.Address.Neighborhood,
+                model.Address.City,
+                model.Address.State,
+                model.Address.ZipCode,
+                model.Address.Country
+            );
+            var entity = await _mediator.Send(new UpdateStudioCommand(model.Id, model.Name, model.ContactEmail, model.PhoneNumber, addressCommand));
+
+            var result = _mapper.Map<StudioModel>(entity);
+
+            if (result is null)
+                return CommandResult<StudioModel>.NotFound("Ateliê não encontrado.");
+
+            if (_businessNotificationContext.HasNotifications)
+                return CommandResult<StudioModel>.Failure("Houve um erro ao atualizar seu ateliê.", _businessNotificationContext.Notifications.ToList());
+            else
+                return CommandResult<StudioModel>.Success(result);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.ExceptionStack(out _));
+            throw;
+        }
+    }
 }

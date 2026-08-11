@@ -1,15 +1,15 @@
-﻿namespace Vestis._02_Application.Common;
+﻿using System.Text.Json.Serialization;
 
-// TODO [Passo 1 - baixo impacto]: Criar enum CommandResultStatus { Success, ValidationFailure, NotFound }
-// para diferenciar erro de usuario (400) de recurso nao encontrado (404). Nao criar status para erro 500:
-// excecoes nao tratadas devem propagar e ser tratadas pelo GlobalExceptionHandler (ver Program.cs).
+namespace Vestis._02_Application.Common;
+
 public class CommandResult<T>
 {
     public bool IsSuccess { get; private set; }
+
+    [JsonIgnore]
     public CommandResultStatus Status { get; private set; }
     public T? Data { get; private set; }
-    public string? Message { get; private set; }
-    public List<string> Errors { get; private set; }
+    public IEnumerable<string> Messages { get; private set; }
 
     public static CommandResult<T> Success(T data, string? message = null)
     {
@@ -18,23 +18,34 @@ public class CommandResult<T>
             IsSuccess = true,
             Status = CommandResultStatus.Success,
             Data = data,
-            Message = message,
-            Errors = new List<string>()
+            Messages = new List<string>() { message  }
         };
     }
 
-    // TODO: Ajustar para setar Status = CommandResultStatus.ValidationFailure ao criar o Failure.
-    // Failure deve representar exclusivamente erro do usuario (campo obrigatorio vazio, regra de negocio violada, etc).
-    public static CommandResult<T> Failure(string message, List<string> errors = null)
+    public static CommandResult<T> Failure(IEnumerable<string> errors)
     {
         return new CommandResult<T>
         {
             IsSuccess = false,
             Status = CommandResultStatus.ValidationFailure,
             Data = default,
-            Message = message,
-            Errors = errors ?? new List<string>()
+            Messages = errors ?? new List<string>() { }
         };
+    }
+
+    [Obsolete("Use Failure(IEnumerable<string> errors) instead.")]
+    public static CommandResult<T> Failure(string message, IEnumerable<string> errors = null)
+    {
+        if (errors is null)
+            return Failure(errors ?? new List<string>() { message });
+        else
+        {
+            var errorList = new List<string>(errors);
+            if (!string.IsNullOrEmpty(message))
+                errorList.Insert(0, message);
+
+            return Failure(errorList);
+        }
     }
 
     public static CommandResult<T> NotFound(string message = null)
@@ -44,8 +55,7 @@ public class CommandResult<T>
             IsSuccess = false,
             Status = CommandResultStatus.NotFound,
             Data = default,
-            Message = message ?? "Não foi possível encontrar o recurso.",
-            Errors = new List<string>()
+            Messages = new List<string>() { "Não foi possível encontrar o recurso." }
         };
     }
 }

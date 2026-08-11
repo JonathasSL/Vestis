@@ -32,7 +32,7 @@ internal class Repository<T, TId> : IRepository<T, TId>
         catch (Exception e)
         {
             _logger.LogError($"Error when creating entity: {entity.GetType().Name}, Id: {entity.Id} ", e);
-            return null;
+            throw;
         }
 
     }
@@ -48,7 +48,7 @@ internal class Repository<T, TId> : IRepository<T, TId>
         catch (Exception e)
         {
             _logger.LogError($"Error when softDeleting entity: {entity.GetType().Name}, Id: {entity.Id} ", e);
-            return false;
+            throw;
         }
     }
 
@@ -63,7 +63,7 @@ internal class Repository<T, TId> : IRepository<T, TId>
         catch (Exception e)
         {
             _logger.LogError($"Error when updating entity: {entity.GetType().Name}, Id: {entity.Id} ", e);
-            return null;
+            throw;
         }
     }
 

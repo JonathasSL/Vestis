@@ -20,9 +20,13 @@ public class StudioEntity : BaseEntity<Guid>
     #endregion Properties
 
     #region Behavior
-    public StudioEntity(string name)
+    public StudioEntity(string name, string contactEmail = null, string phoneNumber = null, AddressEntity address = null)
     {
-        Name = name;
+        Name = name.Trim();
+        ContactEmail = contactEmail?.Trim();
+        PhoneNumber = phoneNumber?.Trim();
+        Address = address;
+        AddressId = address?.Id;
     }
 
     //Constructor for EF
@@ -31,6 +35,7 @@ public class StudioEntity : BaseEntity<Guid>
 
     public void ChangeName(string name)
     {
+        name = name.Trim();
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name cannot be null or empty.");
         else if (Name != name)
@@ -42,6 +47,7 @@ public class StudioEntity : BaseEntity<Guid>
 
     public void ChangeContactEmail(string contactEmail)
     {
+        contactEmail = contactEmail.Trim();
         if (ContactEmail != contactEmail)
         {
             ContactEmail = contactEmail;
@@ -51,6 +57,7 @@ public class StudioEntity : BaseEntity<Guid>
 
     public void ChangePhoneNumber(string phoneNumber)
     {
+        phoneNumber = phoneNumber.Trim();
         if (PhoneNumber != phoneNumber)
         {
             PhoneNumber = phoneNumber;

@@ -23,17 +23,25 @@ public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
             return await next();
 
         TResponse response;
+        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        _logger.LogInformation("Transaction started for request: {Command}", typeof(TRequest).Name);
+
         try
         {
-            await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
-            _logger.LogInformation("Transaction started for request: {Command}", typeof(TRequest).Name);
-
             response = await next();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             await _dbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
             _logger.LogInformation("Transaction committed for request: {Command}", typeof(TRequest).Name);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogWarning("Transaction rolled back due to cancellation for request: {Command}", typeof(TRequest).Name);
+            await transaction.RollbackAsync();
+            throw;
         }
         catch (Exception e)
         {

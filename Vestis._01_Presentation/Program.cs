@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Writers;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System.Text;
@@ -348,7 +349,7 @@ void GenerateYaml()
 
 	// Serializa para YAML
 	var stringWriter = new StringWriter();
-	//swaggerDoc.SerializeAsV3(new OpenApiYamlWriter(stringWriter));
+	swaggerDoc.SerializeAsV3(new OpenApiYamlWriter(stringWriter));
 	var yamlOutput = stringWriter.ToString();
 
 	// Define o caminho para salvar o arquivo dentro do projeto
