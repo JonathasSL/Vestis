@@ -32,7 +32,7 @@ internal class GetStudiosByUserIdQueryHandler : IRequestHandler<GetStudiosByUser
         }
         catch (Exception e)
         {
-            return Task.FromResult(CommandResult<List<StudioSummaryModel>>.Failure(e.Message));
+            return Task.FromResult(CommandResult<List<StudioSummaryModel>>.Failure(new List<string> { e.Message }));
         }
     }
 }

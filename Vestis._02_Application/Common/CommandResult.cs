@@ -52,7 +52,7 @@ public class CommandResult<T>
     {
         return new CommandResult<T>
         {
-            IsSuccess = false,
+            IsSuccess = true,
             Status = CommandResultStatus.NotFound,
             Data = default,
             Messages = new List<string>() { "Não foi possível encontrar o recurso." }

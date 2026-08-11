@@ -16,13 +16,11 @@ namespace Vestis._02_Application.Services;
 
 public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStudioService
 {
-    public StudioService(
-        IMapper mapper,
-        IMediator mediator,
-        BusinessNotificationContext businessNotificationContext,
-        ILogger<StudioService> logger, 
-        IStudioRepository repository) : base(mapper, mediator, businessNotificationContext, logger, repository)
-    { }
+    public CommandResult<StudioModel> GetById(Guid id, CancellationToken cancellation)
+    {
+        var query = new GetStudioByIdQuery(id);
+        return _mediator.Send(query, cancellation).Result;
+    }
 
     public async Task<CommandResult<StudioModel>> Create(Guid contextUser, StudioModel model)
     {
@@ -102,4 +100,13 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
             throw;
         }
     }
+
+    public StudioService(
+        IMapper mapper,
+        IMediator mediator,
+        BusinessNotificationContext businessNotificationContext,
+        ILogger<StudioService> logger,
+        IStudioRepository repository) : base(mapper, mediator, businessNotificationContext, logger, repository)
+    { }
+
 }

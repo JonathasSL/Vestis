@@ -20,7 +20,7 @@ public class StudiosController : VestisController
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var studio = await _service.GetById(id);
+        var studio = _service.GetById(id, cancellationToken);
 		return FromResult(studio);
 	}
 
