@@ -7,5 +7,4 @@ public class StudioModel : BaseModel<Guid>
     public string? PhoneNumber { get; set; }
     public AddressModel? Address { get; set; }
     public string? RoleInStudio { get; set; }
-
 }

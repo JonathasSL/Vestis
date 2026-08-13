@@ -16,6 +16,7 @@ namespace Vestis._02_Application.Services;
 
 public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStudioService
 {
+    private readonly IAddressService _addressService;
     public CommandResult<StudioModel> GetById(Guid id, CancellationToken cancellation)
     {
         var query = new GetStudioByIdQuery(id);
@@ -84,13 +85,13 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
             );
             var entity = await _mediator.Send(new UpdateStudioCommand(model.Id, model.Name, model.ContactEmail, model.PhoneNumber, addressCommand));
 
-            var result = _mapper.Map<StudioModel>(entity);
-
-            if (result is null)
+            if (entity is null)
                 return CommandResult<StudioModel>.NotFound("Ateliê não encontrado.");
 
+            var result = GetStudioModel(entity);
+
             if (_businessNotificationContext.HasNotifications)
-                return CommandResult<StudioModel>.Failure("Houve um erro ao atualizar seu ateliê.", _businessNotificationContext.Notifications.ToList());
+                return CommandResult<StudioModel>.Failure(_businessNotificationContext.Notifications.ToList());
             else
                 return CommandResult<StudioModel>.Success(result);
         }
@@ -101,12 +102,30 @@ public class StudioService : CRUDService<StudioModel, StudioEntity, Guid>, IStud
         }
     }
 
+    internal StudioModel GetStudioModel(StudioEntity entity)
+    {
+        var model = new StudioModel
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            ContactEmail = entity.ContactEmail,
+            PhoneNumber = entity.PhoneNumber,
+        };
+        if (entity.Address is not null)
+            model.Address = _addressService.GetAddressModel(entity.Address);
+
+        return model;
+    }
+
     public StudioService(
         IMapper mapper,
         IMediator mediator,
         BusinessNotificationContext businessNotificationContext,
         ILogger<StudioService> logger,
-        IStudioRepository repository) : base(mapper, mediator, businessNotificationContext, logger, repository)
-    { }
+        IStudioRepository repository,
+        IAddressService addressService) : base(mapper, mediator, businessNotificationContext, logger, repository)
+    {
+        _addressService = addressService;
+    }
 
 }
