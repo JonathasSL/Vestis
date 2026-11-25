@@ -14,7 +14,7 @@ public class ClientEntity : BaseEntity<Guid>
 
     public ClientEntity(string name)
     {
-        Name = name.EmptyToNull() ?? throw new ArgumentNullException(nameof(name));
+        Name = name.Trim().EmptyToNull() ?? throw new ArgumentNullException(nameof(name));
     }
 
     //Constructor for EF

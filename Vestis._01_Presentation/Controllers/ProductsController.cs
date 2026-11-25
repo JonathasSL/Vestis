@@ -15,7 +15,7 @@ public class ProductsController : VestisController
 	[HttpGet]
 	public async Task<IActionResult> GetAll(string studioId)
 	{
-		if (string.IsNullOrEmpty(studioId))
+		if (string.IsNullOrWhiteSpace(studioId))
 			return BadRequest("StudioId is required");
 
 		if (!Guid.TryParse(studioId, out var studioGuid))
@@ -26,7 +26,7 @@ public class ProductsController : VestisController
 			q => q.Key, 
 			q => q.Value.ToString());
 
-		var result =_service.GetProductsByStudioWithFiltersAsync(studioGuid, filters);
+		var result = _service.GetProductsByStudioWithFiltersAsync(studioGuid, filters);
 
 		return FromResult(result);	
 	}

@@ -2,7 +2,7 @@
 using MediatR;
 using Vestis._02_Application.CQRS.Product.Query;
 using Vestis._02_Application.Models.Product;
-using Vestis._04_Infrastructure.ObjectQuery;
+using Vestis._04_Infrastructure.ObjectQuery.Filters;
 using Vestis._04_Infrastructure.Repositories.Interfaces;
 using Vestis.Shared.Extensions;
 
@@ -25,7 +25,6 @@ internal class SearchProductsQueryHandler : IRequestHandler<SearchProductsQuery,
         };
         var entities = _repository.GetProductsByStudioIdAsync(filters, cancellationToken).Result;
 
-        //TODO: Fix this mapping to use AutoMapper instead of manual mapping
         var models = entities.Select(p => new ProductModel
         {
             Id = p.Id,

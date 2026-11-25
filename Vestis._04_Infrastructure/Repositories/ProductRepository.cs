@@ -1,6 +1,6 @@
 ﻿using Vestis._03_Domain.Entities;
 using Vestis._04_Infrastructure.Data;
-using Vestis._04_Infrastructure.ObjectQuery;
+using Vestis._04_Infrastructure.ObjectQuery.Filters;
 using Vestis._04_Infrastructure.Repositories.Interfaces;
 
 namespace Vestis._04_Infrastructure.Repositories;

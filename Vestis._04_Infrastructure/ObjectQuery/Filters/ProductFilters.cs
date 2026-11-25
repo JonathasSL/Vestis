@@ -1,4 +1,4 @@
-﻿namespace Vestis._04_Infrastructure.ObjectQuery;
+﻿namespace Vestis._04_Infrastructure.ObjectQuery.Filters;
 
 public class ProductFilters
 {
