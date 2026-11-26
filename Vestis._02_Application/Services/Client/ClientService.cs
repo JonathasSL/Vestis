@@ -23,6 +23,17 @@ internal class ClientService : CRUDService<ClientModel, ClientEntity, Guid>, ICl
         return result;
     }
 
+    public async Task<CommandResult<ClientModel>> GetClientByIdAndStudioId(Guid clientId, Guid studioGuid, CancellationToken cancellationToken)
+    {
+        var query = new GetClientByIdQuery(clientId, studioGuid);
+        var clientResult = await _mediator.Send(query, cancellationToken);
+
+        if (clientResult is null)
+            return CommandResult<ClientModel>.NotFound("Client not found.");
+
+        return clientResult;
+    }
+
     public async Task<CommandResult<ClientModel>> CreateClient(Guid studioGuid, CreateClientRequestModel request, CancellationToken cancellationToken)
     {
         CreateAddressCommand addressCommand = null;

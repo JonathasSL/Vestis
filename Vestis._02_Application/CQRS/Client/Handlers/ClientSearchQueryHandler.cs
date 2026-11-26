@@ -1,14 +1,20 @@
 ﻿using MediatR;
+using Vestis._02_Application.Common;
 using Vestis._02_Application.CQRS.Client.Query;
+using Vestis._02_Application.Mappings.Address;
+using Vestis._02_Application.Models;
 using Vestis._02_Application.Models.Client;
 using Vestis._04_Infrastructure.ObjectQuery.Filters;
 using Vestis._04_Infrastructure.Repositories.Interfaces;
 
 namespace Vestis._02_Application.CQRS.Client.Handlers;
 
-internal class ClientSearchQueryHandler : IRequestHandler<SearchClientsQuery, List<ClientSearchResultsModel>>
+internal class ClientSearchQueryHandler : 
+    IRequestHandler<SearchClientsQuery, List<ClientSearchResultsModel>>,
+    IRequestHandler<GetClientByIdQuery, CommandResult<ClientModel>>
 {
     private readonly IClientRepository _repository;
+    
     public Task<List<ClientSearchResultsModel>> Handle(SearchClientsQuery request, CancellationToken cancellationToken)
     {
         var filters = new ClientFilters
@@ -34,8 +40,26 @@ internal class ClientSearchQueryHandler : IRequestHandler<SearchClientsQuery, Li
 
         return Task.FromResult(model);
 
-        
+
     }
+    public Task<CommandResult<ClientModel>> Handle(GetClientByIdQuery request, CancellationToken cancellationToken)
+    {
+        var clientEntity = _repository.GetClientByIdAndStudioId(request.ClientId, request.StudioId, cancellationToken);
+
+        if (clientEntity is null)
+            return Task.FromResult(CommandResult<ClientModel>.NotFound("Client not found."));
+
+        return Task.FromResult(CommandResult<ClientModel>.Success(new ClientModel
+        {
+            Id = clientEntity.Id,
+            Name = clientEntity.Name,
+            Email = clientEntity.Email,
+            PhoneNumber = clientEntity.PhoneNumber,
+            CreatedDate = clientEntity.CreatedDate,
+            Address = clientEntity.Address?.ToModel()
+        }));
+    }
+
     private string GetSearchedContactInfo(string searchTerm, string info1, string info2)
     {
         if (string.IsNullOrWhiteSpace(searchTerm))

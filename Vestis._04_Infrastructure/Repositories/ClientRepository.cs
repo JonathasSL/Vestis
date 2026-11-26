@@ -41,4 +41,12 @@ internal class ClientRepository : Repository<ClientEntity, Guid>, IClientReposit
 
         return query.ToList();
     }
+
+    public ClientEntity? GetClientByIdAndStudioId(Guid clientId, Guid studioId, CancellationToken cancellationToken)
+    {
+        var query = BeginQueryReadOnly()
+            .Where(client => client.Id == clientId && client.StudioId == studioId);
+
+        return query.FirstOrDefault();
+    }
 }

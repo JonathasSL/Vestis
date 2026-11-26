@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Vestis._02_Application.Common;
 using Vestis._02_Application.CQRS.Client.Commands;
+using Vestis._02_Application.Mappings.Client;
 using Vestis._02_Application.Models;
 using Vestis._02_Application.Models.Client;
 using Vestis._03_Domain.Entities;
@@ -36,9 +37,10 @@ public class ClientCommandHandler :
         if (request.Address is not null)
         {
             var address = _mediator.Send(request.Address, cancellationToken).Result;
+            
             if (_notificationContext.HasNotifications)
             {
-                var errorMessages = new List<string>(_notificationContext.Notifications) { "Failed to create address." };
+                var errorMessages = new List<string>(_notificationContext.Notifications);
 
                 return Task.FromResult(CommandResult<ClientModel>.Failure(errorMessages));
             }
@@ -46,31 +48,13 @@ public class ClientCommandHandler :
             clientEntity.ChangeAddress(address);
         }
 
-        clientEntity = _repository.CreateAsync(clientEntity, cancellationToken).Result;
-        var model = EntityToModel(clientEntity);
+        var savedEntity = _repository.CreateAsync(clientEntity, cancellationToken).Result;
+        if (savedEntity is null)
+            return Task.FromResult(CommandResult<ClientModel>.Failure(new List<string> { "Failed to create client." }));
+
+        var model = savedEntity.ToClientModel();
 
 
         return Task.FromResult(CommandResult<ClientModel>.Success(model));
-    }
-
-    private ClientModel EntityToModel(ClientEntity entity)
-    {
-        return new ClientModel
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            Email = entity.Email,
-            PhoneNumber = entity.PhoneNumber,
-            CreatedDate = entity.CreatedDate,
-
-            Address = entity.Address is not null ? new AddressModel
-            {
-                Street = entity.Address.Street,
-                City = entity.Address.City,
-                State = entity.Address.State,
-                ZipCode = entity.Address.ZipCode,
-                Country = entity.Address.Country
-            } : null
-        };
     }
 }
