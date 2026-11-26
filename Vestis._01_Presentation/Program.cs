@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -227,6 +228,9 @@ void AddCQRS()
 	// Adiciona MediatR — busca todos os Handlers no Application
 	builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly));
 
+	// Registra todos os AbstractValidators<T> do projeto Application
+	builder.Services.AddValidatorsFromAssembly(typeof(ApplicationAssemblyMarker).Assembly);
+
 	// Pipeline global
 	builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 	builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
@@ -283,6 +287,11 @@ if (args.Length > 0)
 			dbContext.Database.Migrate();
 			Console.WriteLine($"[{systemName}] Database migrated");
 		}
+	}
+	else
+	{
+		var validCommands = !app.Environment.IsProduction() ? "" : " Use 'generate_yaml' or 'migrate_database'";
+		Console.WriteLine($"[{systemName}] No valid command provided.{validCommands}");
 	}
 	return;
 }

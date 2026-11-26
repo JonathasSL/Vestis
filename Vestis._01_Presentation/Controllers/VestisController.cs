@@ -9,7 +9,7 @@ public class VestisController : ControllerBase
 {
 	protected IActionResult FromResult<T>(CommandResult<T> result)
 	{
-		switch (result.Status)
+		switch (result?.Status)
 		{
 			case CommandResultStatus.Success:
 				return Ok(result);

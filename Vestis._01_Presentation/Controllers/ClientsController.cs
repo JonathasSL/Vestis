@@ -1,6 +1,7 @@
 ﻿using Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Vestis._02_Application.Models.Client;
 using Vestis._02_Application.Services.Interfaces;
 
 namespace Vestis._01_Presentation.Controllers;
@@ -28,6 +29,20 @@ public class ClientsController : VestisController
 
 		return FromResult(result);
 	}
+
+	[HttpPost]
+	public async Task<IActionResult> CreateClient(string studioId, [FromBody] CreateClientRequestModel request, CancellationToken cancellationToken)
+	{
+		if (string.IsNullOrWhiteSpace(studioId))
+			return BadRequest("StudioId is required.");
+
+		if (!Guid.TryParse(studioId, out var studioGuid))
+			return BadRequest("Invalid GUID format for studioId.");
+
+		var result = await _service.CreateClient(studioGuid, request, cancellationToken);
+		return FromResult(result);
+	}
+
 
 	public ClientsController(IClientService service)
 	{

@@ -11,7 +11,7 @@ internal class ClientRepository : Repository<ClientEntity, Guid>, IClientReposit
     {
     }
 
-    public List<ClientEntity> SearchStudioClientsWithfilters(ClientFilters filters, CancellationToken cancellationToken)
+    public List<ClientEntity> SearchStudioClientsWithFilters(ClientFilters filters, CancellationToken cancellationToken)
     {
 
         var query = BeginQueryReadOnly()

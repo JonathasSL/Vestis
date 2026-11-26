@@ -2,13 +2,15 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Vestis._02_Application.Common;
+using Vestis._02_Application.CQRS.Address.Commands;
+using Vestis._02_Application.CQRS.Client.Commands;
 using Vestis._02_Application.CQRS.Client.Query;
 using Vestis._02_Application.Models.Client;
 using Vestis._02_Application.Services.Interfaces;
 using Vestis._03_Domain.Entities;
 using Vestis._04_Infrastructure.Repositories.Interfaces;
 
-namespace Vestis._02_Application.Services;
+namespace Vestis._02_Application.Services.Client;
 
 internal class ClientService : CRUDService<ClientModel, ClientEntity, Guid>, IClientService
 {
@@ -18,6 +20,35 @@ internal class ClientService : CRUDService<ClientModel, ClientEntity, Guid>, ICl
         var searchResult = await _mediator.Send(query, cancellationToken);
 
         var result = CommandResult<IEnumerable<ClientSearchResultsModel>>.Success(searchResult);
+        return result;
+    }
+
+    public async Task<CommandResult<ClientModel>> CreateClient(Guid studioGuid, CreateClientRequestModel request, CancellationToken cancellationToken)
+    {
+        CreateAddressCommand addressCommand = null;
+        if (request.Address is not null)
+            addressCommand = new CreateAddressCommand(
+                request.Address.Street, 
+                request.Address.Number, 
+                request.Address.Complement, 
+                request.Address.Neighborhood, 
+                request.Address.City, 
+                request.Address.State, 
+                request.Address.ZipCode, 
+                request.Address.Country);
+
+        var command = new CreateClientCommand(
+            request.Name, 
+            request.Email, 
+            request.PhoneNumber, 
+            studioGuid, 
+            addressCommand);
+        
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (_businessNotificationContext.HasNotifications)
+            result = CommandResult<ClientModel>.Failure(_businessNotificationContext.Notifications);
+
         return result;
     }
 
@@ -32,7 +63,7 @@ internal class ClientService : CRUDService<ClientModel, ClientEntity, Guid>, ICl
             MaxTotalPurchases: filters.TryGetValue("maxTotalPurchases", out var maxTotalPurchasesStr) && long.TryParse(maxTotalPurchasesStr, out var maxTotalPurchases) ? maxTotalPurchases : null
         );
     }
-
+    
     public ClientService(IMapper mapper, IMediator mediator, BusinessNotificationContext businessNotificationContext, ILogger<CRUDService<ClientModel, ClientEntity, Guid>> logger, IRepository<ClientEntity, Guid> repository) : base(mapper, mediator, businessNotificationContext, logger, repository)
     {
     }

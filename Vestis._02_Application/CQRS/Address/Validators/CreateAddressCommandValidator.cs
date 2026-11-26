@@ -5,6 +5,7 @@ namespace Vestis._02_Application.CQRS.Address.Validators;
 
 public class CreateAddressCommandValidator : AbstractValidator<CreateAddressCommand>
 {
+    private const int _MaxZipCodeLength = 10;
     public CreateAddressCommandValidator()
     {
         ValidateStreet();
@@ -57,8 +58,10 @@ public class CreateAddressCommandValidator : AbstractValidator<CreateAddressComm
 
     void ValidateZipCode()
     {
+        //TODO: Aplicar regex de zipcode de forma compativel com o pais do endereço
         RuleFor(x => x.ZipCode)
             .NotEmpty().WithMessage("O campo CEP é obrigatório.")
-            .Matches(@"^\d{5}-\d{3}$").WithMessage("O campo CEP deve estar no formato 12345-678.");
+            //.Matches(@"^\d{5}-\d{3}$").WithMessage("O campo CEP deve estar no formato 12345-678.")
+            .MaximumLength(_MaxZipCodeLength).WithMessage($"O campo CEP não deve passar de {_MaxZipCodeLength} caracteres.");
     }
 }

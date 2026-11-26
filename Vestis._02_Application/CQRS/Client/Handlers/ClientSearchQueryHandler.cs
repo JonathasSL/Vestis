@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Vestis._02_Application.CQRS.Client.Query;
 using Vestis._02_Application.Models.Client;
-using Vestis._04_Infrastructure.ObjectQuery;
 using Vestis._04_Infrastructure.ObjectQuery.Filters;
 using Vestis._04_Infrastructure.Repositories.Interfaces;
 
@@ -22,7 +21,7 @@ internal class ClientSearchQueryHandler : IRequestHandler<SearchClientsQuery, Li
             MaxTotalPurchases = request.MaxTotalPurchases
         };
 
-        var entities = _repository.SearchStudioClientsWithfilters(filters, cancellationToken);
+        var entities = _repository.SearchStudioClientsWithFilters(filters, cancellationToken);
 
         var model = entities.Select(e => new ClientSearchResultsModel
         {

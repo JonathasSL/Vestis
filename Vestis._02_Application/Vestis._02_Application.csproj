@@ -21,8 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Client\Commands\" />
-    <Folder Include="CQRS\Client\Validators\" />
     <Folder Include="CQRS\Product\Validators\" />
   </ItemGroup>
 
