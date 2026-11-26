@@ -8,6 +8,7 @@ using Vestis.Shared.Extensions;
 namespace Controllers;
 
 [Authorize]
+[Route("api/[controller]/")]
 public class StudiosController : VestisController
 {
     private readonly IStudioService _service;
