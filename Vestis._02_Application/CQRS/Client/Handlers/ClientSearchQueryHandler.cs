@@ -27,7 +27,8 @@ internal class ClientSearchQueryHandler : IRequestHandler<SearchClientsQuery, Li
         {
             Id = e.Id,
             Name = e.Name,
-            ContactInfo = GetSearchedContactInfo(request.searchTerm, e.Email, e.PhoneNumber),
+            Email = e.Email,
+            PhoneNumber = e.PhoneNumber,
             ClientSince = DateOnly.FromDateTime(e.CreatedDate),
         }).OrderBy(e => e.Name).ToList();
 
